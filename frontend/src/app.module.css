@@ -1,0 +1,9 @@
+.img {
+    width: 50vw;
+    z-index: -1;
+
+    position: absolute;
+    bottom: 2vh;
+    right: 2vw;
+
+}

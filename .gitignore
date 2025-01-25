@@ -1,0 +1,3 @@
+# For enviroment files
+.env
+node_modules
