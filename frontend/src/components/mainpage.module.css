@@ -1,15 +1,53 @@
+.header {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: white ;
+
+    height: 3.6rem;
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+}
+
+.header_text {
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.circle {
+    width: calc(1.8rem + 8px);
+    height: calc(1.8rem + 8px);
+
+    background-color: #6397FF;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+}
+
+.icon {
+    width: 1.8rem;
+    height: 1.8rem;
+
+    color: white;
+}
+
 .washers {
    display: flex;
    flex-direction: column;
    justify-content: center;
 
-   margin-top: 10vh;
 
 }
 
 .washer_header{
+    margin-top: 3%;
     width: 100%;
-    background-color: #4CB944;
+
 
     display: flex;
     align-items: center;
@@ -18,12 +56,15 @@
 }
 
 .washer_header_left {
-    margin: 6px;
-    font-size: 1.8rem;
+    margin: 0;
+    
+    margin-left: 0.8rem;
+   
+    font-size: 1.4rem;
 }
 
 .washer_header_right {
-    margin: 6px;
+    margin-right: 1.8rem;
 }
 
 .no_display {
@@ -35,13 +76,19 @@
     align-items: center;
     justify-content: space-between;
 
-    width: 100%;
-    margin: auto;
-    padding-top: 3px;
-    padding-bottom: 3px;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 6px;
 
-    background-color: #ff6584;
-    color: white;
+    padding: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
 
-    font-size: 1.2rem;
+    border-radius: 25px;
+
+    background-color: white;
+    
+
+    font-size: 1.1rem;
+
 }
