@@ -44,6 +44,4 @@ export const baseDevices: Device[] = [
   },
 ];
 
-type DevicesContextType = Device[];
-
-export const DevicesContext = createContext<DevicesContextType>(baseDevices);
+export const DevicesContext = createContext<Device[]>(baseDevices);

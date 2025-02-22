@@ -3,16 +3,21 @@ import SpaceshipSVG from "./assets/logo.svg";
 import styles from "./app.module.css";
 import { baseDevices, DevicesContext } from "./context/DevicesContext";
 import { useCallback, useEffect, useState } from "react";
-import { Device } from "./types/types";
+import { Device, SnackbarItem } from "./types/types";
 import { API_URL } from "./secrets";
+import { SnackbarContext } from "./context/SnackbarContext";
 
 function App() {
-  const [context, setContext] = useState<Device[]>(baseDevices);
+  const [deviceContext, setDeviceContext] = useState<Device[]>(baseDevices);
+  const [snackbarMessages, setSnackbarMessages] = useState<SnackbarItem[]>([
+    { status: "success", message: "Test" },
+    { status: "error", message: "Test" },
+  ]);
 
   const fetchDevices = useCallback(async () => {
     const fetchData = await fetch(`${API_URL}/device/all`);
     const data = await fetchData.json();
-    setContext(data);
+    setDeviceContext(data);
   }, []);
 
   useEffect(() => {
@@ -20,9 +25,13 @@ function App() {
   }, [fetchDevices]);
 
   return (
-    <DevicesContext.Provider value={context}>
-      <MainPage refresh={fetchDevices} />
-      <img src={SpaceshipSVG} className={styles.img} alt="Spaceship SVG" />
+    <DevicesContext.Provider value={deviceContext}>
+      <SnackbarContext.Provider
+        value={{ messages: snackbarMessages, setMessages: setSnackbarMessages }}
+      >
+        <MainPage refresh={fetchDevices} />
+        <img src={SpaceshipSVG} className={styles.img} alt="Spaceship SVG" />
+      </SnackbarContext.Provider>
     </DevicesContext.Provider>
   );
 }

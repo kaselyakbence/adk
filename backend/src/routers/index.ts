@@ -14,7 +14,7 @@ DeviceRouter.post("/:id/update", async (req, res) => {
   const hours = req.body?.hours;
 
   try {
-    if (req.params.id && hours && minutes) {
+    if (req.params.id && !isNaN(hours) && !isNaN(minutes)) {
       const endDate = new Date(
         Date.now() + (hours * 60 + minutes) * 60 * 1000
       ).toISOString();

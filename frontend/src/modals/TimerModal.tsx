@@ -3,9 +3,10 @@ import { IoMdCloseCircle as CloseIcon } from "react-icons/io";
 import styles from "./timermodal.module.css";
 import AstronautSVG from "../assets/astronaut.svg";
 import "./modal.css";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useRef, useState } from "react";
 import { DevicesContext } from "../context/DevicesContext";
 import { API_URL } from "../secrets";
+import { SnackbarContext } from "../context/SnackbarContext";
 
 interface TimerModalProps {
   deviceID: number | null;
@@ -14,36 +15,65 @@ interface TimerModalProps {
 }
 
 const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const [input, setInput] = useState<{ hours?: string; minutes?: string }>({});
+
+  const { messages, setMessages } = useContext(SnackbarContext);
 
   const device = useContext(DevicesContext).find((d) => d.id == deviceID);
 
-  const startOnClick = useCallback(async () => {
-    if (deviceID) {
-      const body = {
-        hours: parseInt(input.hours || "0"),
-        minutes: parseInt(input.minutes || "0"),
-      };
-
-      await fetch(`${API_URL}/device/${deviceID}/update`, {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      refresh();
-    }
-
+  const closeModal = useCallback(() => {
     setIsOpen(null);
-  }, [setIsOpen, deviceID, input, refresh]);
+    setInput({});
+  }, [setIsOpen]);
+
+  const startOnClick = useCallback(async () => {
+    try {
+      if (deviceID) {
+        const body = {
+          hours: parseInt(input.hours || "0"),
+          minutes: parseInt(input.minutes || "0"),
+        };
+        closeModal();
+
+        const res = await fetch(`${API_URL}/device/${deviceID}/update`, {
+          method: "POST",
+          body: JSON.stringify(body),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        refresh();
+
+        if (setMessages) {
+          if (res.status == 201)
+            setMessages([
+              ...messages,
+              { status: "success", message: "Successfully updated" },
+            ]);
+          else {
+            setMessages([
+              ...messages,
+              { status: "error", message: "An error occured" },
+            ]);
+          }
+        }
+      }
+    } catch (_) {
+      if (setMessages)
+        setMessages([
+          ...messages,
+          { status: "error", message: "An error occured" },
+        ]);
+    }
+  }, [deviceID, input, refresh, closeModal, messages, setMessages]);
 
   return (
     <ReactModal
       isOpen={!!deviceID}
       ariaHideApp={false} //TODO
-      onRequestClose={() => setIsOpen(null)}
+      onRequestClose={closeModal}
     >
       <div className={styles.modal_content}>
         <div className={styles.modal_header}>
@@ -51,10 +81,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
             {device?.type == "dryer" ? "Dryer " : "Washin machine"}{" "}
             {device?.number}
           </p>
-          <CloseIcon
-            onClick={() => setIsOpen(null)}
-            className={styles.close_icon}
-          />
+          <CloseIcon onClick={closeModal} className={styles.close_icon} />
         </div>
         <div className={styles.modal_body}>
           <div className={styles.inputs}>
@@ -66,13 +93,21 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
               value={input.hours}
               max={3}
               onChange={(e) => {
-                const val = parseInt(e.target.value) || 0;
-                if (val < 4 && val > -1)
-                  setInput({ ...input, hours: e.target.value });
+                const v = e.target.value;
+                const num = parseInt(v.charAt(v.length - 1)) || 0;
+                if (num < 4 && num > -1) {
+                  setInput({
+                    ...input,
+                    hours: v.length === 1 ? v : v.charAt(1),
+                  });
+                  inputRef.current?.focus();
+                }
               }}
+              autoFocus
             />
             <p className={styles.separator}>:</p>
             <input
+              ref={inputRef}
               id="minutes"
               inputMode="numeric"
               type="number"
@@ -88,10 +123,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
           <img src={AstronautSVG} className={styles.img} alt="Spaceship SVG" />
         </div>
         <div className={styles.buttons}>
-          <button
-            onClick={() => setIsOpen(null)}
-            className={styles.close_button}
-          >
+          <button onClick={closeModal} className={styles.close_button}>
             Close
           </button>
           <button className={styles.start_button} onClick={startOnClick}>
