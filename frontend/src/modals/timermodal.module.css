@@ -1,105 +1,101 @@
 .modal {
-    max-height: fit-content;
+  max-height: fit-content;
 }
 
 .modal_content {
-    height: fit-content;
+  height: fit-content;
 }
 
 .modal_header {
-    display: flex;
+  display: flex;
 
-    align-items: center;
-    justify-content: space-between;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .header_text {
-    font-size: 1.6rem;
+  font-size: 1.6rem;
 }
 
 .close_icon {
-    width: 2rem;
-    height: 2rem;
+  width: 2rem;
+  height: 2rem;
 }
 
 .modal_body {
-    width: 100%;
+  width: 100%;
 
-    position: relative;
+  position: relative;
 
-    min-height: 200px;
-    height: fit-content;
-
-
+  min-height: 200px;
+  height: fit-content;
 }
 
 .inputs {
-    width: 50%;
+  width: 50%;
 
-    position: relative;
-    z-index: 999;
+  position: relative;
+  z-index: 999;
 
-    padding-top: 20%;
+  padding-top: 20%;
 
-    display: flex;
-    justify-content: space-between;
-  
-
+  display: flex;
+  justify-content: space-between;
 }
 
 .input {
-    width: 45%;
+  width: 45%;
+
+  border: 3px solid #170a1c;
 }
 
 .separator {
-    margin: 4px;
+  margin: 4px;
 }
 
 .img {
-     min-width: 200px;
+  min-width: 200px;
 
-     width: 50%;
+  width: 50%;
 
-     position: absolute;
+  position: absolute;
 
-     top:0;
-     right: -20px;
+  top: 0;
+  right: -20px;
 
-
-    transform:scale(-1,1); 
+  transform: scale(-1, 1);
 }
 
 .buttons {
-    display: flex;
+  display: flex;
 
-    margin-top: 1rem;
+  margin-top: 1rem;
 
-    justify-content: space-evenly;
+  justify-content: space-evenly;
 }
 
 .start_button {
-    background-color: white;
+  background-color: white;
 
-    padding: 0.6rem;
+  padding: 0.6rem;
 
-    font-size: 1.6rem;
+  font-size: 1.6rem;
 
-    color: #4CB944;
+  color: #4cb944;
 
-    border: 3px solid #4CB944;
-    border-radius: 25px;
+  border: 3px solid #4cb944;
+  border-radius: 25px;
 }
 
 .close_button {
-    background-color: white;
-    
-    padding: 0.6rem;
-    
-    font-size: 1.6rem;
-    
-    color: #ff6584;
-    
-    border: 3px solid #ff6584;
-    border-radius: 25px;
-    
+  background-color: white;
+
+  padding: 0.6rem;
+
+  font-size: 1.6rem;
+
+  color: #ff6584;
+
+  border: 3px solid #ff6584;
+  border-radius: 25px;
 }

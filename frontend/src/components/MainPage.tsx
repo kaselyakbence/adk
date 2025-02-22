@@ -4,6 +4,7 @@ import styles from "./mainpage.module.css";
 import Countdown from "./countdown/Countdown";
 import { MdCameraswitch } from "react-icons/md";
 import TimerModal from "../modals/TimerModal";
+import CustomSnackbar from "./snackbar/CustomSnackbar";
 
 interface MainPageProps {
   refresh: () => Promise<void>;
@@ -66,6 +67,7 @@ const MainPage = ({ refresh }: MainPageProps) => {
         {devices &&
           devices
             .filter((d) => d.type == "dryer")
+            .sort((a, b) => a.id - b.id)
             .map((d) => (
               <div
                 className={styles.item}
@@ -82,6 +84,7 @@ const MainPage = ({ refresh }: MainPageProps) => {
         setIsOpen={setChosenDevice}
         refresh={refresh}
       />
+      <CustomSnackbar />
     </>
   );
 };
