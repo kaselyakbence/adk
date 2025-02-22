@@ -1,5 +1,19 @@
-import { add } from "./utils";
+import express from "express";
+import { PrismaClient } from "@prisma/client";
+import { PORT } from "./secrets";
+import DeviceRouter from "./routers";
+import bodyParser from "body-parser";
+import cors from "cors";
 
-console.log(add(1, 2));
+const app = express();
 
-console.log(process.env.APP_DEBUG);
+app.use(cors({ credentials: true }));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use("/device", DeviceRouter);
+
+export const prismaClient = new PrismaClient({ log: ["query"] });
+
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
