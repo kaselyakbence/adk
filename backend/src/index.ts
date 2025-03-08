@@ -1,13 +1,13 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
-import { PORT } from "./secrets";
+import { MODE, PORT } from "./secrets";
 import DeviceRouter from "./routers";
 import bodyParser from "body-parser";
 import cors from "cors";
 
 const app = express();
 
-app.use(cors({ credentials: true }));
+if (MODE === "development") app.use(cors({ credentials: true }));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

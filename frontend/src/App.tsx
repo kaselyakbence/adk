@@ -9,10 +9,7 @@ import { SnackbarContext } from "./context/SnackbarContext";
 
 function App() {
   const [deviceContext, setDeviceContext] = useState<Device[]>(baseDevices);
-  const [snackbarMessages, setSnackbarMessages] = useState<SnackbarItem[]>([
-    { status: "success", message: "Test" },
-    { status: "error", message: "Test" },
-  ]);
+  const [snackbarMessages, setSnackbarMessages] = useState<SnackbarItem[]>([]);
 
   const fetchDevices = useCallback(async () => {
     const fetchData = await fetch(`${API_URL}/device/all`);

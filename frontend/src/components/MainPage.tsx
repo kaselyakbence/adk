@@ -5,6 +5,7 @@ import Countdown from "./countdown/Countdown";
 import { MdCameraswitch } from "react-icons/md";
 import TimerModal from "../modals/TimerModal";
 import CustomSnackbar from "./snackbar/CustomSnackbar";
+import QRScanner from "./qrscanner/QRScanner";
 
 interface MainPageProps {
   refresh: () => Promise<void>;
@@ -12,6 +13,7 @@ interface MainPageProps {
 
 const MainPage = ({ refresh }: MainPageProps) => {
   const [chosenDevice, setChosenDevice] = useState<number | null>(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
 
   const devices = useContext(DevicesContext);
 
@@ -35,7 +37,7 @@ const MainPage = ({ refresh }: MainPageProps) => {
     <>
       <div className={styles.header}>
         <p className={styles.header_text}>ADK Washing</p>
-        <div className={styles.circle}>
+        <div className={styles.circle} onClick={() => setCameraOpen(true)}>
           <MdCameraswitch className={styles.icon} />
         </div>
       </div>
@@ -49,11 +51,7 @@ const MainPage = ({ refresh }: MainPageProps) => {
             .filter((d) => d.type == "washer")
             .sort((a, b) => a.id - b.id)
             .map((d) => (
-              <div
-                className={styles.item}
-                key={d.id}
-                onClick={() => setChosenDevice(d.id)}
-              >
+              <div className={styles.item} key={d.id}>
                 <div>Washer {d.number}</div>
                 <Countdown time={d.end_date} />
               </div>
@@ -69,11 +67,7 @@ const MainPage = ({ refresh }: MainPageProps) => {
             .filter((d) => d.type == "dryer")
             .sort((a, b) => a.id - b.id)
             .map((d) => (
-              <div
-                className={styles.item}
-                key={d.id}
-                onClick={() => setChosenDevice(d.number)}
-              >
+              <div className={styles.item} key={d.id}>
                 <div>Dryer {d.number}</div>
                 <Countdown time={d.end_date} />
               </div>
@@ -85,6 +79,11 @@ const MainPage = ({ refresh }: MainPageProps) => {
         refresh={refresh}
       />
       <CustomSnackbar />
+      <QRScanner
+        isOpen={cameraOpen}
+        setIsOpen={setCameraOpen}
+        setChosenDevice={setChosenDevice}
+      />
     </>
   );
 };
