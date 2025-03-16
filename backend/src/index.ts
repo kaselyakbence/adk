@@ -14,6 +14,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/device", DeviceRouter);
 
-export const prismaClient = new PrismaClient({ log: ["query"] });
+app.get("/", (_, res) => {
+  res.status(201).send({ msg: "Successfull" });
+});
+
+export const prismaClient = new PrismaClient({ log: ["info"] });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
