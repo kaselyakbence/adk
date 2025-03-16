@@ -4,9 +4,13 @@ import { prismaClient } from "../index";
 const DeviceRouter = Router();
 
 DeviceRouter.get("/all", async (_, res) => {
-  const devices = await prismaClient.device.findMany();
+  try {
+    const devices = await prismaClient.device.findMany();
 
-  res.status(200).send(devices);
+    res.status(200).send(devices);
+  } catch (e) {
+    res.status(400).send([]);
+  }
 });
 
 DeviceRouter.post("/:id/update", async (req, res) => {
