@@ -13,7 +13,10 @@ function App() {
 
   const fetchDevices = useCallback(async () => {
     const fetchData = await fetch(`${API_URL}/device/all`, {
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "access-control-allow-origin": "*",
+      },
     });
     const data = await fetchData.json();
     setDeviceContext(data);
