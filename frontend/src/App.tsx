@@ -12,7 +12,9 @@ function App() {
   const [snackbarMessages, setSnackbarMessages] = useState<SnackbarItem[]>([]);
 
   const fetchDevices = useCallback(async () => {
-    const fetchData = await fetch(`${API_URL}/device/all`);
+    const fetchData = await fetch(`${API_URL}/device/all`, {
+      headers: { "Content-Type": "application/json" },
+    });
     const data = await fetchData.json();
     setDeviceContext(data);
   }, []);
