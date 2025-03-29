@@ -4,10 +4,20 @@ import { MODE, PORT } from "./secrets";
 import DeviceRouter from "./routers";
 import bodyParser from "body-parser";
 import cors from "cors";
+import morgan from "morgan";
 
 const app = express();
 
-if (MODE === "development") app.use(cors({ credentials: true }));
+if (MODE === "development") {
+  const corsOptions = {
+    origin: "*",
+    methods: ["POST", "GET", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  };
+  app.use(cors(corsOptions));
+  app.use(morgan("tiny"));
+  console.log("Cors and Morgan set up");
+}
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
