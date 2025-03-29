@@ -15,8 +15,8 @@ function App() {
     const fetchData = await fetch(`${API_URL}/device/all`, {
       headers: {
         "Content-Type": "application/json",
-        "access-control-allow-origin": "*",
       },
+      mode: "cors",
     });
     const data = await fetchData.json();
     setDeviceContext(data);
