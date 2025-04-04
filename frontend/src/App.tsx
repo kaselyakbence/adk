@@ -4,7 +4,7 @@ import styles from "./app.module.css";
 import { baseDevices, DevicesContext } from "./context/DevicesContext";
 import { useCallback, useEffect, useState } from "react";
 import { Device, SnackbarItem } from "./types/types";
-import { API_URL } from "./secrets";
+import { API_URL, MODE } from "./secrets";
 import { SnackbarContext } from "./context/SnackbarContext";
 
 function App() {
@@ -13,10 +13,11 @@ function App() {
 
   const fetchDevices = useCallback(async () => {
     const fetchData = await fetch(`${API_URL}/device/all`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      mode: "cors",
+      mode: MODE == "development" ? "no-cors" : undefined,
     });
     const data = await fetchData.json();
     setDeviceContext(data);
