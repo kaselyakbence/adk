@@ -11,6 +11,8 @@ function App() {
   const [deviceContext, setDeviceContext] = useState<Device[]>(baseDevices);
   const [snackbarMessages, setSnackbarMessages] = useState<SnackbarItem[]>([]);
 
+  console.log("App mode:", MODE);
+
   const fetchDevices = useCallback(async () => {
     const fetchData = await fetch(`${API_URL}/device/all`, {
       method: "GET",
