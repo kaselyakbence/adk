@@ -12,7 +12,7 @@ if (MODE === "development") {
   const corsOptions = {
     origin: "*",
     methods: ["POST", "GET", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", ""],
   };
   app.use(cors(corsOptions));
   app.use(morgan("tiny"));
