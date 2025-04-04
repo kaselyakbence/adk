@@ -1,6 +1,6 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
-import { MODE, PORT } from "./secrets";
+import { FRONTEND_URL, MODE, PORT } from "./secrets";
 import DeviceRouter from "./routers";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -10,9 +10,10 @@ const app = express();
 
 if (MODE === "development") {
   const corsOptions = {
-    origin: "*",
+    origin: FRONTEND_URL,
     methods: ["POST", "GET", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", ""],
+    preflightContinue: true,
   };
   app.use(cors(corsOptions));
   app.use(morgan("tiny"));
