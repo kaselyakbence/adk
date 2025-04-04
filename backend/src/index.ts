@@ -10,9 +10,10 @@ const app = express();
 
 if (MODE === "development") {
   const corsOptions = {
-    origin: "*",
+    origin: "https://main.d3dzus7hfrui6z.amplifyapp.com",
     methods: ["POST", "GET", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", ""],
+    preflightContinue: true,
   };
   app.use(cors(corsOptions));
   app.use(morgan("tiny"));
