@@ -12,7 +12,7 @@ if (MODE === "development") {
   const corsOptions = {
     origin: FRONTEND_URL,
     methods: ["POST", "GET", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization", ""],
+    allowedHeaders: ["Content-Type", "Authorization", "Referer"],
     preflightContinue: true,
   };
   app.use(cors(corsOptions));
