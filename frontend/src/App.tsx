@@ -4,26 +4,33 @@ import styles from "./app.module.css";
 import { baseDevices, DevicesContext } from "./context/DevicesContext";
 import { useCallback, useEffect, useState } from "react";
 import { Device, SnackbarItem } from "./types/types";
-import { API_URL, MODE } from "./secrets";
+import { API_URL } from "./secrets";
 import { SnackbarContext } from "./context/SnackbarContext";
 
 function App() {
   const [deviceContext, setDeviceContext] = useState<Device[]>(baseDevices);
   const [snackbarMessages, setSnackbarMessages] = useState<SnackbarItem[]>([]);
 
-  console.log("App mode:", MODE);
-
   const fetchDevices = useCallback(async () => {
-    const fetchData = await fetch(`${API_URL}/device/all`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      mode: MODE == "development" ? "no-cors" : undefined,
-    });
-    const data = await fetchData.json();
-    setDeviceContext(data);
-  }, []);
+    try {
+      const fetchData = await fetch(`${API_URL}/device/all`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await fetchData.json();
+      setDeviceContext(data);
+    } catch (_) {
+      if (setSnackbarMessages.length === 0) {
+        setSnackbarMessages([
+          ...snackbarMessages,
+          { status: "error", message: "Connection error" },
+        ]);
+      }
+    }
+  }, [snackbarMessages]);
 
   useEffect(() => {
     fetchDevices();

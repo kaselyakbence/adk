@@ -32,12 +32,12 @@
 }
 
 .inputs {
-  width: 50%;
+  width: 100%;
 
   position: relative;
   z-index: 999;
 
-  padding-top: 20%;
+  padding-top: 4rem;
 
   display: flex;
   justify-content: space-between;
@@ -64,12 +64,18 @@
   right: -20px;
 
   transform: scale(-1, 1);
+
+  @media (850px <= width) {
+    display: none;
+  }
 }
 
 .buttons {
   display: flex;
 
   margin-top: 1rem;
+
+  width: 100%;
 
   justify-content: space-evenly;
 }
