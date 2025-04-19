@@ -78,7 +78,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
       <div className={styles.modal_content}>
         <div className={styles.modal_header}>
           <p className={styles.header_text}>
-            {device?.type == "dryer" ? "Dryer " : "Washin machine"}{" "}
+            {device?.type == "dryer" ? "Dryer " : "Washing machine"}
             {device?.number}
           </p>
           <CloseIcon onClick={closeModal} className={styles.close_icon} />
@@ -90,6 +90,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
               type="number"
               className={styles.input}
               inputMode="numeric"
+              placeholder="Hours"
               value={input.hours}
               max={3}
               onChange={(e) => {
@@ -110,6 +111,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
               ref={inputRef}
               id="minutes"
               inputMode="numeric"
+              placeholder="Minutes"
               type="number"
               className={styles.input}
               value={input.minutes}

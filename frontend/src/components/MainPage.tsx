@@ -12,7 +12,8 @@ interface MainPageProps {
 }
 
 const MainPage = ({ refresh }: MainPageProps) => {
-  const [chosenDevice, setChosenDevice] = useState<number | null>(null);
+  //const [chosenDevice, setChosenDevice] = useState<number | null>(null);
+  const [chosenDevice, setChosenDevice] = useState<number | null>(6);
   const [cameraOpen, setCameraOpen] = useState(false);
 
   const devices = useContext(DevicesContext);
@@ -41,37 +42,41 @@ const MainPage = ({ refresh }: MainPageProps) => {
           <MdCameraswitch className={styles.icon} />
         </div>
       </div>
-      <div className={styles.washers}>
-        <div className={styles.washer_header}>
-          <p className={styles.washer_header_left}>Washing machines</p>
-          <p className={styles.washer_header_right}>{freeDevices.washers}/5</p>
+      <div className={styles.body}>
+        <div className={styles.washers}>
+          <div className={styles.washer_header}>
+            <p className={styles.washer_header_left}>Washing machines</p>
+            <p className={styles.washer_header_right}>
+              {freeDevices.washers}/5
+            </p>
+          </div>
+          {devices &&
+            devices
+              .filter((d) => d.type == "washer")
+              .sort((a, b) => a.id - b.id)
+              .map((d) => (
+                <div className={styles.item} key={d.id}>
+                  <div>Washer {d.number}</div>
+                  <Countdown time={d.end_date} />
+                </div>
+              ))}
         </div>
-        {devices &&
-          devices
-            .filter((d) => d.type == "washer")
-            .sort((a, b) => a.id - b.id)
-            .map((d) => (
-              <div className={styles.item} key={d.id}>
-                <div>Washer {d.number}</div>
-                <Countdown time={d.end_date} />
-              </div>
-            ))}
-      </div>
-      <div>
-        <div className={styles.washer_header}>
-          <p className={styles.washer_header_left}>Dryers</p>
-          <p className={styles.washer_header_right}>{freeDevices.dryers}/3</p>
+        <div className={styles.dryers}>
+          <div className={styles.washer_header}>
+            <p className={styles.washer_header_left}>Dryers</p>
+            <p className={styles.washer_header_right}>{freeDevices.dryers}/3</p>
+          </div>
+          {devices &&
+            devices
+              .filter((d) => d.type == "dryer")
+              .sort((a, b) => a.id - b.id)
+              .map((d) => (
+                <div className={styles.item} key={d.id}>
+                  <div>Dryer {d.number}</div>
+                  <Countdown time={d.end_date} />
+                </div>
+              ))}
         </div>
-        {devices &&
-          devices
-            .filter((d) => d.type == "dryer")
-            .sort((a, b) => a.id - b.id)
-            .map((d) => (
-              <div className={styles.item} key={d.id}>
-                <div>Dryer {d.number}</div>
-                <Countdown time={d.end_date} />
-              </div>
-            ))}
       </div>
       <TimerModal
         deviceID={chosenDevice}
