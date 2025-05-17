@@ -11,6 +11,8 @@ datasource db {
 model Device {
   id Int @id @default(autoincrement())
   number Int
+  start_date DateTime? 
   end_date DateTime 
   type String
+  owner String 
 }
