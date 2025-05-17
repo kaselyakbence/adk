@@ -3,17 +3,18 @@ import { DevicesContext } from "../context/DevicesContext";
 import styles from "./mainpage.module.css";
 import Countdown from "./countdown/Countdown";
 import { MdCameraswitch } from "react-icons/md";
-import TimerModal from "../modals/TimerModal";
+import TimerModal from "../modals/timer/TimerModal";
 import CustomSnackbar from "./snackbar/CustomSnackbar";
 import QRScanner from "./qrscanner/QRScanner";
+import InfoModal from "../modals/info/InfoModal";
 
 interface MainPageProps {
   refresh: () => Promise<void>;
 }
 
 const MainPage = ({ refresh }: MainPageProps) => {
-  //const [chosenDevice, setChosenDevice] = useState<number | null>(null);
-  const [chosenDevice, setChosenDevice] = useState<number | null>(6);
+  const [updateDevice, setUpdateDevice] = useState<number | null>(null);
+  const [infoDevice, setInfoDevice] = useState<number | null>(null);
   const [cameraOpen, setCameraOpen] = useState(false);
 
   const devices = useContext(DevicesContext);
@@ -55,7 +56,11 @@ const MainPage = ({ refresh }: MainPageProps) => {
               .filter((d) => d.type == "washer")
               .sort((a, b) => a.id - b.id)
               .map((d) => (
-                <div className={styles.item} key={d.id}>
+                <div
+                  className={styles.item}
+                  key={d.id}
+                  onClick={() => setInfoDevice(d.id)}
+                >
                   <div>Washer {d.number}</div>
                   <Countdown time={d.end_date} />
                 </div>
@@ -71,7 +76,11 @@ const MainPage = ({ refresh }: MainPageProps) => {
               .filter((d) => d.type == "dryer")
               .sort((a, b) => a.id - b.id)
               .map((d) => (
-                <div className={styles.item} key={d.id}>
+                <div
+                  className={styles.item}
+                  key={d.id}
+                  onClick={() => setInfoDevice(d.id)}
+                >
                   <div>Dryer {d.number}</div>
                   <Countdown time={d.end_date} />
                 </div>
@@ -79,15 +88,16 @@ const MainPage = ({ refresh }: MainPageProps) => {
         </div>
       </div>
       <TimerModal
-        deviceID={chosenDevice}
-        setIsOpen={setChosenDevice}
+        deviceID={updateDevice}
+        setIsOpen={setUpdateDevice}
         refresh={refresh}
       />
+      <InfoModal deviceID={infoDevice} setIsOpen={setInfoDevice} />
       <CustomSnackbar />
       <QRScanner
         isOpen={cameraOpen}
         setIsOpen={setCameraOpen}
-        setChosenDevice={setChosenDevice}
+        setChosenDevice={setUpdateDevice}
       />
     </>
   );

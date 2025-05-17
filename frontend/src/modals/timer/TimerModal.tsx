@@ -1,12 +1,12 @@
 import ReactModal from "react-modal";
 import { IoMdCloseCircle as CloseIcon } from "react-icons/io";
 import styles from "./timermodal.module.css";
-import AstronautSVG from "../assets/astronaut.svg";
-import "./modal.css";
+import AstronautSVG from "../../assets/astronaut.svg";
+import "../modal.css";
 import { useCallback, useContext, useRef, useState } from "react";
-import { DevicesContext } from "../context/DevicesContext";
-import { API_URL } from "../secrets";
-import { SnackbarContext } from "../context/SnackbarContext";
+import { DevicesContext } from "../../context/DevicesContext";
+import { API_URL } from "../../secrets";
+import { SnackbarContext } from "../../context/SnackbarContext";
 
 interface TimerModalProps {
   deviceID: number | null;
@@ -74,6 +74,18 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
       isOpen={!!deviceID}
       ariaHideApp={false} //TODO
       onRequestClose={closeModal}
+      style={{
+        content: {
+          top: "50%",
+          left: "50%",
+          right: "auto",
+          bottom: "auto",
+          marginRight: "-50%",
+          transform: "translate(-50%, -50%)",
+          padding: "20px",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        },
+      }}
     >
       <div className={styles.modal_content}>
         <div className={styles.modal_header}>

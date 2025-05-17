@@ -27,7 +27,7 @@
 
   position: relative;
 
-  min-height: 200px;
+  min-height: 150px;
   height: fit-content;
 }
 
@@ -37,7 +37,7 @@
   position: relative;
   z-index: 999;
 
-  padding-top: 4rem;
+  padding-top: 3rem;
 
   display: flex;
   justify-content: space-between;
@@ -54,7 +54,7 @@
 }
 
 .img {
-  min-width: 200px;
+  max-width: 200px;
 
   width: 50%;
 

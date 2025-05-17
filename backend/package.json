@@ -10,6 +10,10 @@
     "test:watch": "jest --watch",
     "lint": "eslint"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts",
+    "reset": "rm -rf prisma/migrations && npx prisma migrate dev --name init && npx prisma migrate reset --force"
+  },
   "author": "Bence Kaselyak",
   "license": "ISC",
   "devDependencies": {
@@ -20,7 +24,7 @@
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/morgan": "^1.9.9",
-    "@types/node": "^22.13.0",
+    "@types/node": "^22.14.1",
     "dotenv-cli": "^8.0.0",
     "eslint": "^9.19.0",
     "eslint-config-prettier": "^10.0.1",
