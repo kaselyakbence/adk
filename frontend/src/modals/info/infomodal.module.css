@@ -1,3 +1,14 @@
+.header {
+  min-width: 25vw;
+  @media (850px >= width) {
+    min-width: 65vw;
+  }
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .available {
   color: #4cb944;
 }

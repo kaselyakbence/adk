@@ -2,6 +2,7 @@ import { useContext, useMemo } from "react";
 import ReactModal from "react-modal";
 import styles from "./infomodal.module.css";
 import { DevicesContext } from "../../context/DevicesContext";
+import Countdown from "../../components/countdown/Countdown";
 
 interface InfoModalProps {
   deviceID: number | null;
@@ -36,10 +37,29 @@ const InfoModal = ({ deviceID, setIsOpen }: InfoModalProps) => {
         },
       }}
     >
-      <h2 className={isAvailable ? styles.available : ""}>
-        {device?.type === "washer" ? "Washer" : "Dryer"} {device?.number}
-      </h2>
-      <p>This is a basic modal component.</p>
+      {device ? (
+        <>
+          <div className={styles.header}>
+            <h2 className={isAvailable ? styles.available : ""}>
+              {device?.type === "washer" ? "Washer" : "Dryer"} {device.number}
+            </h2>
+            <Countdown time={device.end_date} />
+          </div>
+          <p>
+            Last started:{" "}
+            {device.start_date &&
+              new Date(device.start_date).toLocaleTimeString()}
+          </p>
+          <p>
+            Ended:{" "}
+            {device.end_date && new Date(device.end_date).toLocaleTimeString()}
+          </p>
+          <p>Started by: {device.owner ? device.owner : "Unknown"}</p>
+          <p></p>
+        </>
+      ) : (
+        <></>
+      )}
     </ReactModal>
   );
 };
