@@ -1,6 +1,6 @@
 import { useContext, useMemo, useState } from "react";
 import { DevicesContext } from "../context/DevicesContext";
-import styles from "./mainpage.module.css";
+import styles from "./washingpage.module.css";
 import Countdown from "./countdown/Countdown";
 import { MdCameraswitch } from "react-icons/md";
 import TimerModal from "../modals/timer/TimerModal";

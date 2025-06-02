@@ -1,4 +1,4 @@
-import MainPage from "./components/MainPage";
+import MainPage from "./components/WashingPage";
 import SpaceshipSVG from "./assets/logo.svg";
 import styles from "./app.module.css";
 import { baseDevices, DevicesContext } from "./context/DevicesContext";
