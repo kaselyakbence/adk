@@ -34,6 +34,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
         const body = {
           hours: parseInt(input.hours || "0"),
           minutes: parseInt(input.minutes || "0"),
+          owner: localStorage.getItem("username") || "Unknown",
         };
         closeModal();
 
@@ -134,7 +135,11 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
               }}
             />
           </div>
-          <img src={AstronautSVG} className={styles.img} alt="Spaceship SVG" />
+          <img
+            src={AstronautSVG.src}
+            className={styles.img}
+            alt="Spaceship SVG"
+          />
         </div>
         <div className={styles.buttons}>
           <button onClick={closeModal} className={styles.close_button}>

@@ -1,2 +1,3 @@
-export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-export const MODE = import.meta.env.VITE_MODE || "production";
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+export const MODE = process.env.NEXT_PUBLIC_MODE || "production";

@@ -37,7 +37,7 @@ const MainPage = ({ refresh }: MainPageProps) => {
 
   return (
     <>
-      <div className={styles.header}>
+      <div className={styles.custom_header}>
         <p className={styles.header_text}>ADK Washing</p>
         <div className={styles.circle} onClick={() => setCameraOpen(true)}>
           <MdCameraswitch className={styles.icon} />

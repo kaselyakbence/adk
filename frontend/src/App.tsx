@@ -42,7 +42,11 @@ function App() {
         value={{ messages: snackbarMessages, setMessages: setSnackbarMessages }}
       >
         <MainPage refresh={fetchDevices} />
-        <img src={SpaceshipSVG} className={styles.img} alt="Spaceship SVG" />
+        <img
+          src={SpaceshipSVG.src}
+          className={styles.img}
+          alt="Spaceship SVG"
+        />
       </SnackbarContext.Provider>
     </DevicesContext.Provider>
   );
