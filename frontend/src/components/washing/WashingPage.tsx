@@ -1,12 +1,12 @@
 import { useContext, useMemo, useState } from "react";
-import { DevicesContext } from "../context/DevicesContext";
+import { DevicesContext } from "../../context/DevicesContext";
 import styles from "./washingpage.module.css";
-import Countdown from "./countdown/Countdown";
+import Countdown from "../countdown/Countdown";
 import { MdCameraswitch } from "react-icons/md";
-import TimerModal from "../modals/timer/TimerModal";
-import CustomSnackbar from "./snackbar/CustomSnackbar";
-import QRScanner from "./qrscanner/QRScanner";
-import InfoModal from "../modals/info/InfoModal";
+import TimerModal from "../../modals/timer/TimerModal";
+import CustomSnackbar from "../snackbar/CustomSnackbar";
+import QRScanner from "../qrscanner/QRScanner";
+import InfoModal from "../../modals/info/InfoModal";
 
 interface MainPageProps {
   refresh: () => Promise<void>;

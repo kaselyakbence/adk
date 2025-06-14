@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev --turbopack -p 5173",
     "build": "next build",
-    "start": "npx serve@latest ./build --port 5173"
+    "start": "npx serve@latest ./build"
   },
   "dependencies": {
     "@yudiel/react-qr-scanner": "^2.2.1",

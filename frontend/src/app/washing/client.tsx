@@ -1,11 +1,12 @@
-import MainPage from "./components/WashingPage";
-import SpaceshipSVG from "./assets/logo.svg";
-import styles from "./app.module.css";
-import { baseDevices, DevicesContext } from "./context/DevicesContext";
+"use client";
 import { useCallback, useEffect, useState } from "react";
-import { Device, SnackbarItem } from "./types/types";
-import { API_URL } from "./secrets";
-import { SnackbarContext } from "./context/SnackbarContext";
+import MainPage from "../../components/washing/WashingPage";
+import SpaceshipSVG from "../../assets/logo.svg";
+import styles from "./app.module.css";
+import { baseDevices, DevicesContext } from "../../context/DevicesContext";
+import { Device, SnackbarItem } from "../../types/types";
+import { API_URL } from "../../secrets";
+import { SnackbarContext } from "../..//context/SnackbarContext";
 
 function App() {
   const [deviceContext, setDeviceContext] = useState<Device[]>(baseDevices);
@@ -52,4 +53,6 @@ function App() {
   );
 }
 
-export default App;
+export function ClientOnly() {
+  return <App />;
+}

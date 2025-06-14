@@ -1,10 +1,4 @@
-import type { Metadata } from "next";
 import "../main.css";
-
-export const metadata: Metadata = {
-  title: "React App",
-  description: "Web site created with Next.js.",
-};
 
 export default function RootLayout({
   children,
