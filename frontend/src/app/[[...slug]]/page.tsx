@@ -7,8 +7,8 @@ export default function Page() {
   return (
     <main className={styles.main}>
       <Navbar />
-      <h1>Home</h1>
-      <p>
+      <h1 className={styles.welcomeHeader}>Welcome to ADK</h1>
+      <p className={styles.welcomeText}>
         Welcome to the new homepage of the SSV of Allee der Kosmonauten 20! Here
         you can find information about the dormitory and of course about the
         offers of the SSV.

@@ -5,8 +5,23 @@
   overflow: hidden;
 }
 
-.welcomeImage {
-  width: 100%;
+.welcomeHeader {
+  font-size: 3rem;
+  text-align: center;
+  margin-top: 2rem;
+}
 
+.welcomeText {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 1rem;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.welcomeImage {
+  width: 90%;
+  margin-left: 5%;
   object-fit: cover;
 }

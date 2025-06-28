@@ -4,7 +4,13 @@ import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import styles from "./navbar.module.css";
 
-const navItems = [{ name: "home" }, { name: "about" }, { name: "washing" }];
+const navItems = [
+  { name: "SSV", href: "ssv" },
+  { name: "about", href: "about" },
+  { name: "washing", href: "washing" },
+  { name: "gallery", href: "gallery" },
+  { name: "contacts", href: "contacts" },
+];
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,8 +33,8 @@ const Navbar = () => {
         {navItems.map((item) => (
           <li key={item.name}>
             <Link
-              href={`/${item.name}`}
-              className={isActive(`/${item.name}`) ? styles.active : ""}
+              href={`/${item.href}`}
+              id={isActive(`/${item.href}`) ? styles.active : ""}
               onClick={() => setMenuOpen(false)}
             >
               {item.name}
