@@ -1,12 +1,15 @@
 import { useContext, useMemo, useState } from "react";
-import { DevicesContext } from "../context/DevicesContext";
-import styles from "./mainpage.module.css";
-import Countdown from "./countdown/Countdown";
-import { MdCameraswitch } from "react-icons/md";
-import TimerModal from "../modals/timer/TimerModal";
-import CustomSnackbar from "./snackbar/CustomSnackbar";
-import QRScanner from "./qrscanner/QRScanner";
-import InfoModal from "../modals/info/InfoModal";
+import { DevicesContext } from "../../context/DevicesContext";
+import styles from "./washingpage.module.css";
+import Countdown from "../countdown/Countdown";
+//import { MdCameraswitch } from "react-icons/md";
+import TimerModal from "../../modals/timer/TimerModal";
+import CustomSnackbar from "../snackbar/CustomSnackbar";
+import QRScanner from "../qrscanner/QRScanner";
+import InfoModal from "../../modals/info/InfoModal";
+import Navbar from "../navbar/NavBar";
+
+//TODO Move the cameraOpen to a floating button
 
 interface MainPageProps {
   refresh: () => Promise<void>;
@@ -37,12 +40,13 @@ const MainPage = ({ refresh }: MainPageProps) => {
 
   return (
     <>
-      <div className={styles.header}>
+      {/* <div className={styles.custom_header}>
         <p className={styles.header_text}>ADK Washing</p>
         <div className={styles.circle} onClick={() => setCameraOpen(true)}>
           <MdCameraswitch className={styles.icon} />
         </div>
-      </div>
+      </div> */}
+      <Navbar />
       <div className={styles.body}>
         <div className={styles.washers}>
           <div className={styles.washer_header}>
