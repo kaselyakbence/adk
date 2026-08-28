@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "standalone", // Outputs a Single-Page Application (SPA)
+  output: "standalone", // Outputs a self-contained Node.js server build
   distDir: "build", // Changes the build output directory to `build`
 };
 

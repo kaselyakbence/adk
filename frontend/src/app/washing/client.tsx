@@ -6,7 +6,7 @@ import styles from "./app.module.css";
 import { baseDevices, DevicesContext } from "../../context/DevicesContext";
 import { Device, SnackbarItem } from "../../types/types";
 import { API_URL } from "../../secrets";
-import { SnackbarContext } from "../..//context/SnackbarContext";
+import { SnackbarContext } from "../../context/SnackbarContext";
 
 function App() {
   const [deviceContext, setDeviceContext] = useState<Device[]>(baseDevices);
