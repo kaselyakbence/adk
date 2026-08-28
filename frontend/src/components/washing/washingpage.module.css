@@ -1,34 +1,30 @@
-.custom_header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.fab {
+  width: calc(1.8rem + 24px);
+  height: calc(1.8rem + 24px);
 
-  background-color: white;
-
-  height: 3.6rem;
-  padding-left: 0.8rem;
-  padding-right: 0.8rem;
-}
-
-.header_text {
-  font-size: 1.6rem;
-  font-weight: bold;
-}
-
-.circle {
-  width: calc(1.8rem + 8px);
-  height: calc(1.8rem + 8px);
-
-  background-color: #6397ff;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 10;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
+  background-color: #6397ff;
+  border: none;
   border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+
+  transition: transform 0.15s ease;
 }
 
-.icon {
+.fab:hover {
+  transform: scale(1.05);
+}
+
+.fabIcon {
   width: 1.8rem;
   height: 1.8rem;
 
