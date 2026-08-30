@@ -27,7 +27,7 @@ DeviceRouter.post("/:id/update", async (req, res) => {
     ) {
       const now = new Date().toISOString();
       const endDate = new Date(
-        Date.now() + (hours * 60 + minutes) * 60 * 1000
+        Date.now() + (hours * 60 + minutes) * 60 * 1000,
       ).toISOString();
 
       await prismaClient.device.update({
@@ -40,6 +40,7 @@ DeviceRouter.post("/:id/update", async (req, res) => {
       });
 
       res.status(201).send();
+      return;
     }
 
     res.sendStatus(403);

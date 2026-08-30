@@ -2,7 +2,6 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { MODE, PORT } from "./secrets";
 import DeviceRouter from "./routers";
-import bodyParser from "body-parser";
 import cors from "cors";
 import morgan from "morgan";
 
@@ -19,8 +18,8 @@ if (MODE === "development") {
   console.log("Cors and Morgan set up");
 }
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/device", DeviceRouter);
 

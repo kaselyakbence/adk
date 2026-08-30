@@ -1,12 +1,11 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import MainPage from "../../components/washing/WashingPage";
-import SpaceshipSVG from "../../assets/logo.svg";
-import styles from "./app.module.css";
+import Astronaut from "../../components/astronaut/Astronaut";
 import { baseDevices, DevicesContext } from "../../context/DevicesContext";
 import { Device, SnackbarItem } from "../../types/types";
 import { API_URL } from "../../secrets";
-import { SnackbarContext } from "../..//context/SnackbarContext";
+import { SnackbarContext } from "../../context/SnackbarContext";
 
 function App() {
   const [deviceContext, setDeviceContext] = useState<Device[]>(baseDevices);
@@ -43,11 +42,7 @@ function App() {
         value={{ messages: snackbarMessages, setMessages: setSnackbarMessages }}
       >
         <MainPage refresh={fetchDevices} />
-        <img
-          src={SpaceshipSVG.src}
-          className={styles.img}
-          alt="Spaceship SVG"
-        />
+        <Astronaut />
       </SnackbarContext.Provider>
     </DevicesContext.Provider>
   );

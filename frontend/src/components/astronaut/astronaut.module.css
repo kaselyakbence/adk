@@ -1,0 +1,9 @@
+.astronaut {
+  width: 50vw;
+  max-width: 350px;
+  z-index: -1;
+
+  position: fixed;
+  bottom: 2vh;
+  right: 2vw;
+}

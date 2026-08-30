@@ -1,7 +1,8 @@
+import type { ReactElement } from "react";
 import ReactCountdown from "react-countdown";
 import styles from "./countdown.module.css";
 
-const Countdown = ({ time }: { time: string | undefined }): JSX.Element => {
+const Countdown = ({ time }: { time: string | undefined }): ReactElement => {
   const now = new Date();
 
   if (!time)
