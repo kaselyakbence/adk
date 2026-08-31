@@ -31,10 +31,28 @@
   color: white;
 }
 
+.layout {
+  display: flex;
+  flex-direction: column;
+
+  @media (850px <= width) {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 2rem;
+    padding: 1.5rem 2rem;
+    box-sizing: border-box;
+    height: calc(100vh - 3.6rem);
+    overflow: hidden;
+  }
+}
+
 .body {
   @media (850px <= width) {
     display: flex;
-    width: 100vw;
+    flex-direction: column;
+    flex: 0 1 60%;
+    max-width: 60%;
+    overflow-y: auto;
   }
 }
 
@@ -44,8 +62,7 @@
   justify-content: center;
 
   @media (850px <= width) {
-    width: 40%;
-    margin-left: 5%;
+    width: 100%;
   }
 }
 
@@ -72,8 +89,8 @@
 
 .dryers {
   @media (850px <= width) {
-    width: 40%;
-    margin-left: 5%;
+    width: 100%;
+    margin-top: 1.5rem;
   }
 }
 
