@@ -1,0 +1,247 @@
+.carousel {
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media (850px <= width) {
+  .carousel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.stage {
+  position: relative;
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.track {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+@media (850px <= width) {
+  .track {
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
+
+.mainSlide {
+  width: 100%;
+}
+
+@media (850px <= width) {
+  .mainSlide {
+    width: auto;
+    flex: 0 0 65%;
+  }
+}
+
+.mainImage {
+  display: block;
+  width: 100%;
+  height: 45vh;
+
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+@media (850px <= width) {
+  .mainImage {
+    height: 85vh;
+    object-fit: cover;
+  }
+}
+
+.sideSlide {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+}
+
+@media (850px <= width) {
+  .sideSlide {
+    width: auto;
+    flex: 0 0 20%;
+  }
+}
+
+.sideImage {
+  display: block;
+  width: 100%;
+  height: 12vh;
+
+  border-radius: 8px;
+  object-fit: cover;
+  opacity: 0.7;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+@media (850px <= width) {
+  .sideImage {
+    height: 65vh;
+  }
+}
+
+.sideImage:hover {
+  opacity: 1;
+  transform: scale(1.03);
+}
+
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(24px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    transform: translateY(-24px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(24px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-24px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.slideNext {
+  animation: slideInFromBottom 0.35s ease;
+}
+
+.slidePrev {
+  animation: slideInFromTop 0.35s ease;
+}
+
+@media (850px <= width) {
+  .slideNext {
+    animation: slideInFromRight 0.35s ease;
+  }
+
+  .slidePrev {
+    animation: slideInFromLeft 0.35s ease;
+  }
+}
+
+.nav {
+  position: absolute;
+  z-index: 2;
+
+  width: 2.5rem;
+  height: 2.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: black;
+  background-color: white;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+.nav:hover {
+  background-color: #f0f0f0;
+}
+
+.prev {
+  top: -1.25rem;
+  left: 50%;
+  transform: translateX(-50%) rotate(90deg);
+}
+
+.next {
+  bottom: -1.25rem;
+  left: 50%;
+  transform: translateX(-50%) rotate(90deg);
+}
+
+@media (850px <= width) {
+  .prev {
+    top: 50%;
+    left: -1.25rem;
+    transform: translateY(-50%) rotate(0deg);
+  }
+
+  .next {
+    top: 50%;
+    bottom: auto;
+    left: auto;
+    right: -1.25rem;
+    transform: translateY(-50%) rotate(0deg);
+  }
+}
+
+.dots {
+  flex: 0 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+@media (850px <= width) {
+  .dots {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+
+  background-color: #c4c4c4;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.dot:hover {
+  background-color: #8f8f8f;
+}
+
+.dotActive {
+  background-color: #0891b2;
+  transform: scale(1.3);
+}

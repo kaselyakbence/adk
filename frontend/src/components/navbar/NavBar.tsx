@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import styles from "./navbar.module.css";
 
 const navItems = [
-  { name: "SSV", href: "ssv" },
   { name: "about", href: "about" },
   { name: "washing", href: "washing" },
   { name: "gallery", href: "gallery" },
