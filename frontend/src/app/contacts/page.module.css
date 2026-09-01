@@ -1,0 +1,113 @@
+.main {
+  min-height: 100vh;
+  padding-bottom: 3rem;
+}
+
+@media (850px <= width) {
+  .main {
+    height: 100vh;
+    padding-bottom: 0;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.container {
+  width: 90%;
+  max-width: 1300px;
+  margin: 2rem auto 0;
+}
+
+@media (850px <= width) {
+  .container {
+    flex: 1;
+    min-height: 0;
+    margin: 2.5rem auto;
+  }
+}
+
+.card {
+  composes: card from "../../styles/shared.module.css";
+  margin-bottom: 1.5rem;
+}
+
+@media (850px <= width) {
+  .card {
+    max-height: 100%;
+    margin-bottom: 0;
+    overflow-y: auto;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (600px <= width) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (1000px <= width) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.contactInfo {
+  min-width: 0;
+}
+
+.contactLine {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.followHeading {
+  composes: heading from "../../styles/shared.module.css";
+  margin-top: 2rem;
+}
+
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  background-color: rgba(8, 145, 178, 0.08);
+
+  color: #0891b2;
+  font-weight: bold;
+  text-decoration: none;
+
+  transition: background-color 0.2s ease;
+}
+
+.socialLink:hover {
+  background-color: rgba(8, 145, 178, 0.18);
+}
+
+.socialIcon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
