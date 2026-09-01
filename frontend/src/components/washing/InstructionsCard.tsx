@@ -11,10 +11,10 @@ const InstructionsCard = () => {
         className={styles.header}
         onClick={() => setOpen((isOpen) => !isOpen)}
       >
-        <h2 className={`${styles.title} ${styles.headingCyan}`}>Usage</h2>
         <FaChevronDown
           className={`${styles.chevron} ${open ? styles.chevronOpen : ""}`}
         />
+        <h2 className={`${styles.title} ${styles.headingCyan}`}>Usage</h2>
       </div>
 
       <div className={`${styles.content} ${open ? styles.open : ""}`}>

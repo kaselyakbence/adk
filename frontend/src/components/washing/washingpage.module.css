@@ -20,6 +20,12 @@
   transition: transform 0.15s ease;
 }
 
+@media (850px <= width) {
+  .fab {
+    display: none;
+  }
+}
+
 .fab:hover {
   transform: scale(1.05);
 }

@@ -18,15 +18,10 @@ export default function Page() {
             <FaInfoCircle /> About the SSV
           </h1>
           <p className={styles.text}>
-            SSV is an abbreviation for &quot;Studentische
-            Selbstverwaltung&quot;, that means student self-administration.
-            The SSV of the AdK 20 exists to improve the student life in the
-            dormitory.
-          </p>
-          <p className={styles.text}>
-            We are using our means to organize parties in the dormitory,
-            video evenings, sports (like swimming and fitness), trips and
-            cultural offers. In addition, we are running the laundry and
+            SSV is ADKs self-administration that exists to improve the
+            student life in the dormitory. We are using our means to
+            organize parties in the dormitory, video evenings, sports, trips
+            and cultural offers. In addition, we are running the laundry and
             selling the necessary cards, renting out games and providing a
             possiblity for guests to stay in our guest rooms.
           </p>
@@ -72,8 +67,7 @@ export default function Page() {
           <p className={styles.text}>In the office of the SSV, you can</p>
           <ul className={styles.list}>
             <li>
-              get a card for the washing machines, recharge it or give it
-              back
+              get a card for the washing machines, recharge it or give it back
             </li>
             <li>rent a guest room</li>
             <li>get a key for the sports room</li>
