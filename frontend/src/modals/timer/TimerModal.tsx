@@ -1,12 +1,12 @@
 import ReactModal from "react-modal";
-import { IoMdCloseCircle as CloseIcon } from "react-icons/io";
+import { IoMdClose } from "react-icons/io";
 import styles from "./timermodal.module.css";
-import AstronautSVG from "../../assets/astronaut.svg";
 import "../modal.css";
 import { useCallback, useContext, useRef, useState } from "react";
 import { DevicesContext } from "../../context/DevicesContext";
 import { API_URL } from "../../secrets";
 import { SnackbarContext } from "../../context/SnackbarContext";
+import { getStoredUsername } from "../../context/UsernameContext";
 
 interface TimerModalProps {
   deviceID: number | null;
@@ -34,7 +34,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
         const body = {
           hours: parseInt(input.hours || "0"),
           minutes: parseInt(input.minutes || "0"),
-          owner: localStorage.getItem("username") || "Unknown",
+          owner: getStoredUsername() || "Unknown",
         };
         closeModal();
 
@@ -75,6 +75,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
       isOpen={!!deviceID}
       ariaHideApp={false} //TODO
       onRequestClose={closeModal}
+      className={styles.modalBox}
       style={{
         content: {
           top: "50%",
@@ -83,72 +84,76 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
           bottom: "auto",
           marginRight: "-50%",
           transform: "translate(-50%, -50%)",
-          padding: "20px",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          border: "none",
+          background: "none",
+          padding: 0,
+        },
+        overlay: {
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
         },
       }}
     >
-      <div className={styles.modal_content}>
-        <div className={styles.modal_header}>
-          <p className={styles.header_text}>
-            {device?.type == "dryer" ? "Dryer " : "Washing machine"}
-            {device?.number}
-          </p>
-          <CloseIcon onClick={closeModal} className={styles.close_icon} />
-        </div>
-        <div className={styles.modal_body}>
-          <div className={styles.inputs}>
-            <input
-              id="hour"
-              type="number"
-              className={styles.input}
-              inputMode="numeric"
-              placeholder="Hours"
-              value={input.hours}
-              max={3}
-              onChange={(e) => {
-                const v = e.target.value;
-                const num = parseInt(v.charAt(v.length - 1)) || 0;
-                if (num < 4 && num > -1) {
-                  setInput({
-                    ...input,
-                    hours: v.length === 1 ? v : v.charAt(1),
-                  });
-                  inputRef.current?.focus();
-                }
-              }}
-              autoFocus
-            />
-            <p className={styles.separator}>:</p>
-            <input
-              ref={inputRef}
-              id="minutes"
-              inputMode="numeric"
-              placeholder="Minutes"
-              type="number"
-              className={styles.input}
-              value={input.minutes}
-              onChange={(e) => {
-                const val = parseInt(e.target.value) || 0;
-                if (val < 61 && val > -1)
-                  setInput({ ...input, minutes: e.target.value });
-              }}
-            />
-          </div>
-          <img
-            src={AstronautSVG.src}
-            className={styles.img}
-            alt="Spaceship SVG"
-          />
-        </div>
-        <div className={styles.buttons}>
-          <button onClick={closeModal} className={styles.close_button}>
-            Close
-          </button>
-          <button className={styles.start_button} onClick={startOnClick}>
-            Start
-          </button>
-        </div>
+      <div className={styles.header}>
+        <p className={styles.title}>
+          {device?.type === "dryer" ? "Dryer" : "Washing Machine"}{" "}
+          {device?.number}
+        </p>
+        <button
+          className={styles.closeIcon}
+          onClick={closeModal}
+          aria-label="Close"
+        >
+          <IoMdClose />
+        </button>
+      </div>
+
+      <p className={styles.label}>Set a timer</p>
+      <div className={styles.inputs}>
+        <input
+          id="hour"
+          type="number"
+          className={styles.input}
+          inputMode="numeric"
+          placeholder="HH"
+          value={input.hours}
+          max={3}
+          onChange={(e) => {
+            const v = e.target.value;
+            const num = parseInt(v.charAt(v.length - 1)) || 0;
+            if (num < 4 && num > -1) {
+              setInput({
+                ...input,
+                hours: v.length === 1 ? v : v.charAt(1),
+              });
+              inputRef.current?.focus();
+            }
+          }}
+          autoFocus
+        />
+        <span className={styles.separator}>:</span>
+        <input
+          ref={inputRef}
+          id="minutes"
+          inputMode="numeric"
+          placeholder="MM"
+          type="number"
+          className={styles.input}
+          value={input.minutes}
+          onChange={(e) => {
+            const val = parseInt(e.target.value) || 0;
+            if (val < 61 && val > -1)
+              setInput({ ...input, minutes: e.target.value });
+          }}
+        />
+      </div>
+
+      <div className={styles.buttons}>
+        <button onClick={closeModal} className={styles.closeButton}>
+          Close
+        </button>
+        <button className={styles.startButton} onClick={startOnClick}>
+          Start
+        </button>
       </div>
     </ReactModal>
   );

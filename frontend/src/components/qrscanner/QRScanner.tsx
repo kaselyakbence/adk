@@ -32,9 +32,14 @@ const QRScanner = ({ isOpen, setIsOpen, setChosenDevice }: QRCodeScanner) => {
   if (isOpen)
     return (
       <>
-        <div className={styles.circle} onClick={() => setIsOpen(false)}>
+        <button
+          type="button"
+          className={styles.circle}
+          onClick={() => setIsOpen(false)}
+          aria-label="Close scanner"
+        >
           <IoMdCloseCircleOutline className={styles.icon} />
-        </div>
+        </button>
         <div className={styles.scannerwrapper} onClick={() => setIsOpen(false)}>
           <div>
             <Scanner onScan={handleScan} scanDelay={1000} />

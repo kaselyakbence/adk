@@ -36,87 +36,13 @@
 }
 
 .card {
-  background-color: white;
-
-  border-radius: 12px;
-  padding: 1.75rem 2rem;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  composes: card from "../../styles/shared.module.css";
 }
 
 @media (850px <= width) {
   .card {
-    padding: 1.5rem 1.75rem;
+    max-height: 100%;
     overflow-y: auto;
-  }
-}
-
-@media (850px <= width) {
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.32);
-  }
-}
-
-.heading {
-  margin-top: 0;
-  margin-bottom: 1rem;
-
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-
-  font-size: 1.7rem;
-}
-
-@media (850px <= width) {
-  .heading {
-    margin-bottom: 0.75rem;
-    font-size: 1.55rem;
-  }
-}
-
-.subheading {
-  margin-top: 1.75rem;
-  margin-bottom: 0.5rem;
-
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  font-size: 1.3rem;
-}
-
-@media (850px <= width) {
-  .subheading {
-    margin-top: 1.25rem;
-    margin-bottom: 0.4rem;
-    font-size: 1.2rem;
-  }
-}
-
-.headingGreen {
-  color: #2e7d32;
-}
-
-.headingCyan {
-  color: #0891b2;
-}
-
-.text {
-  font-size: 1.1rem;
-  line-height: 1.55;
-  margin: 0.6rem 0;
-}
-
-@media (850px <= width) {
-  .text {
-    font-size: 1.05rem;
-    line-height: 1.5;
-    margin: 0.5rem 0;
   }
 }
 
@@ -164,43 +90,4 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-bottom: 1.5rem;
-}
-
-.hoursItem {
-  flex: 1 1 auto;
-
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-
-  padding: 0.75rem 1.1rem;
-  border-radius: 8px;
-  background-color: rgba(8, 145, 178, 0.08);
-}
-
-.hoursDay {
-  color: #0891b2;
-  font-size: 1.3rem;
-  font-weight: bold;
-}
-
-@media (850px <= width) {
-  .hoursDay {
-    font-size: 1.2rem;
-  }
-}
-
-.hoursTime {
-  font-size: 1rem;
-  opacity: 0.75;
-}
-
-@media (850px <= width) {
-  .hoursTime {
-    font-size: 0.95rem;
-  }
-}
-
-.link {
-  color: #2e7d32;
 }

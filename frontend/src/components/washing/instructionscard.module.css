@@ -3,7 +3,7 @@
 
   border-radius: 12px;
   padding: 0.75rem 1.1rem;
-  margin: 1.5rem 1rem 0;
+  margin: 1.5rem 1rem 1.5rem;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 
   @media (850px <= width) {
@@ -14,65 +14,165 @@
   }
 }
 
-.header {
+.headerRow {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 0.5rem;
-
-  cursor: pointer;
-
-  @media (850px <= width) {
-    cursor: default;
-  }
 }
 
-.title {
-  margin: 0;
-  font-size: 1.2rem;
+.chevronButton {
+  display: flex;
+  align-items: center;
+  align-self: center;
+
+  padding: 0;
+
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  color: #2e7d32;
+}
+
+@media (850px <= width) {
+  .chevronButton {
+    display: none;
+  }
 }
 
 .chevron {
-  transition: transform 0.2s ease;
+  width: 1.2rem;
+  height: 1.2rem;
 
-  @media (850px <= width) {
-    display: none;
-  }
+  transition: transform 0.2s ease;
 }
 
 .chevronOpen {
   transform: rotate(180deg);
 }
 
-.content {
-  display: none;
+.collapseLabel {
+  padding: 0;
 
-  @media (850px <= width) {
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #2e7d32;
+  text-transform: uppercase;
+}
+
+.collapseLabelHidden {
+  display: none;
+}
+
+@media (850px <= width) {
+  .collapseLabel {
+    display: none !important;
+  }
+}
+
+.body {
+  display: none;
+}
+
+.body.open {
+  display: block;
+  margin-top: 1rem;
+}
+
+@media (850px <= width) {
+  .body {
     display: block !important;
     margin-top: 1rem;
   }
 }
 
-.content.open {
-  display: block;
-  margin-top: 1rem;
+.tabs {
+  display: flex;
+  gap: 1.5rem;
+  margin-left: auto;
+
+  border-bottom: 2px solid rgba(0, 0, 0, 0.08);
 }
 
-.headingCyan {
-  color: #0891b2;
+.tabsHidden {
+  display: none;
+}
+
+@media (850px <= width) {
+  .tabs {
+    display: flex !important;
+    flex: 1;
+    margin-left: 0;
+  }
+}
+
+.tab {
+  margin-bottom: -2px;
+  padding: 0.5rem 0.1rem;
+
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+
+  font-size: 1.3rem;
+  line-height: 1;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+@media (850px <= width) {
+  .tab {
+    font-size: 1.55rem;
+  }
+}
+
+.tab:hover {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.tab.tabActive {
+  color: #2e7d32;
+  border-bottom-color: #2e7d32;
 }
 
 .text {
-  font-size: 0.9rem;
-  line-height: 1.45;
-  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  line-height: 1.55;
+  margin: 0.6rem 0;
+}
+
+@media (850px <= width) {
+  .text {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    margin: 0.5rem 0;
+  }
 }
 
 .list {
-  font-size: 0.9rem;
-  line-height: 1.45;
-  margin: 0.5rem 0;
-  padding-left: 1.2rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0.6rem 0;
+  padding-left: 1.4rem;
+}
+
+@media (850px <= width) {
+  .list {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    margin: 0.5rem 0;
+  }
 }
 
 .list li + li {
@@ -80,5 +180,5 @@
 }
 
 .link {
-  color: #2e7d32;
+  composes: accentGreen from "../../styles/shared.module.css";
 }

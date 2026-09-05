@@ -14,11 +14,88 @@
   z-index: 1000;
 }
 
+.logo {
+  display: flex;
+  align-items: baseline;
+}
+
 .logo a {
   color: black;
   text-decoration: none;
   font-weight: bold;
   font-size: 1.6rem;
+}
+
+.userMenu {
+  position: absolute;
+  top: 50%;
+  right: 0.8rem;
+  transform: translateY(-50%);
+}
+
+.usernameButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  max-width: 6rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  font: inherit;
+  font-size: 0.85rem;
+  color: inherit;
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+.usernameButton:hover {
+  opacity: 0.85;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+
+  flex-direction: column;
+  gap: 0.6rem;
+
+  min-width: 11rem;
+  padding: 0.75rem;
+
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown.dropdownOpen {
+  display: flex;
+}
+
+.dropdownLabel {
+  margin: 0;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.changeButton {
+  background: white;
+
+  padding: 0.35rem 0.9rem;
+
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+}
+
+.changeButton:hover {
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .menuButton {
@@ -29,6 +106,13 @@
   cursor: pointer;
   display: none;
 }
+
+.mobileMenu {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
 .navlist {
   height: 100%;
 
@@ -36,7 +120,7 @@
   display: flex;
   gap: 1.5rem;
   margin: 0;
-  padding: 0;
+  padding: 0 6.5rem 0 0;
 
   font-size: 1.2rem;
 }
@@ -58,23 +142,58 @@
   .menuButton {
     display: block;
   }
-  .navlist {
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: white;
-    width: 50vw;
+
+  .mobileMenu {
     display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+
+    position: fixed;
+    top: 3.6rem;
+    right: 0;
+    bottom: 0;
+    height: auto;
+
+    width: 50vw;
+
+    background: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-
-    height: 100vh;
-    padding-top: 1.5rem;
-
-    gap: 0.5rem;
   }
-  .open {
+
+  .mobileMenu.open {
     display: flex;
+  }
+
+  .navlist {
+    height: auto;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.5rem 0 0;
+  }
+
+  .userMenu {
+    position: static;
+    transform: none;
+
+    padding: 1rem 1rem 1.5rem;
+    text-align: center;
+  }
+
+  .usernameButton {
+    display: none;
+  }
+
+  .dropdown {
+    display: flex;
+    position: static;
+    align-items: center;
+
+    padding: 0;
+
+    background: none;
+    border: none;
+    box-shadow: none;
   }
 }
 
