@@ -6,6 +6,7 @@ import { useCallback, useContext, useRef, useState } from "react";
 import { DevicesContext } from "../../context/DevicesContext";
 import { API_URL } from "../../secrets";
 import { SnackbarContext } from "../../context/SnackbarContext";
+import { getStoredUsername } from "../../context/UsernameContext";
 
 interface TimerModalProps {
   deviceID: number | null;
@@ -33,7 +34,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
         const body = {
           hours: parseInt(input.hours || "0"),
           minutes: parseInt(input.minutes || "0"),
-          owner: localStorage.getItem("username") || "Unknown",
+          owner: getStoredUsername() || "Unknown",
         };
         closeModal();
 

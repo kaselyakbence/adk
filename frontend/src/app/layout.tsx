@@ -1,4 +1,5 @@
 import "../main.css";
+import UsernameProvider from "../context/UsernameProvider";
 
 export default function RootLayout({
   children,
@@ -8,7 +9,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning>
-        <div id="root">{children}</div>
+        <div id="root">
+          <UsernameProvider>{children}</UsernameProvider>
+        </div>
       </body>
     </html>
   );

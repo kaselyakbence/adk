@@ -7,6 +7,8 @@ import { Device, SnackbarItem } from "../../types/types";
 import { API_URL } from "../../secrets";
 import { SnackbarContext } from "../../context/SnackbarContext";
 
+const DEVICE_POLL_INTERVAL_MS = 30_000;
+
 function App() {
   const [deviceContext, setDeviceContext] = useState<Device[]>(baseDevices);
   const [snackbarMessages, setSnackbarMessages] = useState<SnackbarItem[]>([]);
@@ -23,17 +25,17 @@ function App() {
       const data = await fetchData.json();
       setDeviceContext(data);
     } catch (_) {
-      if (setSnackbarMessages.length === 0) {
-        setSnackbarMessages([
-          ...snackbarMessages,
-          { status: "error", message: "Connection error" },
-        ]);
-      }
+      setSnackbarMessages((prev) => [
+        ...prev,
+        { status: "error", message: "Connection error" },
+      ]);
     }
-  }, [snackbarMessages]);
+  }, []);
 
   useEffect(() => {
     fetchDevices();
+    const interval = setInterval(fetchDevices, DEVICE_POLL_INTERVAL_MS);
+    return () => clearInterval(interval);
   }, [fetchDevices]);
 
   return (

@@ -1,0 +1,54 @@
+.header {
+  min-width: 25vw;
+  @media (850px >= width) {
+    min-width: 65vw;
+  }
+}
+
+.header h2 {
+  margin: 0;
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem;
+  margin: 0.75rem 0 1rem;
+
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.save_button,
+.guest_button {
+  background-color: white;
+
+  padding: 0.4rem 1rem;
+
+  font-size: 1rem;
+
+  border-radius: 25px;
+}
+
+.save_button {
+  color: #4cb944;
+  border: 2px solid #4cb944;
+}
+
+.save_button:disabled {
+  color: rgba(0, 0, 0, 0.3);
+  border-color: rgba(0, 0, 0, 0.2);
+  cursor: not-allowed;
+}
+
+.guest_button {
+  color: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(0, 0, 0, 0.2);
+}

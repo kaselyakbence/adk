@@ -5,8 +5,10 @@ dist
 .next
 next-env.d.ts
 build
+*.tsbuildinfo
 
 design-plan.md
 deployment-plan.md
+aws-cost-estimate.md
 frontend/AGENTS.md
 frontend/CLAUDE.md

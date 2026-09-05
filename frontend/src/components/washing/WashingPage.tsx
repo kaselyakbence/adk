@@ -9,6 +9,7 @@ import QRScanner from "../qrscanner/QRScanner";
 import InfoModal from "../../modals/info/InfoModal";
 import Navbar from "../navbar/NavBar";
 import InstructionsCard from "./InstructionsCard";
+import { UsernameContext } from "../../context/UsernameContext";
 
 interface MainPageProps {
   refresh: () => Promise<void>;
@@ -20,6 +21,7 @@ const MainPage = ({ refresh }: MainPageProps) => {
   const [cameraOpen, setCameraOpen] = useState(false);
 
   const devices = useContext(DevicesContext);
+  const { username } = useContext(UsernameContext);
 
   const freeDevices = useMemo(() => {
     const now = new Date();
@@ -40,13 +42,15 @@ const MainPage = ({ refresh }: MainPageProps) => {
   return (
     <>
       <Navbar />
-      <button
-        className={styles.fab}
-        onClick={() => setCameraOpen(true)}
-        aria-label="Scan QR code"
-      >
-        <MdCameraswitch className={styles.fabIcon} />
-      </button>
+      {username !== "Guest" && (
+        <button
+          className={styles.fab}
+          onClick={() => setCameraOpen(true)}
+          aria-label="Scan QR code"
+        >
+          <MdCameraswitch className={styles.fabIcon} />
+        </button>
+      )}
       <div className={styles.layout}>
         <div className={styles.body}>
           <div className={styles.washers}>
