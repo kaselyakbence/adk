@@ -5,3 +5,8 @@ dist
 .next
 next-env.d.ts
 build
+
+design-plan.md
+deployment-plan.md
+frontend/AGENTS.md
+frontend/CLAUDE.md
