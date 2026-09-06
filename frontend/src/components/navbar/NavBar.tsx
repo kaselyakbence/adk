@@ -21,6 +21,7 @@ const Navbar = () => {
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path;
   const { username, loaded: usernameLoaded } = useContext(UsernameContext);
+  const displayName = username || "Guest";
 
   useEffect(() => {
     if (!dropdownOpen) return;
@@ -64,32 +65,30 @@ const Navbar = () => {
             </li>
           ))}
         </ul>
-        {usernameLoaded && username && (
-          <div className={styles.userMenu} ref={userMenuRef}>
+        <div className={styles.userMenu} ref={userMenuRef}>
+          <button
+            type="button"
+            className={styles.usernameButton}
+            onClick={() => setDropdownOpen((open) => !open)}
+          >
+            {displayName}
+          </button>
+          <div
+            className={`${styles.dropdown} ${dropdownOpen ? styles.dropdownOpen : ""}`}
+          >
+            <p className={styles.dropdownLabel}>Username: {displayName}</p>
             <button
               type="button"
-              className={styles.usernameButton}
-              onClick={() => setDropdownOpen((open) => !open)}
+              className={styles.changeButton}
+              onClick={() => {
+                setChangeModalOpen(true);
+                setDropdownOpen(false);
+              }}
             >
-              {username}
+              Change
             </button>
-            <div
-              className={`${styles.dropdown} ${dropdownOpen ? styles.dropdownOpen : ""}`}
-            >
-              <p className={styles.dropdownLabel}>Username: {username}</p>
-              <button
-                type="button"
-                className={styles.changeButton}
-                onClick={() => {
-                  setChangeModalOpen(true);
-                  setDropdownOpen(false);
-                }}
-              >
-                Change
-              </button>
-            </div>
           </div>
-        )}
+        </div>
       </div>
       <UsernameModal
         isOpen={(usernameLoaded && !username && pathname === "/washing") || changeModalOpen}

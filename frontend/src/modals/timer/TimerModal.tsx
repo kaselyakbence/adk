@@ -7,6 +7,8 @@ import { DevicesContext } from "../../context/DevicesContext";
 import { API_URL } from "../../secrets";
 import { SnackbarContext } from "../../context/SnackbarContext";
 import { getStoredUsername } from "../../context/UsernameContext";
+import { enqueueUpdate, registerBackgroundSync } from "../../lib/offlineQueue";
+import { subscribeToPush, MACHINE_STARTED_EVENT } from "../../lib/push";
 
 interface TimerModalProps {
   deviceID: number | null;
@@ -29,43 +31,65 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
   }, [setIsOpen]);
 
   const startOnClick = useCallback(async () => {
+    if (!deviceID) return;
+
+    const hours = parseInt(input.hours || "0");
+    const minutes = parseInt(input.minutes || "0");
+    // Computed now, at the moment Start is actually pressed - if this ends
+    // up queued offline, the server will honor this exact moment instead of
+    // whenever the request happens to arrive, so the cycle doesn't drift.
+    const start_date = new Date().toISOString();
+    const end_date = new Date(
+      Date.now() + (hours * 60 + minutes) * 60 * 1000,
+    ).toISOString();
+
+    const body = {
+      hours,
+      minutes,
+      owner: getStoredUsername() || "Unknown",
+      start_date,
+      end_date,
+    };
+    const url = `${API_URL}/device/${deviceID}/update`;
+    closeModal();
+
     try {
-      if (deviceID) {
-        const body = {
-          hours: parseInt(input.hours || "0"),
-          minutes: parseInt(input.minutes || "0"),
-          owner: getStoredUsername() || "Unknown",
-        };
-        closeModal();
+      const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      refresh();
 
-        const res = await fetch(`${API_URL}/device/${deviceID}/update`, {
-          method: "POST",
-          body: JSON.stringify(body),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        refresh();
+      if (res.status == 201) {
+        subscribeToPush(deviceID);
+        window.dispatchEvent(new Event(MACHINE_STARTED_EVENT));
+      }
 
-        if (setMessages) {
-          if (res.status == 201)
-            setMessages([
-              ...messages,
-              { status: "success", message: "Successfully updated" },
-            ]);
-          else {
-            setMessages([
-              ...messages,
-              { status: "error", message: "An error occured" },
-            ]);
-          }
+      if (setMessages) {
+        if (res.status == 201)
+          setMessages([
+            ...messages,
+            { status: "success", message: "Successfully updated" },
+          ]);
+        else {
+          setMessages([
+            ...messages,
+            { status: "error", message: "An error occured" },
+          ]);
         }
       }
     } catch (_) {
+      // Likely offline - queue it instead of just failing outright.
+      await enqueueUpdate({ deviceId: deviceID, url, body, queuedAt: Date.now() });
+      registerBackgroundSync();
+
       if (setMessages)
         setMessages([
           ...messages,
-          { status: "error", message: "An error occured" },
+          { status: "info", message: "Saved offline - will sync once you're back online" },
         ]);
     }
   }, [deviceID, input, refresh, closeModal, messages, setMessages]);

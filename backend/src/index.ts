@@ -2,6 +2,7 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { MODE, PORT } from "./secrets";
 import DeviceRouter from "./routers";
+import { startPushJob } from "./pushJob";
 import cors from "cors";
 import morgan from "morgan";
 
@@ -30,3 +31,5 @@ app.get("/", (_, res) => {
 export const prismaClient = new PrismaClient({ log: ["info"] });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+startPushJob();

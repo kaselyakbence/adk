@@ -8,6 +8,6 @@ export interface Device {
 }
 
 export interface SnackbarItem {
-  status: "success" | "error";
+  status: "success" | "error" | "info";
   message: string;
 }

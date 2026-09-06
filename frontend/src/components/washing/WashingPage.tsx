@@ -1,15 +1,16 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { DevicesContext } from "../../context/DevicesContext";
 import styles from "./washingpage.module.css";
 import Countdown from "../countdown/Countdown";
-import { MdCameraswitch } from "react-icons/md";
+import { MdCameraswitch, MdSync } from "react-icons/md";
 import TimerModal from "../../modals/timer/TimerModal";
 import CustomSnackbar from "../snackbar/CustomSnackbar";
 import QRScanner from "../qrscanner/QRScanner";
 import InfoModal from "../../modals/info/InfoModal";
 import Navbar from "../navbar/NavBar";
 import InstructionsCard from "./InstructionsCard";
-import { UsernameContext } from "../../context/UsernameContext";
+import { getPendingUpdates, subscribeToQueueChanges } from "../../lib/offlineQueue";
+import InstallNudge from "../InstallNudge";
 
 interface MainPageProps {
   refresh: () => Promise<void>;
@@ -21,7 +22,20 @@ const MainPage = ({ refresh }: MainPageProps) => {
   const [cameraOpen, setCameraOpen] = useState(false);
 
   const devices = useContext(DevicesContext);
-  const { username } = useContext(UsernameContext);
+  const [pendingDeviceIds, setPendingDeviceIds] = useState<Set<number>>(
+    new Set(),
+  );
+
+  useEffect(() => {
+    const refreshPending = () => {
+      getPendingUpdates().then((updates) =>
+        setPendingDeviceIds(new Set(updates.map((u) => u.deviceId))),
+      );
+    };
+
+    refreshPending();
+    return subscribeToQueueChanges(refreshPending);
+  }, []);
 
   const freeDevices = useMemo(() => {
     const now = new Date();
@@ -42,15 +56,13 @@ const MainPage = ({ refresh }: MainPageProps) => {
   return (
     <>
       <Navbar />
-      {username !== "Guest" && (
-        <button
-          className={styles.fab}
-          onClick={() => setCameraOpen(true)}
-          aria-label="Scan QR code"
-        >
-          <MdCameraswitch className={styles.fabIcon} />
-        </button>
-      )}
+      <button
+        className={styles.fab}
+        onClick={() => setCameraOpen(true)}
+        aria-label="Scan QR code"
+      >
+        <MdCameraswitch className={styles.fabIcon} />
+      </button>
       <div className={styles.layout}>
         <div className={styles.body}>
           <div className={styles.washers}>
@@ -70,7 +82,15 @@ const MainPage = ({ refresh }: MainPageProps) => {
                     key={d.id}
                     onClick={() => setInfoDevice(d.id)}
                   >
-                    <div>Washer {d.number}</div>
+                    <div className={styles.itemLabel}>
+                      <span>Washer {d.number}</span>
+                      {pendingDeviceIds.has(d.id) && (
+                        <span className={styles.pendingBadge}>
+                          <MdSync className={styles.pendingIcon} />
+                          Pending sync
+                        </span>
+                      )}
+                    </div>
                     <Countdown time={d.end_date} />
                   </div>
                 ))}
@@ -92,7 +112,15 @@ const MainPage = ({ refresh }: MainPageProps) => {
                     key={d.id}
                     onClick={() => setInfoDevice(d.id)}
                   >
-                    <div>Dryer {d.number}</div>
+                    <div className={styles.itemLabel}>
+                      <span>Dryer {d.number}</span>
+                      {pendingDeviceIds.has(d.id) && (
+                        <span className={styles.pendingBadge}>
+                          <MdSync className={styles.pendingIcon} />
+                          Pending sync
+                        </span>
+                      )}
+                    </div>
                     <Countdown time={d.end_date} />
                   </div>
                 ))}
@@ -107,6 +135,7 @@ const MainPage = ({ refresh }: MainPageProps) => {
       />
       <InfoModal deviceID={infoDevice} setIsOpen={setInfoDevice} />
       <CustomSnackbar />
+      <InstallNudge />
       <QRScanner
         isOpen={cameraOpen}
         setIsOpen={setCameraOpen}
