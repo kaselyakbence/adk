@@ -2,6 +2,7 @@ import ReactModal from "react-modal";
 import styles from "./usernamemodal.module.css";
 import { useContext, useEffect, useState } from "react";
 import { UsernameContext } from "../../context/UsernameContext";
+import { LocaleContext } from "../../context/LocaleContext";
 
 interface UsernameModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ const UsernameModal = ({
   onClose,
 }: UsernameModalProps) => {
   const { setUsername } = useContext(UsernameContext);
+  const { t } = useContext(LocaleContext);
   const [name, setName] = useState("");
 
   useEffect(() => {
@@ -57,13 +59,13 @@ const UsernameModal = ({
       }}
     >
       <div className={styles.header}>
-        <h2>Welcome!</h2>
+        <h2>{t("usernameModal.welcome")}</h2>
       </div>
-      <p>Please use your name from the groupchat</p>
+      <p>{t("usernameModal.prompt")}</p>
       <input
         type="text"
         className={styles.input}
-        placeholder="Your name"
+        placeholder={t("usernameModal.placeholder")}
         value={name}
         maxLength={30}
         onChange={(e) => setName(e.target.value)}
@@ -74,14 +76,14 @@ const UsernameModal = ({
       />
       <div className={styles.buttons}>
         <button className={styles.guest_button} onClick={continueAsGuest}>
-          Continue as guest
+          {t("usernameModal.guestButton")}
         </button>
         <button
           className={styles.save_button}
           onClick={save}
           disabled={!name.trim()}
         >
-          Save
+          {t("usernameModal.saveButton")}
         </button>
       </div>
     </ReactModal>

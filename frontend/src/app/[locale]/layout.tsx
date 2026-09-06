@@ -1,8 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import "../main.css";
-import UsernameProvider from "../context/UsernameProvider";
-import ServiceWorkerRegister from "../components/ServiceWorkerRegister";
-import OfflineQueueSync from "../components/OfflineQueueSync";
+import { notFound } from "next/navigation";
+import "../../main.css";
+import { isLocale, LOCALES } from "../../locales";
+import LocaleProvider from "../../context/LocaleProvider";
+import UsernameProvider from "../../context/UsernameProvider";
+import ServiceWorkerRegister from "../../components/ServiceWorkerRegister";
+import OfflineQueueSync from "../../components/OfflineQueueSync";
+import LanguageSwitcher from "../../components/LanguageSwitcher";
+
+export function generateStaticParams() {
+  return LOCALES.map((locale) => ({ locale }));
+}
 
 export const viewport: Viewport = {
   themeColor: "#6397ff",
@@ -29,24 +37,32 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function LocaleLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         {/* Next only emits the modern unprefixed tag; older iOS Safari
             versions still key standalone-mode detection off this one. */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
       <body suppressHydrationWarning>
-        <div id="root">
-          <UsernameProvider>{children}</UsernameProvider>
-        </div>
-        <ServiceWorkerRegister />
-        <OfflineQueueSync />
+        <LocaleProvider locale={locale}>
+          <div id="root">
+            <UsernameProvider>{children}</UsernameProvider>
+          </div>
+          <LanguageSwitcher />
+          <ServiceWorkerRegister />
+          <OfflineQueueSync />
+        </LocaleProvider>
       </body>
     </html>
   );

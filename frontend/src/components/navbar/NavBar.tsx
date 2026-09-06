@@ -4,13 +4,14 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import styles from "./navbar.module.css";
 import { UsernameContext } from "../../context/UsernameContext";
+import { LocaleContext } from "../../context/LocaleContext";
 import UsernameModal from "../../modals/username/UsernameModal";
 
 const navItems = [
-  { name: "about", href: "about" },
-  { name: "washing", href: "washing" },
-  { name: "gallery", href: "gallery" },
-  { name: "contacts", href: "contacts" },
+  { key: "nav.about", href: "about" },
+  { key: "nav.washing", href: "washing" },
+  { key: "nav.gallery", href: "gallery" },
+  { key: "nav.contacts", href: "contacts" },
 ];
 
 const Navbar = () => {
@@ -19,7 +20,8 @@ const Navbar = () => {
   const [changeModalOpen, setChangeModalOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const isActive = (path: string) => pathname === path;
+  const { locale, t } = useContext(LocaleContext);
+  const isActive = (path: string) => pathname === `/${locale}${path}`;
   const { username, loaded: usernameLoaded } = useContext(UsernameContext);
   const displayName = username || "Guest";
 
@@ -42,25 +44,25 @@ const Navbar = () => {
   return (
     <nav className={styles.navbar}>
       <div className={styles.logo}>
-        <Link href="/">Alle Der Kosmonauten 20</Link>
+        <Link href={`/${locale}`}>Alle Der Kosmonauten 20</Link>
       </div>
       <button
         className={styles.menuButton}
         onClick={() => setMenuOpen((open) => !open)}
-        aria-label="Toggle navigation"
+        aria-label={t("nav.toggleNav")}
       >
         ☰
       </button>
       <div className={`${styles.mobileMenu} ${menuOpen ? styles.open : ""}`}>
         <ul className={styles.navlist}>
           {navItems.map((item) => (
-            <li key={item.name}>
+            <li key={item.key}>
               <Link
-                href={`/${item.href}`}
+                href={`/${locale}/${item.href}`}
                 id={isActive(`/${item.href}`) ? styles.active : ""}
                 onClick={() => setMenuOpen(false)}
               >
-                {item.name}
+                {t(item.key)}
               </Link>
             </li>
           ))}
@@ -76,7 +78,9 @@ const Navbar = () => {
           <div
             className={`${styles.dropdown} ${dropdownOpen ? styles.dropdownOpen : ""}`}
           >
-            <p className={styles.dropdownLabel}>Username: {displayName}</p>
+            <p className={styles.dropdownLabel}>
+              {t("nav.usernameLabel")} {displayName}
+            </p>
             <button
               type="button"
               className={styles.changeButton}
@@ -85,13 +89,16 @@ const Navbar = () => {
                 setDropdownOpen(false);
               }}
             >
-              Change
+              {t("nav.changeButton")}
             </button>
           </div>
         </div>
       </div>
       <UsernameModal
-        isOpen={(usernameLoaded && !username && pathname === "/washing") || changeModalOpen}
+        isOpen={
+          (usernameLoaded && !username && pathname === `/${locale}/washing`) ||
+          changeModalOpen
+        }
         dismissible={changeModalOpen}
         onClose={() => setChangeModalOpen(false)}
       />

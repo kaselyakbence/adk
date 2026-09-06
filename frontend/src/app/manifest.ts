@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Alle Der Kosmonauten 20",
     short_name: "ADK 20",
     description: "Book a washer or dryer at Alle Der Kosmonauten 20.",
-    start_url: "/washing",
+    start_url: "/en/washing",
     display: "standalone",
     background_color: "#6397ff",
     theme_color: "#6397ff",

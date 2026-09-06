@@ -1,26 +1,28 @@
+import { useContext } from "react";
 import type { ReactElement } from "react";
 import ReactCountdown from "react-countdown";
 import styles from "./countdown.module.css";
+import { LocaleContext } from "../../context/LocaleContext";
 
 const Countdown = ({ time }: { time: string | undefined }): ReactElement => {
+  const { t } = useContext(LocaleContext);
   const now = new Date();
 
   if (!time)
     return (
       <div className={styles.loading}>
-        <span>L</span>
-        <span>o</span>
-        <span>a</span>
-        <span>d</span>
-        <span>i</span>
-        <span>n</span>
-        <span>g</span>
+        {t("countdown.loading")
+          .split("")
+          .map((char, index) => (
+            <span key={index}>{char}</span>
+          ))}
       </div>
     );
 
   const date = new Date(time);
 
-  if (now > date) return <span className={styles.available}>Available</span>;
+  if (now > date)
+    return <span className={styles.available}>{t("countdown.available")}</span>;
 
   return <ReactCountdown date={date} daysInHours />;
 };

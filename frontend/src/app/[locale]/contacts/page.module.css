@@ -29,7 +29,7 @@
 }
 
 .card {
-  composes: card from "../../styles/shared.module.css";
+  composes: card from "../../../styles/shared.module.css";
   margin-bottom: 1.5rem;
 }
 
@@ -77,7 +77,7 @@
 }
 
 .followHeading {
-  composes: heading from "../../styles/shared.module.css";
+  composes: heading from "../../../styles/shared.module.css";
   margin-top: 2rem;
 }
 

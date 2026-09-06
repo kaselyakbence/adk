@@ -11,6 +11,7 @@ import Navbar from "../navbar/NavBar";
 import InstructionsCard from "./InstructionsCard";
 import { getPendingUpdates, subscribeToQueueChanges } from "../../lib/offlineQueue";
 import InstallNudge from "../InstallNudge";
+import { LocaleContext } from "../../context/LocaleContext";
 
 interface MainPageProps {
   refresh: () => Promise<void>;
@@ -22,6 +23,7 @@ const MainPage = ({ refresh }: MainPageProps) => {
   const [cameraOpen, setCameraOpen] = useState(false);
 
   const devices = useContext(DevicesContext);
+  const { t } = useContext(LocaleContext);
   const [pendingDeviceIds, setPendingDeviceIds] = useState<Set<number>>(
     new Set(),
   );
@@ -59,7 +61,7 @@ const MainPage = ({ refresh }: MainPageProps) => {
       <button
         className={styles.fab}
         onClick={() => setCameraOpen(true)}
-        aria-label="Scan QR code"
+        aria-label={t("washing.scanQrAria")}
       >
         <MdCameraswitch className={styles.fabIcon} />
       </button>
@@ -67,7 +69,9 @@ const MainPage = ({ refresh }: MainPageProps) => {
         <div className={styles.body}>
           <div className={styles.washers}>
             <div className={styles.washer_header}>
-              <p className={styles.washer_header_left}>Washing machines</p>
+              <p className={styles.washer_header_left}>
+                {t("washing.machinesHeading")}
+              </p>
               <p className={styles.washer_header_right}>
                 {freeDevices.washers}/5
               </p>
@@ -83,11 +87,13 @@ const MainPage = ({ refresh }: MainPageProps) => {
                     onClick={() => setInfoDevice(d.id)}
                   >
                     <div className={styles.itemLabel}>
-                      <span>Washer {d.number}</span>
+                      <span>
+                        {t("washing.washerLabel")} {d.number}
+                      </span>
                       {pendingDeviceIds.has(d.id) && (
                         <span className={styles.pendingBadge}>
                           <MdSync className={styles.pendingIcon} />
-                          Pending sync
+                          {t("washing.pendingSync")}
                         </span>
                       )}
                     </div>
@@ -97,7 +103,9 @@ const MainPage = ({ refresh }: MainPageProps) => {
           </div>
           <div className={styles.dryers}>
             <div className={styles.washer_header}>
-              <p className={styles.washer_header_left}>Dryers</p>
+              <p className={styles.washer_header_left}>
+                {t("washing.dryersHeading")}
+              </p>
               <p className={styles.washer_header_right}>
                 {freeDevices.dryers}/3
               </p>
@@ -113,11 +121,13 @@ const MainPage = ({ refresh }: MainPageProps) => {
                     onClick={() => setInfoDevice(d.id)}
                   >
                     <div className={styles.itemLabel}>
-                      <span>Dryer {d.number}</span>
+                      <span>
+                        {t("washing.dryerLabel")} {d.number}
+                      </span>
                       {pendingDeviceIds.has(d.id) && (
                         <span className={styles.pendingBadge}>
                           <MdSync className={styles.pendingIcon} />
-                          Pending sync
+                          {t("washing.pendingSync")}
                         </span>
                       )}
                     </div>

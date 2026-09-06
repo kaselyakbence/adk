@@ -1,8 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import styles from "./installnudge.module.css";
 import { isIOS, isStandalone, MACHINE_STARTED_EVENT } from "../lib/push";
+import { LocaleContext } from "../context/LocaleContext";
 
 const DISMISSED_KEY = "installNudgeShown";
 
@@ -11,6 +12,7 @@ const DISMISSED_KEY = "installNudgeShown";
 // unlocks: iOS only delivers push notifications to an installed app.
 const InstallNudge = () => {
   const [visible, setVisible] = useState(false);
+  const { t } = useContext(LocaleContext);
 
   useEffect(() => {
     const handleMachineStarted = () => {
@@ -34,15 +36,16 @@ const InstallNudge = () => {
   return (
     <div className={styles.banner}>
       <p className={styles.text}>
-        Want a ping when it&#39;s done? Tap <strong>Share</strong>, then{" "}
-        <strong>Add to Home Screen</strong> - iPhones only deliver
-        notifications to installed apps.
+        {t("installNudge.textBefore")} <strong>{t("installNudge.share")}</strong>
+        {t("installNudge.textMiddle")}{" "}
+        <strong>{t("installNudge.addToHomeScreen")}</strong>{" "}
+        {t("installNudge.textAfter")}
       </p>
       <button
         type="button"
         className={styles.closeButton}
         onClick={() => setVisible(false)}
-        aria-label="Dismiss"
+        aria-label={t("installNudge.dismissAria")}
       >
         <IoMdClose />
       </button>

@@ -9,6 +9,7 @@ import { SnackbarContext } from "../../context/SnackbarContext";
 import { getStoredUsername } from "../../context/UsernameContext";
 import { enqueueUpdate, registerBackgroundSync } from "../../lib/offlineQueue";
 import { subscribeToPush, MACHINE_STARTED_EVENT } from "../../lib/push";
+import { LocaleContext } from "../../context/LocaleContext";
 
 interface TimerModalProps {
   deviceID: number | null;
@@ -22,6 +23,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
   const [input, setInput] = useState<{ hours?: string; minutes?: string }>({});
 
   const { messages, setMessages } = useContext(SnackbarContext);
+  const { t } = useContext(LocaleContext);
 
   const device = useContext(DevicesContext).find((d) => d.id == deviceID);
 
@@ -72,12 +74,12 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
         if (res.status == 201)
           setMessages([
             ...messages,
-            { status: "success", message: "Successfully updated" },
+            { status: "success", message: t("timerModal.successMessage") },
           ]);
         else {
           setMessages([
             ...messages,
-            { status: "error", message: "An error occured" },
+            { status: "error", message: t("timerModal.errorMessage") },
           ]);
         }
       }
@@ -89,10 +91,10 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
       if (setMessages)
         setMessages([
           ...messages,
-          { status: "info", message: "Saved offline - will sync once you're back online" },
+          { status: "info", message: t("timerModal.offlineMessage") },
         ]);
     }
-  }, [deviceID, input, refresh, closeModal, messages, setMessages]);
+  }, [deviceID, input, refresh, closeModal, messages, setMessages, t]);
 
   return (
     <ReactModal
@@ -119,19 +121,19 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
     >
       <div className={styles.header}>
         <p className={styles.title}>
-          {device?.type === "dryer" ? "Dryer" : "Washing Machine"}{" "}
+          {device?.type === "dryer" ? t("timerModal.dryer") : t("timerModal.washingMachine")}{" "}
           {device?.number}
         </p>
         <button
           className={styles.closeIcon}
           onClick={closeModal}
-          aria-label="Close"
+          aria-label={t("timerModal.closeAria")}
         >
           <IoMdClose />
         </button>
       </div>
 
-      <p className={styles.label}>Set a timer</p>
+      <p className={styles.label}>{t("timerModal.setTimer")}</p>
       <div className={styles.inputs}>
         <input
           id="hour"
@@ -173,10 +175,10 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
 
       <div className={styles.buttons}>
         <button onClick={closeModal} className={styles.closeButton}>
-          Close
+          {t("timerModal.close")}
         </button>
         <button className={styles.startButton} onClick={startOnClick}>
-          Start
+          {t("timerModal.start")}
         </button>
       </div>
     </ReactModal>
