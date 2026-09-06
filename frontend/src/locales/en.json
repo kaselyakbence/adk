@@ -99,7 +99,8 @@
   "instructionsCard.infoParagraph2Link": "SSV office",
   "instructionsCard.infoParagraph2After": "against a deposit of 15€. You also need to charge it with an amount of money to be able to wash. For 1€, you get 2 points on the card.",
   "instructionsCard.infoParagraph3": "Washing costs 4 points (2€), drying costs 2 points (1€).",
-  "instructionsCard.infoParagraph4": "When you move out, you can return your card at the office and get your deposit back, if the card is not physically damaged (e.g. bent or ruptured). We can't give you your remaining credit back, so make sure that you don't charge too much.",
+  "instructionsCard.infoParagraph4": "Made a mistake - wrong machine, wrong time? Just scan the QR code again and enter the correct time; it overwrites what was there. This runs on an honor system, so please only use it to fix genuine mistakes, not to cut someone else's cycle short.",
+  "instructionsCard.infoParagraph5": "When you move out, you can return your card at the office and get your deposit back, if the card is not physically damaged (e.g. bent or ruptured). We can't give you your remaining credit back, so make sure that you don't charge too much.",
 
   "snackbar.connectionError": "Connection error",
   "snackbar.scanError": "Unsuccessfull scan",

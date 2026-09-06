@@ -88,6 +88,7 @@ const InstructionsCard = () => {
             </p>
             <p className={styles.text}>{t("instructionsCard.infoParagraph3")}</p>
             <p className={styles.text}>{t("instructionsCard.infoParagraph4")}</p>
+            <p className={styles.text}>{t("instructionsCard.infoParagraph5")}</p>
           </div>
         )}
       </div>

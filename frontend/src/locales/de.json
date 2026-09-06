@@ -99,7 +99,8 @@
   "instructionsCard.infoParagraph2Link": "SSV-Büro",
   "instructionsCard.infoParagraph2After": "gegen ein Pfand von 15€. Außerdem musst du sie mit einem Guthaben aufladen, um waschen zu können. Für 1€ bekommst du 2 Punkte auf die Karte.",
   "instructionsCard.infoParagraph3": "Waschen kostet 4 Punkte (2€), Trocknen kostet 2 Punkte (1€).",
-  "instructionsCard.infoParagraph4": "Wenn du ausziehst, kannst du deine Karte im Büro zurückgeben und dein Pfand zurückbekommen, sofern die Karte nicht beschädigt ist (z. B. verbogen oder gerissen). Dein restliches Guthaben können wir dir leider nicht zurückerstatten, also lade nicht zu viel auf.",
+  "instructionsCard.infoParagraph4": "Etwas falsch gemacht - falsche Maschine, falsche Zeit? Scanne den QR-Code einfach noch einmal und gib die richtige Zeit ein; das überschreibt den alten Eintrag. Das funktioniert auf Vertrauensbasis, also nutze es bitte nur, um echte Fehler zu korrigieren, und nicht, um jemandem den Waschgang vorzeitig zu beenden.",
+  "instructionsCard.infoParagraph5": "Wenn du ausziehst, kannst du deine Karte im Büro zurückgeben und dein Pfand zurückbekommen, sofern die Karte nicht beschädigt ist (z. B. verbogen oder gerissen). Dein restliches Guthaben können wir dir leider nicht zurückerstatten, also lade nicht zu viel auf.",
 
   "snackbar.connectionError": "Verbindungsfehler",
   "snackbar.scanError": "Scan fehlgeschlagen",
