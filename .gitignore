@@ -1,5 +1,6 @@
 # For enviroment files
 .env
+backend.env
 node_modules
 dist
 .next

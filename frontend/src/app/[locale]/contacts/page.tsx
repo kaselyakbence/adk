@@ -1,3 +1,5 @@
+"use client";
+import { useContext } from "react";
 import {
   FaEnvelope,
   FaFacebook,
@@ -5,31 +7,11 @@ import {
   FaPhone,
   FaUserCircle,
 } from "react-icons/fa";
-import Astronaut from "../../components/astronaut/Astronaut";
-import Navbar from "../../components/navbar/NavBar";
-import shared from "../../styles/shared.module.css";
+import Astronaut from "../../../components/astronaut/Astronaut";
+import Navbar from "../../../components/navbar/NavBar";
+import shared from "../../../styles/shared.module.css";
 import styles from "./page.module.css";
-
-const contacts = [
-  {
-    role: "Info Center",
-    name: "Placeholder Name",
-    email: "info@ssv-adk20.example",
-    phone: "+49 30 0000 0001",
-  },
-  {
-    role: "Resident Tutor",
-    name: "Placeholder Name",
-    email: "tutor@ssv-adk20.example",
-    phone: "+49 30 0000 0002",
-  },
-  {
-    role: "Caretaker",
-    name: "Placeholder Name",
-    email: "caretaker@ssv-adk20.example",
-    phone: "+49 30 0000 0003",
-  },
-];
+import { LocaleContext } from "../../../context/LocaleContext";
 
 const socials = [
   { name: "Instagram", href: "#", icon: FaInstagram },
@@ -37,24 +19,43 @@ const socials = [
 ];
 
 export default function Page() {
+  const { t } = useContext(LocaleContext);
+
+  const contacts = [
+    {
+      roleKey: "contacts.roleInfoCenter",
+      email: "info@ssv-adk20.example",
+      phone: "+49 30 0000 0001",
+    },
+    {
+      roleKey: "contacts.roleResidentTutor",
+      email: "tutor@ssv-adk20.example",
+      phone: "+49 30 0000 0002",
+    },
+    {
+      roleKey: "contacts.roleCaretaker",
+      email: "caretaker@ssv-adk20.example",
+      phone: "+49 30 0000 0003",
+    },
+  ];
+
   return (
     <main className={styles.main}>
       <Navbar />
       <div className={styles.container}>
         <section className={styles.card}>
-          <h1 className={shared.heading}>Contacts</h1>
-          <p className={shared.text}>
-            Placeholder contacts for now &mdash; reach out to the SSV office
-            during opening hours for anything urgent.
-          </p>
+          <h1 className={shared.heading}>{t("contacts.heading")}</h1>
+          <p className={shared.text}>{t("contacts.intro")}</p>
 
           <div className={styles.grid}>
             {contacts.map((contact) => (
-              <div className={shared.infoBox} key={contact.role}>
+              <div className={shared.infoBox} key={contact.roleKey}>
                 <FaUserCircle className={shared.infoBoxIcon} />
                 <div className={styles.contactInfo}>
-                  <p className={shared.infoBoxLabel}>{contact.role}</p>
-                  <p className={shared.infoBoxSub}>{contact.name}</p>
+                  <p className={shared.infoBoxLabel}>{t(contact.roleKey)}</p>
+                  <p className={shared.infoBoxSub}>
+                    {t("contacts.placeholderName")}
+                  </p>
                   <p className={styles.contactLine}>
                     <FaEnvelope /> {contact.email}
                   </p>
@@ -66,7 +67,9 @@ export default function Page() {
             ))}
           </div>
 
-          <h2 className={styles.followHeading}>Follow the SSV</h2>
+          <h2 className={styles.followHeading}>
+            {t("contacts.followHeading")}
+          </h2>
           <div className={styles.socials}>
             {socials.map((social) => (
               <a

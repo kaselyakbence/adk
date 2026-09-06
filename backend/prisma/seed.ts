@@ -50,7 +50,12 @@ function minutesFromNow(minutes: number): Date {
 async function main() {
   // TRUNCATE (not deleteMany) also resets the id sequence back to 1, so a
   // re-seeded device keeps the same id the printed QR codes point at.
-  await prisma.$executeRawUnsafe(`TRUNCATE TABLE "Device" RESTART IDENTITY;`);
+  // PushSubscription has to be truncated in the same statement (Postgres
+  // refuses otherwise, since it references Device) - a clean reset should
+  // drop stale subscriptions tied to bookings that no longer exist anyway.
+  await prisma.$executeRawUnsafe(
+    `TRUNCATE TABLE "Device", "PushSubscription" RESTART IDENTITY;`,
+  );
 
   for (const device of DEVICES) {
     const isRunning = Math.random() < 0.5;

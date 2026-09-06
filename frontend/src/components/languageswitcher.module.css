@@ -1,0 +1,46 @@
+.switcher {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  z-index: 1000;
+}
+
+.toggle {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #4b5358;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.options {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.option {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: #4b5358;
+}
+
+.option.active {
+  background: #6397ff;
+  color: #ffffff;
+}

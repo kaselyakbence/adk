@@ -126,3 +126,29 @@
 
   font-size: 1.1rem;
 }
+
+.itemLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pendingBadge {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  padding: 2px 8px;
+
+  border-radius: 12px;
+  background-color: rgba(99, 151, 255, 0.15);
+
+  font-size: 0.75rem;
+  color: #6397ff;
+  white-space: nowrap;
+}
+
+.pendingIcon {
+  width: 0.85rem;
+  height: 0.85rem;
+}

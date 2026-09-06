@@ -1,0 +1,46 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file: ./.env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    image: ghcr.io/kaselyakbence/adk-backend:latest
+    build: ./backend
+    restart: unless-stopped
+    env_file: ./backend.env
+    depends_on:
+      - postgres
+
+  frontend:
+    image: ghcr.io/kaselyakbence/adk-frontend:latest
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        NEXT_PUBLIC_VAPID_PUBLIC_KEY: ${NEXT_PUBLIC_VAPID_PUBLIC_KEY}
+        NEXT_PUBLIC_MODE: production
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:

@@ -28,6 +28,7 @@
     "@types/jest": "^30.0.0",
     "@types/morgan": "^1.9.10",
     "@types/node": "^22.20.1",
+    "@types/web-push": "^3.6.4",
     "dotenv-cli": "^11.0.0",
     "eslint": "^10.9.1",
     "eslint-config-prettier": "^10.1.8",
@@ -48,6 +49,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "morgan": "^1.11.0",
-    "prisma": "^6.19.3"
+    "prisma": "^6.19.3",
+    "web-push": "^3.6.7"
   }
 }

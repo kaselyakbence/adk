@@ -3,6 +3,7 @@ import ReactModal from "react-modal";
 import styles from "./infomodal.module.css";
 import { DevicesContext } from "../../context/DevicesContext";
 import Countdown from "../../components/countdown/Countdown";
+import { LocaleContext } from "../../context/LocaleContext";
 
 interface InfoModalProps {
   deviceID: number | null;
@@ -11,6 +12,7 @@ interface InfoModalProps {
 
 const InfoModal = ({ deviceID, setIsOpen }: InfoModalProps) => {
   const device = useContext(DevicesContext).find((d) => d.id == deviceID);
+  const { t } = useContext(LocaleContext);
 
   const isAvailable = useMemo(() => {
     if (!device) return false;
@@ -41,20 +43,24 @@ const InfoModal = ({ deviceID, setIsOpen }: InfoModalProps) => {
         <>
           <div className={styles.header}>
             <h2 className={isAvailable ? styles.available : ""}>
-              {device?.type === "washer" ? "Washer" : "Dryer"} {device.number}
+              {device?.type === "washer" ? t("infoModal.washer") : t("infoModal.dryer")}{" "}
+              {device.number}
             </h2>
             <Countdown time={device.end_date} />
           </div>
           <p>
-            Last started:{" "}
+            {t("infoModal.lastStarted")}{" "}
             {device.start_date &&
               new Date(device.start_date).toLocaleTimeString()}
           </p>
           <p>
-            Ended:{" "}
+            {t("infoModal.ended")}{" "}
             {device.end_date && new Date(device.end_date).toLocaleTimeString()}
           </p>
-          <p>Started by: {device.owner ? device.owner : "Unknown"}</p>
+          <p>
+            {t("infoModal.startedBy")}{" "}
+            {device.owner ? device.owner : t("infoModal.unknown")}
+          </p>
           <p></p>
         </>
       ) : (

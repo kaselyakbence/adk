@@ -3,6 +3,7 @@ import styles from "./qrscanner.module.css";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { useContext } from "react";
 import { SnackbarContext } from "../../context/SnackbarContext";
+import { LocaleContext } from "../../context/LocaleContext";
 
 interface QRCodeScanner {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface QRCodeScanner {
 
 const QRScanner = ({ isOpen, setIsOpen, setChosenDevice }: QRCodeScanner) => {
   const { messages, setMessages } = useContext(SnackbarContext);
+  const { t } = useContext(LocaleContext);
 
   const handleScan = (detectedCodes: IDetectedBarcode[]) => {
     try {
@@ -24,7 +26,7 @@ const QRScanner = ({ isOpen, setIsOpen, setChosenDevice }: QRCodeScanner) => {
       if (setMessages)
         setMessages([
           ...messages,
-          { status: "error", message: "Unsuccessfull scan" },
+          { status: "error", message: t("snackbar.scanError") },
         ]);
     }
   };
@@ -36,7 +38,7 @@ const QRScanner = ({ isOpen, setIsOpen, setChosenDevice }: QRCodeScanner) => {
           type="button"
           className={styles.circle}
           onClick={() => setIsOpen(false)}
-          aria-label="Close scanner"
+          aria-label={t("qrscanner.closeAria")}
         >
           <IoMdCloseCircleOutline className={styles.icon} />
         </button>

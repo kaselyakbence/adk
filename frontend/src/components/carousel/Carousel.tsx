@@ -1,7 +1,8 @@
 "use client";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import styles from "./carousel.module.css";
+import { LocaleContext } from "../../context/LocaleContext";
 
 const SWIPE_THRESHOLD = 40;
 
@@ -15,6 +16,7 @@ interface CarouselProps {
 }
 
 const Carousel = ({ images }: CarouselProps) => {
+  const { t } = useContext(LocaleContext);
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
   const count = images.length;
@@ -52,7 +54,7 @@ const Carousel = ({ images }: CarouselProps) => {
         <button
           className={`${styles.nav} ${styles.prev}`}
           onClick={() => goTo(activeIndex - 1, -1)}
-          aria-label="Previous photo"
+          aria-label={t("gallery.prevPhotoAria")}
         >
           <FaChevronLeft />
         </button>
@@ -93,7 +95,7 @@ const Carousel = ({ images }: CarouselProps) => {
         <button
           className={`${styles.nav} ${styles.next}`}
           onClick={() => goTo(activeIndex + 1, 1)}
-          aria-label="Next photo"
+          aria-label={t("gallery.nextPhotoAria")}
         >
           <FaChevronRight />
         </button>
@@ -105,7 +107,7 @@ const Carousel = ({ images }: CarouselProps) => {
             key={index}
             className={`${styles.dot} ${index === activeIndex ? styles.dotActive : ""}`}
             onClick={() => goTo(index, index > activeIndex ? 1 : -1)}
-            aria-label={`Go to photo ${index + 1}`}
+            aria-label={`${t("gallery.goToPhotoAria")} ${index + 1}`}
             aria-current={index === activeIndex}
           />
         ))}
