@@ -12,6 +12,11 @@ const QUEUE_DB_VERSION = 1;
 const QUEUE_STORE_NAME = "pending-updates";
 const QUEUE_BROADCAST_CHANNEL_NAME = "adk-offline-queue-updates";
 
+// Mirrors src/locales/index.ts's LOCALES/DEFAULT_LOCALE - duplicated for the
+// same reason as the queue constants above.
+const LOCALES = ["en", "de"];
+const DEFAULT_LOCALE = "en";
+
 const PRECACHE_URLS = [
   "/manifest.webmanifest",
   "/icon-192.png",
@@ -174,10 +179,27 @@ self.addEventListener("notificationclick", (event) => {
     self.clients
       .matchAll({ type: "window", includeUncontrolled: true })
       .then((clients) => {
-        const washingUrl = new URL("/washing", self.location.origin).href;
-        const existing = clients.find((client) => client.url === washingUrl);
-        if (existing) return existing.focus();
-        return self.clients.openWindow("/washing");
+        // No window open - hand off to the root redirect page, which
+        // already knows how to pick the right locale (see app/(root)/page.tsx).
+        // The service worker itself can't read localStorage to do this
+        // directly.
+        if (clients.length === 0) {
+          return self.clients.openWindow("/?start=washing");
+        }
+
+        // A window is already open - it's already on some /<locale>/...
+        // route, so reuse that locale instead of guessing.
+        const client = clients[0];
+        const segment = new URL(client.url).pathname.split("/")[1];
+        const locale = LOCALES.includes(segment) ? segment : DEFAULT_LOCALE;
+        const washingUrl = new URL(
+          `/${locale}/washing`,
+          self.location.origin,
+        ).href;
+
+        return client
+          .navigate(washingUrl)
+          .then((navigated) => navigated && navigated.focus());
       }),
   );
 });

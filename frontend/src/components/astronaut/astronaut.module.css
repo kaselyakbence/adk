@@ -6,4 +6,6 @@
   position: fixed;
   bottom: 2vh;
   right: 2vw;
+
+  animation: bob 4s ease-in-out infinite;
 }

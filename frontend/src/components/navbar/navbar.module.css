@@ -55,7 +55,7 @@
 }
 
 .dropdown {
-  display: none;
+  display: flex;
   position: absolute;
   top: calc(100% + 0.5rem);
   right: 0;
@@ -70,10 +70,20 @@
   border: 1px solid #ccc;
   border-radius: 6px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    visibility 0.15s;
 }
 
 .dropdown.dropdownOpen {
-  display: flex;
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .dropdownLabel {
@@ -126,6 +136,7 @@
 }
 
 .navlist li a {
+  position: relative;
   height: 100%;
 
   display: flex;
@@ -138,13 +149,28 @@
   transition: background 0.2s;
 }
 
+.navlist li a::after {
+  content: "";
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.4rem;
+
+  height: 2px;
+  background: currentColor;
+
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s ease;
+}
+
 @media (max-width: 600px) {
   .menuButton {
     display: block;
   }
 
   .mobileMenu {
-    display: none;
+    display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: stretch;
@@ -159,10 +185,20 @@
 
     background: white;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    visibility: hidden;
+    opacity: 0;
+    transform: translateX(12px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      visibility 0.2s;
   }
 
   .mobileMenu.open {
-    display: flex;
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(0);
   }
 
   .navlist {
@@ -194,11 +230,15 @@
     background: none;
     border: none;
     box-shadow: none;
+
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 
-.navlist li a:hover {
-  font-style: italic;
+.navlist li a:hover::after {
+  transform: scaleX(1);
 }
 #active {
   background: #3f3d56;

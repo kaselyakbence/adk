@@ -66,31 +66,33 @@ const InstructionsCard = () => {
       </div>
 
       <div className={`${styles.body} ${!collapsed ? styles.open : ""}`}>
-        {activeTab === "usage" && (
-          <ol className={styles.list}>
-            <li>{t("instructionsCard.usageStep1")}</li>
-            <li>{t("instructionsCard.usageStep2")}</li>
-            <li>{t("instructionsCard.usageStep3")}</li>
-            <li>{t("instructionsCard.usageStep4")}</li>
-            <li>{t("instructionsCard.usageStep5")}</li>
-          </ol>
-        )}
+        <div className={styles.bodyInner}>
+          {activeTab === "usage" && (
+            <ol className={styles.list}>
+              <li>{t("instructionsCard.usageStep1")}</li>
+              <li>{t("instructionsCard.usageStep2")}</li>
+              <li>{t("instructionsCard.usageStep3")}</li>
+              <li>{t("instructionsCard.usageStep4")}</li>
+              <li>{t("instructionsCard.usageStep5")}</li>
+            </ol>
+          )}
 
-        {activeTab === "info" && (
-          <div>
-            <p className={styles.text}>{t("instructionsCard.infoParagraph1")}</p>
-            <p className={styles.text}>
-              {t("instructionsCard.infoParagraph2Before")}{" "}
-              <span className={styles.link}>
-                {t("instructionsCard.infoParagraph2Link")}
-              </span>{" "}
-              {t("instructionsCard.infoParagraph2After")}
-            </p>
-            <p className={styles.text}>{t("instructionsCard.infoParagraph3")}</p>
-            <p className={styles.text}>{t("instructionsCard.infoParagraph4")}</p>
-            <p className={styles.text}>{t("instructionsCard.infoParagraph5")}</p>
-          </div>
-        )}
+          {activeTab === "info" && (
+            <div>
+              <p className={styles.text}>{t("instructionsCard.infoParagraph1")}</p>
+              <p className={styles.text}>
+                {t("instructionsCard.infoParagraph2Before")}{" "}
+                <span className={styles.link}>
+                  {t("instructionsCard.infoParagraph2Link")}
+                </span>{" "}
+                {t("instructionsCard.infoParagraph2After")}
+              </p>
+              <p className={styles.text}>{t("instructionsCard.infoParagraph3")}</p>
+              <p className={styles.text}>{t("instructionsCard.infoParagraph4")}</p>
+              <p className={styles.text}>{t("instructionsCard.infoParagraph5")}</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

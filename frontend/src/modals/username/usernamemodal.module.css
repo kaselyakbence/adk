@@ -5,6 +5,58 @@
   }
 }
 
+.modalBox {
+  /* This modal had no custom className before - it was relying entirely on
+     react-modal's own default content styles. Passing a className (needed
+     for the animation classes below) makes react-modal skip those defaults
+     entirely, so they're reproduced here verbatim. */
+  position: absolute;
+  height: fit-content;
+  border: 1px solid #ccc;
+  background: #fff;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 4px;
+  outline: none;
+
+  transform: translate(-50%, -50%) scale(0.92);
+  opacity: 0;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.modalBoxAfterOpen {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.modalBoxBeforeClose {
+  transform: translate(-50%, -50%) scale(0.92);
+  opacity: 0;
+}
+
+.overlay {
+  /* Same story as modalBox, for react-modal's default overlay styles. */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.75);
+
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.overlayAfterOpen {
+  opacity: 1;
+}
+
+.overlayBeforeClose {
+  opacity: 0;
+}
+
 .header h2 {
   margin: 0;
 }

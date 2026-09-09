@@ -26,6 +26,17 @@ const InfoModal = ({ deviceID, setIsOpen }: InfoModalProps) => {
       onRequestClose={() => setIsOpen(null)}
       contentLabel="Info Modal"
       ariaHideApp={false}
+      closeTimeoutMS={200}
+      className={{
+        base: styles.modalBox,
+        afterOpen: styles.modalBoxAfterOpen,
+        beforeClose: styles.modalBoxBeforeClose,
+      }}
+      overlayClassName={{
+        base: styles.overlay,
+        afterOpen: styles.overlayAfterOpen,
+        beforeClose: styles.overlayBeforeClose,
+      }}
       style={{
         content: {
           top: "50%",
@@ -33,7 +44,6 @@ const InfoModal = ({ deviceID, setIsOpen }: InfoModalProps) => {
           right: "auto",
           bottom: "auto",
           marginRight: "-50%",
-          transform: "translate(-50%, -50%)",
           padding: "20px",
           boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
         },
