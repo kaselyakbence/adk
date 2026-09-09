@@ -1,13 +1,63 @@
 .modalBox {
+  /* react-modal skips its own default content styles (position: absolute
+     among them) whenever a custom className is passed - replicated here
+     since this now supplies afterOpen/beforeClose animation classes too. */
+  position: absolute;
+  height: fit-content;
+
   width: 90vw;
-  max-width: 360px;
+  max-width: 440px;
 
   background-color: white;
   border-radius: 16px;
-  padding: 1.5rem;
+  padding: 2rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 
   outline: none;
+
+  transform: translate(-50%, -50%) scale(0.92);
+  opacity: 0;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.modalBoxAfterOpen {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.modalBoxBeforeClose {
+  transform: translate(-50%, -50%) scale(0.92);
+  opacity: 0;
+}
+
+@media (max-width: 600px) {
+  .modalBox {
+    width: 84vw;
+    padding: 1.5rem;
+  }
+}
+
+.overlay {
+  /* Same deal as modalBox above, but for react-modal's default overlay
+     styles (position: fixed + full-viewport inset). */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.overlayAfterOpen {
+  opacity: 1;
+}
+
+.overlayBeforeClose {
+  opacity: 0;
 }
 
 .header {
@@ -51,9 +101,18 @@
 }
 
 .label {
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.4rem;
 
-  font-size: 1rem;
+  font-size: 1.1rem;
+  text-align: center;
+  opacity: 0.6;
+}
+
+.instructions {
+  margin: 0 0 1.25rem;
+
+  font-size: 0.9rem;
+  line-height: 1.4;
   text-align: center;
   opacity: 0.6;
 }
@@ -68,17 +127,22 @@
 }
 
 .input {
-  width: 5rem;
-  padding: 0.6rem;
+  width: 5.5rem;
+  padding: 0.75rem;
 
   background-color: #f2f2f2;
   border: 2px solid transparent;
   border-radius: 10px;
 
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   text-align: center;
 
   transition: border-color 0.15s ease;
+}
+
+.input.shake {
+  border-color: #ff6584;
+  animation: shake 0.4s ease;
 }
 
 .input:focus {

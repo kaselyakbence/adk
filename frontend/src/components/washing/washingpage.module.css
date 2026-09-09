@@ -95,6 +95,10 @@
   font-size: 1rem;
 }
 
+.washer_header_right.pulse {
+  animation: countPulse 0.4s ease;
+}
+
 .dryers {
   @media (850px <= width) {
     width: 100%;
@@ -104,6 +108,32 @@
 
 .no_display {
   display: none;
+}
+
+.skeletonItem {
+  height: 2.7rem;
+
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-top: 6px;
+
+  border-radius: 25px;
+
+  background: linear-gradient(90deg, #d9d9d9 25%, #ececec 37%, #d9d9d9 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+.skeletonCount {
+  display: inline-block;
+  width: 2.2rem;
+  height: 1rem;
+
+  border-radius: 4px;
+
+  background: linear-gradient(90deg, #d9d9d9 25%, #ececec 37%, #d9d9d9 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
 }
 
 .item {
@@ -125,6 +155,21 @@
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 
   font-size: 1.1rem;
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.item:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .itemLabel {
@@ -146,6 +191,8 @@
   font-size: 0.75rem;
   color: #6397ff;
   white-space: nowrap;
+
+  animation: fadeIn 0.2s ease;
 }
 
 .pendingIcon {

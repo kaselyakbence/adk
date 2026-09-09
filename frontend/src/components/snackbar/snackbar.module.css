@@ -1,20 +1,42 @@
 .snackbar {
-  width: 80%;
+  position: fixed;
+  bottom: 24px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: max-content;
+  max-width: 90vw;
+
+  /* Must outrank everything else fixed/portaled in the app (nav, camera
+     overlay, modals) so a message is never silently hidden behind them. */
+  z-index: 1000000;
 
   background-color: #4cb944;
   color: white;
 
-  position: absolute;
-  bottom: 5px;
-  left: 10%;
+  padding: 0.6rem 1.1rem;
 
-  padding: 4px;
-
-  border-radius: 25px;
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.5rem;
+
+  font-size: 0.95rem;
+  text-align: center;
+
+  animation: fadeInUp 0.25s ease;
+}
+
+.snackbar.leaving {
+  animation: fadeOutDown 0.2s ease forwards;
+}
+
+.icon {
+  flex-shrink: 0;
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 .success {

@@ -1,5 +1,7 @@
 .available {
   color: #4cb944;
+  display: inline-block;
+  animation: pop 0.35s ease;
 }
 
 @keyframes fade {

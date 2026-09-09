@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import styles from "./navbar.module.css";
 import { UsernameContext } from "../../context/UsernameContext";
 import { LocaleContext } from "../../context/LocaleContext";
+import { CameraContext } from "../../context/CameraContext";
 import UsernameModal from "../../modals/username/UsernameModal";
 
 const navItems = [
@@ -24,6 +25,7 @@ const Navbar = () => {
   const isActive = (path: string) => pathname === `/${locale}${path}`;
   const { username, loaded: usernameLoaded } = useContext(UsernameContext);
   const displayName = username || "Guest";
+  const { cameraOpen } = useContext(CameraContext);
 
   useEffect(() => {
     if (!dropdownOpen) return;
@@ -40,6 +42,8 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [dropdownOpen]);
+
+  if (cameraOpen) return null;
 
   return (
     <nav className={styles.navbar}>
@@ -87,6 +91,7 @@ const Navbar = () => {
               onClick={() => {
                 setChangeModalOpen(true);
                 setDropdownOpen(false);
+                setMenuOpen(false);
               }}
             >
               {t("nav.changeButton")}
