@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DevicesContext } from "../../context/DevicesContext";
 import styles from "./washingpage.module.css";
 import Countdown from "../countdown/Countdown";
@@ -12,15 +12,17 @@ import InstructionsCard from "./InstructionsCard";
 import { getPendingUpdates, subscribeToQueueChanges } from "../../lib/offlineQueue";
 import InstallNudge from "../InstallNudge";
 import { LocaleContext } from "../../context/LocaleContext";
+import { CameraContext } from "../../context/CameraContext";
 
 interface MainPageProps {
   refresh: () => Promise<void>;
+  loading: boolean;
 }
 
-const MainPage = ({ refresh }: MainPageProps) => {
+const MainPage = ({ refresh, loading }: MainPageProps) => {
   const [updateDevice, setUpdateDevice] = useState<number | null>(null);
   const [infoDevice, setInfoDevice] = useState<number | null>(null);
-  const [cameraOpen, setCameraOpen] = useState(false);
+  const { cameraOpen, setCameraOpen } = useContext(CameraContext);
 
   const devices = useContext(DevicesContext);
   const { t } = useContext(LocaleContext);
@@ -55,6 +57,25 @@ const MainPage = ({ refresh }: MainPageProps) => {
     };
   }, [devices]);
 
+  const [washerPulse, setWasherPulse] = useState(false);
+  const [dryerPulse, setDryerPulse] = useState(false);
+  const prevWashersRef = useRef(freeDevices.washers);
+  const prevDryersRef = useRef(freeDevices.dryers);
+
+  useEffect(() => {
+    if (freeDevices.washers !== prevWashersRef.current) {
+      prevWashersRef.current = freeDevices.washers;
+      setWasherPulse(true);
+    }
+  }, [freeDevices.washers]);
+
+  useEffect(() => {
+    if (freeDevices.dryers !== prevDryersRef.current) {
+      prevDryersRef.current = freeDevices.dryers;
+      setDryerPulse(true);
+    }
+  }, [freeDevices.dryers]);
+
   return (
     <>
       <Navbar />
@@ -72,68 +93,90 @@ const MainPage = ({ refresh }: MainPageProps) => {
               <p className={styles.washer_header_left}>
                 {t("washing.machinesHeading")}
               </p>
-              <p className={styles.washer_header_right}>
-                {freeDevices.washers}/5
+              <p
+                className={`${styles.washer_header_right} ${washerPulse ? styles.pulse : ""}`}
+                onAnimationEnd={() => setWasherPulse(false)}
+              >
+                {loading ? (
+                  <span className={styles.skeletonCount} />
+                ) : (
+                  `${freeDevices.washers}/5`
+                )}
               </p>
             </div>
-            {devices &&
-              devices
-                .filter((d) => d.type == "washer")
-                .sort((a, b) => a.id - b.id)
-                .map((d) => (
-                  <div
-                    className={styles.item}
-                    key={d.id}
-                    onClick={() => setInfoDevice(d.id)}
-                  >
-                    <div className={styles.itemLabel}>
-                      <span>
-                        {t("washing.washerLabel")} {d.number}
-                      </span>
-                      {pendingDeviceIds.has(d.id) && (
-                        <span className={styles.pendingBadge}>
-                          <MdSync className={styles.pendingIcon} />
-                          {t("washing.pendingSync")}
+            {loading
+              ? Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className={styles.skeletonItem} />
+                ))
+              : devices &&
+                devices
+                  .filter((d) => d.type == "washer")
+                  .sort((a, b) => a.id - b.id)
+                  .map((d) => (
+                    <div
+                      className={styles.item}
+                      key={d.id}
+                      onClick={() => setInfoDevice(d.id)}
+                    >
+                      <div className={styles.itemLabel}>
+                        <span>
+                          {t("washing.washerLabel")} {d.number}
                         </span>
-                      )}
+                        {pendingDeviceIds.has(d.id) && (
+                          <span className={styles.pendingBadge}>
+                            <MdSync className={styles.pendingIcon} />
+                            {t("washing.pendingSync")}
+                          </span>
+                        )}
+                      </div>
+                      <Countdown time={d.end_date} />
                     </div>
-                    <Countdown time={d.end_date} />
-                  </div>
-                ))}
+                  ))}
           </div>
           <div className={styles.dryers}>
             <div className={styles.washer_header}>
               <p className={styles.washer_header_left}>
                 {t("washing.dryersHeading")}
               </p>
-              <p className={styles.washer_header_right}>
-                {freeDevices.dryers}/3
+              <p
+                className={`${styles.washer_header_right} ${dryerPulse ? styles.pulse : ""}`}
+                onAnimationEnd={() => setDryerPulse(false)}
+              >
+                {loading ? (
+                  <span className={styles.skeletonCount} />
+                ) : (
+                  `${freeDevices.dryers}/3`
+                )}
               </p>
             </div>
-            {devices &&
-              devices
-                .filter((d) => d.type == "dryer")
-                .sort((a, b) => a.id - b.id)
-                .map((d) => (
-                  <div
-                    className={styles.item}
-                    key={d.id}
-                    onClick={() => setInfoDevice(d.id)}
-                  >
-                    <div className={styles.itemLabel}>
-                      <span>
-                        {t("washing.dryerLabel")} {d.number}
-                      </span>
-                      {pendingDeviceIds.has(d.id) && (
-                        <span className={styles.pendingBadge}>
-                          <MdSync className={styles.pendingIcon} />
-                          {t("washing.pendingSync")}
+            {loading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className={styles.skeletonItem} />
+                ))
+              : devices &&
+                devices
+                  .filter((d) => d.type == "dryer")
+                  .sort((a, b) => a.id - b.id)
+                  .map((d) => (
+                    <div
+                      className={styles.item}
+                      key={d.id}
+                      onClick={() => setInfoDevice(d.id)}
+                    >
+                      <div className={styles.itemLabel}>
+                        <span>
+                          {t("washing.dryerLabel")} {d.number}
                         </span>
-                      )}
+                        {pendingDeviceIds.has(d.id) && (
+                          <span className={styles.pendingBadge}>
+                            <MdSync className={styles.pendingIcon} />
+                            {t("washing.pendingSync")}
+                          </span>
+                        )}
+                      </div>
+                      <Countdown time={d.end_date} />
                     </div>
-                    <Countdown time={d.end_date} />
-                  </div>
-                ))}
+                  ))}
           </div>
         </div>
         <InstructionsCard />

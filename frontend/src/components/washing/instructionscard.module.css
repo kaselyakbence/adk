@@ -76,17 +76,29 @@
 }
 
 .body {
-  display: none;
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.bodyInner {
+  overflow: hidden;
+  min-height: 0;
 }
 
 .body.open {
-  display: block;
+  grid-template-rows: 1fr;
+  opacity: 1;
   margin-top: 1rem;
 }
 
 @media (850px <= width) {
   .body {
-    display: block !important;
+    grid-template-rows: 1fr !important;
+    opacity: 1 !important;
     margin-top: 1rem;
   }
 }

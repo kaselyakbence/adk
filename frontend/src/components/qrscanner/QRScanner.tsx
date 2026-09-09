@@ -1,9 +1,11 @@
 import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
 import styles from "./qrscanner.module.css";
-import { IoMdCloseCircleOutline } from "react-icons/io";
-import { useContext } from "react";
+import { IoMdCheckmarkCircle, IoMdCloseCircleOutline } from "react-icons/io";
+import { useContext, useState } from "react";
 import { SnackbarContext } from "../../context/SnackbarContext";
 import { LocaleContext } from "../../context/LocaleContext";
+
+const CONFIRM_DISPLAY_MS = 500;
 
 interface QRCodeScanner {
   isOpen: boolean;
@@ -14,13 +16,20 @@ interface QRCodeScanner {
 const QRScanner = ({ isOpen, setIsOpen, setChosenDevice }: QRCodeScanner) => {
   const { messages, setMessages } = useContext(SnackbarContext);
   const { t } = useContext(LocaleContext);
+  const [confirmed, setConfirmed] = useState(false);
 
   const handleScan = (detectedCodes: IDetectedBarcode[]) => {
+    if (confirmed) return;
+
     try {
       const val = JSON.parse(detectedCodes[0].rawValue);
       if (val.id) {
-        setChosenDevice(val.id);
-        setIsOpen(false);
+        setConfirmed(true);
+        setTimeout(() => {
+          setChosenDevice(val.id);
+          setIsOpen(false);
+          setConfirmed(false);
+        }, CONFIRM_DISPLAY_MS);
       }
     } catch (_) {
       if (setMessages)
@@ -47,6 +56,11 @@ const QRScanner = ({ isOpen, setIsOpen, setChosenDevice }: QRCodeScanner) => {
             <Scanner onScan={handleScan} scanDelay={1000} />
           </div>
         </div>
+        {confirmed && (
+          <div className={styles.confirmOverlay}>
+            <IoMdCheckmarkCircle className={styles.confirmIcon} />
+          </div>
+        )}
       </>
     );
 };

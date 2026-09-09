@@ -4,9 +4,11 @@ import "../../main.css";
 import { isLocale, LOCALES } from "../../locales";
 import LocaleProvider from "../../context/LocaleProvider";
 import UsernameProvider from "../../context/UsernameProvider";
+import CameraProvider from "../../context/CameraProvider";
 import ServiceWorkerRegister from "../../components/ServiceWorkerRegister";
 import OfflineQueueSync from "../../components/OfflineQueueSync";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
+import PageTransition from "../../components/PageTransition";
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
@@ -56,12 +58,16 @@ export default async function LocaleLayout({
       </head>
       <body suppressHydrationWarning>
         <LocaleProvider locale={locale}>
-          <div id="root">
-            <UsernameProvider>{children}</UsernameProvider>
-          </div>
-          <LanguageSwitcher />
-          <ServiceWorkerRegister />
-          <OfflineQueueSync />
+          <CameraProvider>
+            <div id="root">
+              <UsernameProvider>
+                <PageTransition>{children}</PageTransition>
+              </UsernameProvider>
+            </div>
+            <LanguageSwitcher />
+            <ServiceWorkerRegister />
+            <OfflineQueueSync />
+          </CameraProvider>
         </LocaleProvider>
       </body>
     </html>

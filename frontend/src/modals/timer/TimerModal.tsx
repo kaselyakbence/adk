@@ -2,7 +2,7 @@ import ReactModal from "react-modal";
 import { IoMdClose } from "react-icons/io";
 import styles from "./timermodal.module.css";
 import "../modal.css";
-import { useCallback, useContext, useRef, useState } from "react";
+import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import { DevicesContext } from "../../context/DevicesContext";
 import { API_URL } from "../../secrets";
 import { SnackbarContext } from "../../context/SnackbarContext";
@@ -21,11 +21,18 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [input, setInput] = useState<{ hours?: string; minutes?: string }>({});
+  const [shakeHour, setShakeHour] = useState(false);
+  const [shakeMinute, setShakeMinute] = useState(false);
 
   const { messages, setMessages } = useContext(SnackbarContext);
   const { t } = useContext(LocaleContext);
 
   const device = useContext(DevicesContext).find((d) => d.id == deviceID);
+
+  const inUse = useMemo(() => {
+    if (!device?.end_date) return false;
+    return new Date(device.end_date) > new Date();
+  }, [device]);
 
   const closeModal = useCallback(() => {
     setIsOpen(null);
@@ -101,7 +108,17 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
       isOpen={!!deviceID}
       ariaHideApp={false} //TODO
       onRequestClose={closeModal}
-      className={styles.modalBox}
+      closeTimeoutMS={200}
+      className={{
+        base: styles.modalBox,
+        afterOpen: styles.modalBoxAfterOpen,
+        beforeClose: styles.modalBoxBeforeClose,
+      }}
+      overlayClassName={{
+        base: styles.overlay,
+        afterOpen: styles.overlayAfterOpen,
+        beforeClose: styles.overlayBeforeClose,
+      }}
       style={{
         content: {
           top: "50%",
@@ -109,10 +126,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
           right: "auto",
           bottom: "auto",
           marginRight: "-50%",
-          transform: "translate(-50%, -50%)",
           border: "none",
-          background: "none",
-          padding: 0,
         },
         overlay: {
           backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -133,14 +147,29 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
         </button>
       </div>
 
-      <p className={styles.label}>{t("timerModal.setTimer")}</p>
+      {inUse ? (
+        <>
+          <p className={styles.label}>{t("timerModal.inUseHeading")}</p>
+          <p className={styles.instructions}>
+            {t("timerModal.inUseByBefore")}{" "}
+            {device?.owner || t("infoModal.unknown")}.{" "}
+            {t("timerModal.inUseFreeAt")}{" "}
+            {device?.end_date && new Date(device.end_date).toLocaleTimeString()}.
+          </p>
+        </>
+      ) : (
+        <>
+          <p className={styles.label}>{t("timerModal.setTimer")}</p>
+          <p className={styles.instructions}>{t("timerModal.instructions")}</p>
+        </>
+      )}
       <div className={styles.inputs}>
         <input
           id="hour"
           type="number"
-          className={styles.input}
+          className={`${styles.input} ${shakeHour ? styles.shake : ""}`}
           inputMode="numeric"
-          placeholder="HH"
+          placeholder="H"
           value={input.hours}
           max={3}
           onChange={(e) => {
@@ -152,8 +181,11 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
                 hours: v.length === 1 ? v : v.charAt(1),
               });
               inputRef.current?.focus();
+            } else {
+              setShakeHour(true);
             }
           }}
+          onAnimationEnd={() => setShakeHour(false)}
           autoFocus
         />
         <span className={styles.separator}>:</span>
@@ -163,13 +195,17 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
           inputMode="numeric"
           placeholder="MM"
           type="number"
-          className={styles.input}
+          className={`${styles.input} ${shakeMinute ? styles.shake : ""}`}
           value={input.minutes}
           onChange={(e) => {
             const val = parseInt(e.target.value) || 0;
-            if (val < 61 && val > -1)
+            if (val < 61 && val > -1) {
               setInput({ ...input, minutes: e.target.value });
+            } else {
+              setShakeMinute(true);
+            }
           }}
+          onAnimationEnd={() => setShakeMinute(false)}
         />
       </div>
 
@@ -178,7 +214,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
           {t("timerModal.close")}
         </button>
         <button className={styles.startButton} onClick={startOnClick}>
-          {t("timerModal.start")}
+          {inUse ? t("timerModal.overwrite") : t("timerModal.start")}
         </button>
       </div>
     </ReactModal>
