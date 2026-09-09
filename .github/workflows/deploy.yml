@@ -4,6 +4,9 @@ on:
   push:
     branches: [deployment]
 
+permissions:
+  contents: read
+
 env:
   REGISTRY: ghcr.io
   BACKEND_IMAGE: ghcr.io/${{ github.repository_owner }}/adk-backend
@@ -72,6 +75,7 @@ jobs:
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
+    permissions: {}
     steps:
       - name: SSH deploy
         uses: appleboy/ssh-action@v1

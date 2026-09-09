@@ -51,5 +51,8 @@
     "morgan": "^1.11.0",
     "prisma": "^6.19.3",
     "web-push": "^3.6.7"
+  },
+  "overrides": {
+    "deepmerge-ts": "^8.0.2"
   }
 }
