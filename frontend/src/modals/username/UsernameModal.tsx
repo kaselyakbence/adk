@@ -3,6 +3,7 @@ import styles from "./usernamemodal.module.css";
 import { useContext, useEffect, useState } from "react";
 import { UsernameContext } from "../../context/UsernameContext";
 import { LocaleContext } from "../../context/LocaleContext";
+import { useKeyboardOpen } from "../../hooks/useKeyboardOpen";
 
 interface UsernameModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ const UsernameModal = ({
   const { setUsername } = useContext(UsernameContext);
   const { t } = useContext(LocaleContext);
   const [name, setName] = useState("");
+  const keyboardOpen = useKeyboardOpen();
 
   useEffect(() => {
     if (isOpen) setName("");
@@ -47,7 +49,7 @@ const UsernameModal = ({
       shouldCloseOnEsc={dismissible}
       closeTimeoutMS={200}
       className={{
-        base: styles.modalBox,
+        base: `${styles.modalBox} ${keyboardOpen ? styles.keyboardOpen : ""}`,
         afterOpen: styles.modalBoxAfterOpen,
         beforeClose: styles.modalBoxBeforeClose,
       }}
@@ -58,7 +60,6 @@ const UsernameModal = ({
       }}
       style={{
         content: {
-          top: "50%",
           left: "50%",
           right: "auto",
           bottom: "auto",
