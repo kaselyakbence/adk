@@ -13,6 +13,7 @@ import { getPendingUpdates, subscribeToQueueChanges } from "../../lib/offlineQue
 import InstallNudge from "../InstallNudge";
 import { LocaleContext } from "../../context/LocaleContext";
 import { CameraContext } from "../../context/CameraContext";
+import { MobileMenuContext } from "../../context/MobileMenuContext";
 
 interface MainPageProps {
   refresh: () => Promise<void>;
@@ -23,6 +24,7 @@ const MainPage = ({ refresh, loading }: MainPageProps) => {
   const [updateDevice, setUpdateDevice] = useState<number | null>(null);
   const [infoDevice, setInfoDevice] = useState<number | null>(null);
   const { cameraOpen, setCameraOpen } = useContext(CameraContext);
+  const { menuOpen } = useContext(MobileMenuContext);
 
   const devices = useContext(DevicesContext);
   const { t } = useContext(LocaleContext);
@@ -79,13 +81,15 @@ const MainPage = ({ refresh, loading }: MainPageProps) => {
   return (
     <>
       <Navbar />
-      <button
-        className={styles.fab}
-        onClick={() => setCameraOpen(true)}
-        aria-label={t("washing.scanQrAria")}
-      >
-        <MdCameraswitch className={styles.fabIcon} />
-      </button>
+      {!menuOpen && (
+        <button
+          className={styles.fab}
+          onClick={() => setCameraOpen(true)}
+          aria-label={t("washing.scanQrAria")}
+        >
+          <MdCameraswitch className={styles.fabIcon} />
+        </button>
+      )}
       <div className={styles.layout}>
         <div className={styles.body}>
           <div className={styles.washers}>

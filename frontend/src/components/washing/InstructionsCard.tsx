@@ -12,9 +12,17 @@ const InstructionsCard = () => {
   const { t } = useContext(LocaleContext);
 
   useEffect(() => {
-    if (!collapsed) {
+    if (collapsed) return;
+
+    // The card's expand animation (.body's grid-template-rows transition)
+    // takes 200ms - scrolling immediately targets its still-collapsed
+    // height, so the newly-revealed content ends up below the fold anyway.
+    // Waiting for the transition to finish first actually brings it into
+    // focus.
+    const timer = setTimeout(() => {
       cardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    }, 220);
+    return () => clearTimeout(timer);
   }, [collapsed, activeTab]);
 
   const toggleCollapse = () => setCollapsed((isCollapsed) => !isCollapsed);

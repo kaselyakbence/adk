@@ -4,6 +4,13 @@ A full-stack community web app for the Allee der Kosmonauten student
 dormitory, built end-to-end (frontend, backend, infrastructure) as a side
 project to pitch a live washing-machine booking system to dorm leadership.
 
+## Live demo
+
+[https://3-66-105-218.sslip.io](https://3-66-105-218.sslip.io)
+
+Running on a temporary `sslip.io` address for pre-approval testing; a real
+domain will replace it before later.
+
 ## Overview
 
 The site's primary goal is to inform residents and visitors about the
@@ -55,7 +62,6 @@ script for demo data.
 
 **Tooling** — ESLint, TypeScript, Jest.
 
-**Infrastructure (in progress)** — Docker Compose (frontend, backend,
-Postgres, Caddy), Caddy for automatic HTTPS via Let's Encrypt, a single
-AWS Lightsail instance, and GitHub Actions CI/CD publishing to GitHub
-Container Registry.
+**Infrastructure** — Docker Compose (frontend, backend, Postgres, Caddy),
+Caddy for automatic HTTPS via Let's Encrypt, a single AWS Lightsail
+instance, and GitHub Actions CI/CD publishing to GitHub Container Registry.

@@ -5,6 +5,7 @@ import { isLocale, LOCALES } from "../../locales";
 import LocaleProvider from "../../context/LocaleProvider";
 import UsernameProvider from "../../context/UsernameProvider";
 import CameraProvider from "../../context/CameraProvider";
+import MobileMenuProvider from "../../context/MobileMenuProvider";
 import ServiceWorkerRegister from "../../components/ServiceWorkerRegister";
 import OfflineQueueSync from "../../components/OfflineQueueSync";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
@@ -59,14 +60,16 @@ export default async function LocaleLayout({
       <body suppressHydrationWarning>
         <LocaleProvider locale={locale}>
           <CameraProvider>
-            <div id="root">
-              <UsernameProvider>
-                <PageTransition>{children}</PageTransition>
-              </UsernameProvider>
-            </div>
-            <LanguageSwitcher />
-            <ServiceWorkerRegister />
-            <OfflineQueueSync />
+            <MobileMenuProvider>
+              <div id="root">
+                <UsernameProvider>
+                  <PageTransition>{children}</PageTransition>
+                </UsernameProvider>
+              </div>
+              <LanguageSwitcher />
+              <ServiceWorkerRegister />
+              <OfflineQueueSync />
+            </MobileMenuProvider>
           </CameraProvider>
         </LocaleProvider>
       </body>
