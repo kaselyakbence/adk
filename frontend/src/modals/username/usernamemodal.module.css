@@ -12,6 +12,7 @@
      entirely, so they're reproduced here verbatim. */
   position: absolute;
   height: fit-content;
+  top: 50%;
   border: 1px solid #ccc;
   background: #fff;
   overflow: auto;
@@ -34,6 +35,24 @@
 .modalBoxBeforeClose {
   transform: translate(-50%, -50%) scale(0.92);
   opacity: 0;
+}
+
+/* Only repositioned while the on-screen keyboard is actually open (see
+   useKeyboardOpen) - centering vertically is fine normally, but the keyboard
+   just overlays the bottom of the visual viewport without resizing the
+   layout, so a centered modal would have its bottom half (buttons included)
+   sitting right where the keyboard covers. */
+.keyboardOpen {
+  top: 6vh;
+  transform: translate(-50%, 0) scale(0.92);
+}
+
+.modalBoxAfterOpen.keyboardOpen {
+  transform: translate(-50%, 0) scale(1);
+}
+
+.modalBoxBeforeClose.keyboardOpen {
+  transform: translate(-50%, 0) scale(0.92);
 }
 
 .overlay {

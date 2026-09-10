@@ -10,6 +10,7 @@ import { getStoredUsername } from "../../context/UsernameContext";
 import { enqueueUpdate, registerBackgroundSync } from "../../lib/offlineQueue";
 import { subscribeToPush, MACHINE_STARTED_EVENT } from "../../lib/push";
 import { LocaleContext } from "../../context/LocaleContext";
+import { useKeyboardOpen } from "../../hooks/useKeyboardOpen";
 
 interface TimerModalProps {
   deviceID: number | null;
@@ -26,6 +27,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
 
   const { messages, setMessages } = useContext(SnackbarContext);
   const { t } = useContext(LocaleContext);
+  const keyboardOpen = useKeyboardOpen();
 
   const device = useContext(DevicesContext).find((d) => d.id == deviceID);
 
@@ -110,7 +112,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
       onRequestClose={closeModal}
       closeTimeoutMS={200}
       className={{
-        base: styles.modalBox,
+        base: `${styles.modalBox} ${keyboardOpen ? styles.keyboardOpen : ""}`,
         afterOpen: styles.modalBoxAfterOpen,
         beforeClose: styles.modalBoxBeforeClose,
       }}
@@ -121,7 +123,6 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
       }}
       style={{
         content: {
-          top: "50%",
           left: "50%",
           right: "auto",
           bottom: "auto",

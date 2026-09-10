@@ -6,6 +6,7 @@ import styles from "./navbar.module.css";
 import { UsernameContext } from "../../context/UsernameContext";
 import { LocaleContext } from "../../context/LocaleContext";
 import { CameraContext } from "../../context/CameraContext";
+import { MobileMenuContext } from "../../context/MobileMenuContext";
 import UsernameModal from "../../modals/username/UsernameModal";
 
 const navItems = [
@@ -16,10 +17,11 @@ const navItems = [
 ];
 
 const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const { menuOpen, setMenuOpen } = useContext(MobileMenuContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [changeModalOpen, setChangeModalOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
   const { locale, t } = useContext(LocaleContext);
   const isActive = (path: string) => pathname === `/${locale}${path}`;
@@ -43,10 +45,23 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [dropdownOpen]);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const handleClickOutside = (e: PointerEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handleClickOutside);
+    return () => document.removeEventListener("pointerdown", handleClickOutside);
+  }, [menuOpen, setMenuOpen]);
+
   if (cameraOpen) return null;
 
   return (
-    <nav className={styles.navbar}>
+    <nav className={styles.navbar} ref={navRef}>
       <div className={styles.logo}>
         <Link href={`/${locale}`}>Alle Der Kosmonauten 20</Link>
       </div>
