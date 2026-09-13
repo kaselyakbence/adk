@@ -4,6 +4,7 @@ import styles from "./page.module.css";
 import welcomeImg from "../../assets/pictures/welcome.png";
 import Navbar from "../../components/navbar/NavBar";
 import Astronaut from "../../components/astronaut/Astronaut";
+import PreviewModal from "../../modals/preview/PreviewModal";
 import { LocaleContext } from "../../context/LocaleContext";
 
 export default function Page() {
@@ -11,6 +12,7 @@ export default function Page() {
 
   return (
     <main className={styles.main}>
+      <PreviewModal />
       <Navbar />
       <div className={styles.content}>
         <h1 className={styles.welcomeHeader}>{t("home.title")}</h1>
