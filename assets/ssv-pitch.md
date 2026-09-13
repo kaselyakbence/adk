@@ -35,9 +35,9 @@ phone."
 2. Tap the camera button on the page.
 3. Scan one of these with your phone:
 
-   |                  Washer 1                  |                  Dryer 1                  |
-   | :----------------------------------------: | :---------------------------------------: |
-   | ![Washer 1 QR code](qr_codes/qrcode_1.png) | ![Dryer 1 QR code](qr_codes/qrcode_6.png) |
+   |                  Washer 1                  |     |                  Dryer 1                  |
+   | :----------------------------------------: | :-: | :---------------------------------------: |
+   | ![Washer 1 QR code](qr_codes/qrcode_1.png) |     | ![Dryer 1 QR code](qr_codes/qrcode_6.png) |
 
 4. Enter a time (like 0 hours, 1 minute) and press **Start** to try
    booking it for real.
