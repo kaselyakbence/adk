@@ -1,0 +1,126 @@
+.modalBox {
+  /* This modal has no default className from react-modal to fall back on
+     once we pass our own (needed for the animation classes below), so its
+     base positioning/appearance is fully spelled out here. */
+  position: absolute;
+  height: fit-content;
+  top: 50%;
+
+  width: 90vw;
+  max-width: 380px;
+
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+
+  outline: none;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+  transform: translate(-50%, -50%) scale(0.92);
+  opacity: 0;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.modalBoxAfterOpen {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.modalBoxBeforeClose {
+  transform: translate(-50%, -50%) scale(0.92);
+  opacity: 0;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.overlayAfterOpen {
+  opacity: 1;
+}
+
+.overlayBeforeClose {
+  opacity: 0;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  margin-bottom: 0.75rem;
+}
+
+.icon {
+  width: 1.8rem;
+  height: 1.8rem;
+  color: #f5a623;
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 1.3rem;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.closeButton:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.text {
+  margin: 0 0 1.25rem;
+
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #3f3d56;
+}
+
+.okButton {
+  width: 100%;
+  padding: 0.6rem;
+
+  background-color: #f5a623;
+  border: none;
+  border-radius: 10px;
+
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+
+  transition: background-color 0.15s ease;
+}
+
+.okButton:hover {
+  background-color: #d98f14;
+}

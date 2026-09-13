@@ -1,4 +1,8 @@
 {
+  "previewModal.text": "Unofficial preview - under construction, not yet approved by the SSV.",
+  "previewModal.closeAria": "Close",
+  "previewModal.ok": "Got it",
+
   "nav.about": "about",
   "nav.washing": "washing",
   "nav.gallery": "gallery",
