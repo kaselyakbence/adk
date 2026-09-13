@@ -1,14 +1,14 @@
 # ADK Website
 
-At its core, this is meant to be a simple website for our dorm - a place
-to find out who we are, how to reach us, and what's going on here, the
-same way any dorm or building website would. Alongside that, I've built
-one particularly important feature we're excited to show off first: real-time
-laundry machine booking.
+At its core, this is meant to be a simple website for the dorm - a place
+to find out about the dorm, how to get in touch, and what's going on
+here, the same way any dorm or building website would. Alongside that,
+I've built one particularly important feature worth showing off first:
+real-time laundry machine booking.
 
 ## Laundry machine booking
 
-A simple website for our dorm that shows, in real time, which washing
+A simple website for the dorm that shows, in real time, which washing
 machines and dryers are free right now. No more walking down to the
 basement just to check, and no more guessing whether a running machine
 belongs to someone or was just left there, done, hours ago.
@@ -47,13 +47,13 @@ phone."
 Roughly **€65–125 per year** - a bit more than €1 a week. That covers:
 
 - **Keeping the website online**, 24/7: about €55–110 per year.
-- **Our own web address** (instead of a long, random one): about
+- **Own web address** (instead of a long, random one): about
   €10–15 per year.
 
 Everything else needed to run it - like the security that keeps it safe
 and the process that updates it - comes for free.
 
-## What we could add next
+## What could come next
 
 A few ideas for where the site could go after this, once it's up and
 running:
@@ -71,4 +71,5 @@ running:
 - **A shared dorm password** - one password, known only to people who
   live here, would be needed to actually start a machine or report a
   problem. Just looking at the site - checking which machines are free,
-  reading about us - would stay open to everyone, no password needed.
+  reading about the dorm - would stay open to everyone, no password
+  needed.
