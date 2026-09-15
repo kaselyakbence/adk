@@ -64,7 +64,7 @@ const InfoModal = ({ deviceID, setIsOpen }: InfoModalProps) => {
               new Date(device.start_date).toLocaleTimeString()}
           </p>
           <p>
-            {t("infoModal.ended")}{" "}
+            {isAvailable ? t("infoModal.ended") : t("infoModal.endsAt")}{" "}
             {device.end_date && new Date(device.end_date).toLocaleTimeString()}
           </p>
           <p>

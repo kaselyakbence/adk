@@ -99,6 +99,26 @@
   animation: countPulse 0.4s ease;
 }
 
+/* Was in the global main.css - CSS Modules scopes/hashes an animation-name
+   it sees in a .module.css file, but a @keyframes block defined in a plain
+   (non-module) file keeps its literal, unhashed name. Referencing a global
+   countPulse from here meant the hashed name in `animation` never matched
+   any actual @keyframes, so the browser silently had nothing to play -
+   moved the definition in here so both are scoped identically. */
+@keyframes countPulse {
+  0% {
+    transform: scale(1);
+    color: inherit;
+  }
+  30% {
+    transform: scale(1.25);
+    color: #6397ff;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .dryers {
   @media (850px <= width) {
     width: 100%;

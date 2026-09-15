@@ -36,13 +36,26 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
     return new Date(device.end_date) > new Date();
   }, [device]);
 
+  // Gates the Start/Overwrite button - both fields must parse to in-range
+  // numbers (0-3h, 0-60m) and the total requested duration must be > 0.
+  // An empty field counts as 0, so leaving everything blank (or at 0h/0m)
+  // is correctly treated as "nothing entered" rather than a valid booking.
+  const isValidInput = useMemo(() => {
+    const hours = input.hours === undefined || input.hours === "" ? 0 : parseInt(input.hours, 10);
+    const minutes = input.minutes === undefined || input.minutes === "" ? 0 : parseInt(input.minutes, 10);
+    if (Number.isNaN(hours) || Number.isNaN(minutes)) return false;
+    if (hours < 0 || hours > 3) return false;
+    if (minutes < 0 || minutes > 60) return false;
+    return hours * 60 + minutes > 0;
+  }, [input]);
+
   const closeModal = useCallback(() => {
     setIsOpen(null);
     setInput({});
   }, [setIsOpen]);
 
   const startOnClick = useCallback(async () => {
-    if (!deviceID) return;
+    if (!deviceID || !isValidInput) return;
 
     const hours = parseInt(input.hours || "0");
     const minutes = parseInt(input.minutes || "0");
@@ -64,6 +77,13 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
     const url = `${API_URL}/device/${deviceID}/update`;
     closeModal();
 
+    // Fired here, before the request even goes out, so the permission
+    // prompt/subscribe call stays as close as possible to the original
+    // click - WebKit is stricter than Chrome about tying push permission
+    // requests to a live user gesture, and awaiting the fetch first was
+    // enough to lose that on iOS.
+    subscribeToPush(deviceID);
+
     try {
       const res = await fetch(url, {
         method: "POST",
@@ -75,7 +95,6 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
       refresh();
 
       if (res.status == 201) {
-        subscribeToPush(deviceID);
         window.dispatchEvent(new Event(MACHINE_STARTED_EVENT));
       }
 
@@ -103,7 +122,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
           { status: "info", message: t("timerModal.offlineMessage") },
         ]);
     }
-  }, [deviceID, input, refresh, closeModal, messages, setMessages, t]);
+  }, [deviceID, input, isValidInput, refresh, closeModal, messages, setMessages, t]);
 
   return (
     <ReactModal
@@ -172,16 +191,25 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
           className={`${styles.input} ${shakeHour ? styles.shake : ""}`}
           inputMode="numeric"
           placeholder="H"
-          value={input.hours}
+          value={input.hours ?? ""}
+          min={0}
           max={3}
           onChange={(e) => {
             const v = e.target.value;
-            const num = parseInt(v.charAt(v.length - 1)) || 0;
-            if (num < 4 && num > -1) {
-              setInput({
-                ...input,
-                hours: v.length === 1 ? v : v.charAt(1),
-              });
+            if (v === "") {
+              setInput({ ...input, hours: "" });
+              setShakeHour(false);
+              return;
+            }
+            // Single-digit field: always take the most recently typed
+            // digit (lets a second keystroke "overwrite" without having
+            // to select-all first), but validate that specific digit
+            // instead of silently defaulting an unparsable one to 0.
+            const lastChar = v.charAt(v.length - 1);
+            const num = /^[0-9]$/.test(lastChar) ? parseInt(lastChar, 10) : NaN;
+            if (!Number.isNaN(num) && num <= 3) {
+              setInput({ ...input, hours: String(num) });
+              setShakeHour(false);
               inputRef.current?.focus();
             } else {
               setShakeHour(true);
@@ -198,11 +226,28 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
           placeholder="MM"
           type="number"
           className={`${styles.input} ${shakeMinute ? styles.shake : ""}`}
-          value={input.minutes}
+          value={input.minutes ?? ""}
+          min={0}
+          max={60}
           onChange={(e) => {
-            const val = parseInt(e.target.value) || 0;
-            if (val < 61 && val > -1) {
-              setInput({ ...input, minutes: e.target.value });
+            const v = e.target.value;
+            if (v === "") {
+              setInput({ ...input, minutes: "" });
+              setShakeMinute(false);
+              return;
+            }
+            // Reject anything that isn't 1-2 plain digits outright, rather
+            // than parsing it and defaulting a NaN result to a
+            // passes-the-check 0 - that was letting garbage like "-1" or
+            // "-" slip into state as if it were valid input.
+            if (!/^\d{1,2}$/.test(v)) {
+              setShakeMinute(true);
+              return;
+            }
+            const val = parseInt(v, 10);
+            if (val <= 60) {
+              setInput({ ...input, minutes: v });
+              setShakeMinute(false);
             } else {
               setShakeMinute(true);
             }
@@ -215,7 +260,11 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
         <button onClick={closeModal} className={styles.closeButton}>
           {t("timerModal.close")}
         </button>
-        <button className={styles.startButton} onClick={startOnClick}>
+        <button
+          className={styles.startButton}
+          onClick={startOnClick}
+          disabled={!isValidInput}
+        >
           {inUse ? t("timerModal.overwrite") : t("timerModal.start")}
         </button>
       </div>

@@ -200,3 +200,12 @@
 .startButton:hover {
   background-color: #24632a;
 }
+
+.startButton:disabled {
+  background-color: #a9a9a9;
+  cursor: not-allowed;
+}
+
+.startButton:disabled:hover {
+  background-color: #a9a9a9;
+}
