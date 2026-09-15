@@ -135,20 +135,6 @@ body {
   }
 }
 
-@keyframes countPulse {
-  0% {
-    transform: scale(1);
-    color: inherit;
-  }
-  30% {
-    transform: scale(1.25);
-    color: #6397ff;
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
 /* Neutralizes every animation/transition added above (and anything else on
    the page) for users who've asked their OS for reduced motion. */
 @media (prefers-reduced-motion: reduce) {

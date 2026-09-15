@@ -78,6 +78,7 @@
   "infoModal.dryer": "Dryer",
   "infoModal.lastStarted": "Last started:",
   "infoModal.ended": "Ended:",
+  "infoModal.endsAt": "Ends at:",
   "infoModal.startedBy": "Started by:",
   "infoModal.unknown": "Unknown",
 
