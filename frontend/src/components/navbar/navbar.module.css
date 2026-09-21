@@ -88,8 +88,11 @@
 
 .dropdownLabel {
   margin: 0;
-  font-size: 0.9rem;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 0.9rem;
 }
 
 .changeButton {

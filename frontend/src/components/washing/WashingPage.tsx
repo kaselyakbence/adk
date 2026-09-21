@@ -43,6 +43,16 @@ const MainPage = ({ refresh, loading }: MainPageProps) => {
     return subscribeToQueueChanges(refreshPending);
   }, []);
 
+  // Without this, a device crossing its end_date wouldn't be reflected here
+  // until `devices` itself changed - which only happens on the 30s poll or
+  // a manual refresh - leaving the free count visibly stale for however
+  // long is left until the next poll.
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => setTick((t) => t + 1), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   const freeDevices = useMemo(() => {
     const now = new Date();
     const washers = devices
@@ -57,7 +67,11 @@ const MainPage = ({ refresh, loading }: MainPageProps) => {
       washers,
       dryers,
     };
-  }, [devices]);
+    // `tick` isn't read above - it's there purely to force this memo to
+    // re-evaluate against the current time every second, instead of only
+    // when `devices` itself changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [devices, tick]);
 
   const [washerPulse, setWasherPulse] = useState(false);
   const [dryerPulse, setDryerPulse] = useState(false);

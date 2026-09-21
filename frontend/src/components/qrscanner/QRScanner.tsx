@@ -53,7 +53,7 @@ const QRScanner = ({ isOpen, setIsOpen, setChosenDevice }: QRCodeScanner) => {
         </button>
         <div className={styles.scannerwrapper} onClick={() => setIsOpen(false)}>
           <div>
-            <Scanner onScan={handleScan} scanDelay={1000} />
+            <Scanner onScan={handleScan} scanDelay={1000} sound={false} />
           </div>
         </div>
         {confirmed && (

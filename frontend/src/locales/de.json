@@ -78,6 +78,7 @@
   "infoModal.dryer": "Trockner",
   "infoModal.lastStarted": "Zuletzt gestartet:",
   "infoModal.ended": "Beendet:",
+  "infoModal.endsAt": "Endet um:",
   "infoModal.startedBy": "Gestartet von:",
   "infoModal.unknown": "Unbekannt",
 

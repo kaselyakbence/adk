@@ -64,7 +64,10 @@ export async function subscribeToPush(deviceId: number): Promise<void> {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(subscription.toJSON()),
     });
-  } catch {
-    // Unsupported, denied, or offline - nothing to do about it here.
+  } catch (err) {
+    // Still fails silently from the user's perspective (this should never
+    // block starting a machine) - but logged so a real failure here isn't
+    // completely invisible when debugging delivery issues.
+    console.error("subscribeToPush failed", err);
   }
 }

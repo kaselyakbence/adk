@@ -102,6 +102,7 @@
     width: 160px;
   }
 
+  .toggle,
   .option {
     font-size: 1.1rem;
     padding: 10px 18px;
