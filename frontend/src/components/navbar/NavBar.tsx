@@ -2,12 +2,14 @@
 import Link from "next/link";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { FaChevronDown, FaUserCircle } from "react-icons/fa";
 import styles from "./navbar.module.css";
 import { UsernameContext } from "../../context/UsernameContext";
 import { LocaleContext } from "../../context/LocaleContext";
 import { CameraContext } from "../../context/CameraContext";
 import { MobileMenuContext } from "../../context/MobileMenuContext";
 import UsernameModal from "../../modals/username/UsernameModal";
+import ThemeToggle from "../ThemeToggle";
 
 const navItems = [
   { key: "nav.about", href: "about" },
@@ -89,28 +91,41 @@ const Navbar = () => {
         <div className={styles.userMenu} ref={userMenuRef}>
           <button
             type="button"
-            className={styles.usernameButton}
+            className={`${styles.usernameButton} ${dropdownOpen ? styles.usernameButtonOpen : ""}`}
             onClick={() => setDropdownOpen((open) => !open)}
+            aria-haspopup="true"
+            aria-expanded={dropdownOpen}
           >
-            {displayName}
+            <FaUserCircle className={styles.userIcon} aria-hidden />
+            <span className={styles.usernameText}>{displayName}</span>
+            <FaChevronDown className={styles.chevron} aria-hidden />
           </button>
           <div
             className={`${styles.dropdown} ${dropdownOpen ? styles.dropdownOpen : ""}`}
           >
-            <p className={styles.dropdownLabel}>
-              {t("nav.usernameLabel")} {displayName}
-            </p>
-            <button
-              type="button"
-              className={styles.changeButton}
-              onClick={() => {
-                setChangeModalOpen(true);
-                setDropdownOpen(false);
-                setMenuOpen(false);
-              }}
-            >
-              {t("nav.changeButton")}
-            </button>
+            <div className={styles.settingRow}>
+              <div className={styles.settingText}>
+                <span className={styles.settingCaption}>
+                  {t("nav.usernameLabel")}
+                </span>
+                <span className={styles.settingValue}>{displayName}</span>
+              </div>
+              <button
+                type="button"
+                className={styles.changeButton}
+                onClick={() => {
+                  setChangeModalOpen(true);
+                  setDropdownOpen(false);
+                  setMenuOpen(false);
+                }}
+              >
+                {t("nav.changeButton")}
+              </button>
+            </div>
+            <div className={styles.settingRow}>
+              <span>{t("nav.darkMode")}</span>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </div>

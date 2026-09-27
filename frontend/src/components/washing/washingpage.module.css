@@ -11,7 +11,7 @@
   justify-content: center;
   align-items: center;
 
-  background-color: #6397ff;
+  background-color: var(--color-brand);
   border: none;
   border-radius: 50%;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -34,7 +34,7 @@
   width: 1.8rem;
   height: 1.8rem;
 
-  color: white;
+  color: var(--color-on-brand);
 }
 
 .layout {
@@ -112,7 +112,7 @@
   }
   30% {
     transform: scale(1.25);
-    color: #6397ff;
+    color: var(--color-brand);
   }
   100% {
     transform: scale(1);
@@ -139,7 +139,7 @@
 
   border-radius: 25px;
 
-  background: linear-gradient(90deg, #d9d9d9 25%, #ececec 37%, #d9d9d9 63%);
+  background: linear-gradient(90deg, var(--color-skeleton-base) 25%, var(--color-skeleton-highlight) 37%, var(--color-skeleton-base) 63%);
   background-size: 400% 100%;
   animation: shimmer 1.4s ease infinite;
 }
@@ -151,7 +151,7 @@
 
   border-radius: 4px;
 
-  background: linear-gradient(90deg, #d9d9d9 25%, #ececec 37%, #d9d9d9 63%);
+  background: linear-gradient(90deg, var(--color-skeleton-base) 25%, var(--color-skeleton-highlight) 37%, var(--color-skeleton-base) 63%);
   background-size: 400% 100%;
   animation: shimmer 1.4s ease infinite;
 }
@@ -171,7 +171,7 @@
 
   border-radius: 25px;
 
-  background-color: white;
+  background-color: var(--color-surface);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 
   font-size: 1.1rem;
@@ -206,10 +206,10 @@
   padding: 2px 8px;
 
   border-radius: 12px;
-  background-color: rgba(99, 151, 255, 0.15);
+  background-color: rgba(var(--color-brand-rgb), 0.15);
 
   font-size: 0.75rem;
-  color: #6397ff;
+  color: var(--color-brand);
   white-space: nowrap;
 
   animation: fadeIn 0.2s ease;

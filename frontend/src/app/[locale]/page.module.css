@@ -25,7 +25,7 @@
 
 .welcomeHeader {
   margin: 0 0 0.75rem;
-  color: black;
+  color: var(--color-text);
   font-size: clamp(2.2rem, 6vw, 3.5rem);
 }
 

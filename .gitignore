@@ -8,6 +8,8 @@ next-env.d.ts
 build
 *.tsbuildinfo
 
+/testing
+
 design-plan.md
 deployment-plan.md
 aws-cost-estimate.md
@@ -15,3 +17,4 @@ new-features-plan.md
 testing-plan.md
 frontend/AGENTS.md
 frontend/CLAUDE.md
+

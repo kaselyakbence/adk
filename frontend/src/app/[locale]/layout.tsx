@@ -6,6 +6,8 @@ import LocaleProvider from "../../context/LocaleProvider";
 import UsernameProvider from "../../context/UsernameProvider";
 import CameraProvider from "../../context/CameraProvider";
 import MobileMenuProvider from "../../context/MobileMenuProvider";
+import ThemeProvider from "../../context/ThemeProvider";
+import { THEME_INIT_SCRIPT } from "../../themes";
 import ServiceWorkerRegister from "../../components/ServiceWorkerRegister";
 import OfflineQueueSync from "../../components/OfflineQueueSync";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
@@ -51,26 +53,31 @@ export default async function LocaleLayout({
   if (!isLocale(locale)) notFound();
 
   return (
-    <html lang={locale}>
+    // suppressHydrationWarning: THEME_INIT_SCRIPT sets data-theme on <html>
+    // before React hydrates, which the static HTML doesn't have.
+    <html lang={locale} suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         {/* Next only emits the modern unprefixed tag; older iOS Safari
             versions still key standalone-mode detection off this one. */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
       <body suppressHydrationWarning>
         <LocaleProvider locale={locale}>
-          <CameraProvider>
-            <MobileMenuProvider>
-              <div id="root">
-                <UsernameProvider>
-                  <PageTransition>{children}</PageTransition>
-                </UsernameProvider>
-              </div>
-              <LanguageSwitcher />
-              <ServiceWorkerRegister />
-              <OfflineQueueSync />
-            </MobileMenuProvider>
-          </CameraProvider>
+          <ThemeProvider>
+            <CameraProvider>
+              <MobileMenuProvider>
+                <div id="root">
+                  <UsernameProvider>
+                    <PageTransition>{children}</PageTransition>
+                  </UsernameProvider>
+                </div>
+                <LanguageSwitcher />
+                <ServiceWorkerRegister />
+                <OfflineQueueSync />
+              </MobileMenuProvider>
+            </CameraProvider>
+          </ThemeProvider>
         </LocaleProvider>
       </body>
     </html>

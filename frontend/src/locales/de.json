@@ -3,13 +3,17 @@
   "previewModal.closeAria": "Schließen",
   "previewModal.ok": "Verstanden",
 
+  "themeToggle.toDark": "Zum dunklen Modus wechseln",
+  "themeToggle.toLight": "Zum hellen Modus wechseln",
+
   "nav.about": "über uns",
   "nav.washing": "waschen",
   "nav.gallery": "galerie",
   "nav.contacts": "kontakt",
   "nav.toggleNav": "Navigation umschalten",
-  "nav.usernameLabel": "Benutzername:",
+  "nav.usernameLabel": "Benutzername",
   "nav.changeButton": "Ändern",
+  "nav.darkMode": "Dunkler Modus",
 
   "home.title": "Willkommen bei ADK",
   "home.body": "Willkommen auf der neuen Startseite der SSV der Allee der Kosmonauten 20! Hier findest du Informationen über das Wohnheim und natürlich über die Angebote der SSV.",
