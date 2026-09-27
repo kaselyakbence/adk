@@ -16,8 +16,8 @@
      entirely, so they're reproduced here verbatim. */
   position: absolute;
   height: fit-content;
-  border: 1px solid #ccc;
-  background: #fff;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   border-radius: 4px;
@@ -47,7 +47,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.75);
+  background-color: var(--overlay-light);
 
   opacity: 0;
   transition: opacity 0.2s ease;
@@ -62,18 +62,18 @@
 }
 
 .available {
-  color: #4cb944;
+  color: var(--color-success);
 }
 
 .close_button {
-  background-color: white;
+  background-color: var(--color-surface);
 
   padding: 0.3rem;
 
   font-size: 1rem;
 
-  color: #ff6584;
+  color: var(--color-error);
 
-  border: 3px solid #ff6584;
+  border: 3px solid var(--color-error);
   border-radius: 25px;
 }

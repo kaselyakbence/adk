@@ -1,10 +1,107 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
 
+/* Theme palette. Light values live here; the dark overrides below kick in
+   either for an explicit data-theme="dark" (set by ThemeProvider / the
+   pre-paint script in the layout) or, when no choice has been stored yet,
+   for the OS-level dark preference. */
+:root {
+  --color-bg: #e7e5e5;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f2f2f2;
+  --color-text: #000000;
+  /* rgb triple for rgba(var(--on-surface-rgb), alpha): muted text, hairline
+     borders and hover tints drawn on top of a surface. Flips to white in
+     dark mode so every existing alpha keeps its meaning. */
+  --on-surface-rgb: 0, 0, 0;
+  --color-border: #cccccc;
+  --color-grey: #4b5358;
+  --color-disabled: #a9a9a9;
+  --color-dot: #c4c4c4;
+  --color-dot-hover: #8f8f8f;
+  --color-skeleton-base: #d9d9d9;
+  --color-skeleton-highlight: #ececec;
+  --overlay-light: rgba(255, 255, 255, 0.75);
+
+  --color-accent-green: #2e7d32;
+  --color-accent-green-rgb: 46, 125, 50;
+  --color-accent-green-dark: #24632a;
+  --color-info: #0891b2;
+  --color-info-rgb: 8, 145, 178;
+
+  /* Same in both themes - saturated fills that already read fine on
+     either background, or surfaces that are dark by design. */
+  --color-brand: #6397ff;
+  --color-brand-rgb: 99, 151, 255;
+  --color-success: #4cb944;
+  --color-success-rgb: 76, 185, 68;
+  --color-error: #ff6584;
+  --color-accent-amber: #f5a623;
+  --color-accent-amber-dark: #d98f14;
+  --color-navy: #3f3d56;
+  --color-on-brand: #ffffff;
+  --color-on-brand-rgb: 255, 255, 255;
+  --color-camera-backdrop: #4b5358;
+  --overlay-scrim: rgba(0, 0, 0, 0.45);
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #2f2e41;
+  --color-surface: #3a394f;
+  --color-surface-alt: #45445c;
+  --color-text: #f2f2f2;
+  --on-surface-rgb: 255, 255, 255;
+  --color-border: #55546d;
+  --color-grey: #a0a6ab;
+  --color-disabled: #555555;
+  --color-dot: #555555;
+  --color-dot-hover: #888888;
+  --color-skeleton-base: #45445c;
+  --color-skeleton-highlight: #524f6b;
+  --overlay-light: rgba(0, 0, 0, 0.6);
+  /* The light-mode navy blends into the dark surfaces - swapped for the
+     astronaut's purple so the active nav pill + install banner stand out. */
+  --color-navy: #6c63ff;
+
+  /* Lifted so they keep enough contrast as text on dark surfaces, while
+     still carrying white button labels. */
+  --color-accent-green: #43a047;
+  --color-accent-green-rgb: 67, 160, 71;
+  --color-accent-green-dark: #388e3c;
+  --color-info: #22a6c7;
+  --color-info-rgb: 34, 166, 199;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: #2f2e41;
+    --color-surface: #3a394f;
+    --color-surface-alt: #45445c;
+    --color-text: #f2f2f2;
+    --on-surface-rgb: 255, 255, 255;
+    --color-border: #55546d;
+    --color-grey: #a0a6ab;
+    --color-disabled: #555555;
+    --color-dot: #555555;
+    --color-dot-hover: #888888;
+    --color-skeleton-base: #45445c;
+    --color-skeleton-highlight: #524f6b;
+    --overlay-light: rgba(0, 0, 0, 0.6);
+    --color-navy: #6c63ff;
+
+    --color-accent-green: #43a047;
+    --color-accent-green-rgb: 67, 160, 71;
+    --color-accent-green-dark: #388e3c;
+    --color-info: #22a6c7;
+    --color-info-rgb: 34, 166, 199;
+  }
+}
+
 body {
   margin: 0;
   box-sizing: border-box;
 
-  background-color: #e7e5e5;
+  background-color: var(--color-bg);
+  color: var(--color-text);
 
   font-family: "Bebas Neue", serif;
   font-weight: 400;

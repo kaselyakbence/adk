@@ -9,7 +9,7 @@
   width: 90vw;
   max-width: 440px;
 
-  background-color: white;
+  background-color: var(--color-surface);
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
@@ -88,7 +88,7 @@
   border-radius: 50%;
   cursor: pointer;
 
-  color: rgba(0, 0, 0, 0.4);
+  color: rgba(var(--on-surface-rgb), 0.4);
   font-size: 1.4rem;
 
   transition:
@@ -97,8 +97,8 @@
 }
 
 .closeIcon:hover {
-  background-color: rgba(0, 0, 0, 0.06);
-  color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(var(--on-surface-rgb), 0.06);
+  color: rgba(var(--on-surface-rgb), 0.7);
 }
 
 .label {
@@ -131,7 +131,10 @@
   width: 5.5rem;
   padding: 0.75rem;
 
-  background-color: #f2f2f2;
+  background-color: var(--color-surface-alt);
+  /* Inputs don't inherit text color - without this the digits stay black
+     on the dark field. */
+  color: var(--color-text);
   border: 2px solid transparent;
   border-radius: 10px;
 
@@ -142,19 +145,19 @@
 }
 
 .input.shake {
-  border-color: #ff6584;
+  border-color: var(--color-error);
   animation: shake 0.4s ease;
 }
 
 .input:focus {
-  border-color: #2e7d32;
+  border-color: var(--color-accent-green);
   outline: none;
 }
 
 .separator {
   font-size: 1.6rem;
   font-weight: bold;
-  color: rgba(0, 0, 0, 0.35);
+  color: rgba(var(--on-surface-rgb), 0.35);
 }
 
 .buttons {
@@ -166,46 +169,46 @@
   flex: 1;
   padding: 0.7rem;
 
-  background-color: white;
-  border: 2px solid rgba(0, 0, 0, 0.15);
+  background-color: var(--color-surface);
+  border: 2px solid rgba(var(--on-surface-rgb), 0.15);
   border-radius: 10px;
 
   font-size: 1.1rem;
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(var(--on-surface-rgb), 0.6);
   cursor: pointer;
 
   transition: background-color 0.15s ease;
 }
 
 .closeButton:hover {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgba(var(--on-surface-rgb), 0.04);
 }
 
 .startButton {
   flex: 1;
   padding: 0.7rem;
 
-  background-color: #2e7d32;
+  background-color: var(--color-accent-green);
   border: none;
   border-radius: 10px;
 
   font-size: 1.1rem;
   font-weight: bold;
-  color: white;
+  color: var(--color-on-brand);
   cursor: pointer;
 
   transition: background-color 0.15s ease;
 }
 
 .startButton:hover {
-  background-color: #24632a;
+  background-color: var(--color-accent-green-dark);
 }
 
 .startButton:disabled {
-  background-color: #a9a9a9;
+  background-color: var(--color-disabled);
   cursor: not-allowed;
 }
 
 .startButton:disabled:hover {
-  background-color: #a9a9a9;
+  background-color: var(--color-disabled);
 }

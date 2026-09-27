@@ -13,8 +13,8 @@
   position: absolute;
   height: fit-content;
   top: 50%;
-  border: 1px solid #ccc;
-  background: #fff;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   border-radius: 4px;
@@ -44,7 +44,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.75);
+  background-color: var(--overlay-light);
 
   opacity: 0;
   transition: opacity 0.2s ease;
@@ -69,7 +69,11 @@
   margin: 0.75rem 0 1rem;
 
   font-size: 1rem;
-  border: 1px solid #ccc;
+  /* Inputs don't inherit color or background from the page - left unset,
+     this would stay a white field with black text in dark mode. */
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
 }
 
@@ -81,7 +85,7 @@
 
 .save_button,
 .guest_button {
-  background-color: white;
+  background-color: var(--color-surface);
 
   padding: 0.4rem 1rem;
 
@@ -91,17 +95,17 @@
 }
 
 .save_button {
-  color: #4cb944;
-  border: 2px solid #4cb944;
+  color: var(--color-success);
+  border: 2px solid var(--color-success);
 }
 
 .save_button:disabled {
-  color: rgba(0, 0, 0, 0.3);
-  border-color: rgba(0, 0, 0, 0.2);
+  color: rgba(var(--on-surface-rgb), 0.3);
+  border-color: rgba(var(--on-surface-rgb), 0.2);
   cursor: not-allowed;
 }
 
 .guest_button {
-  color: rgba(0, 0, 0, 0.6);
-  border: 2px solid rgba(0, 0, 0, 0.2);
+  color: rgba(var(--on-surface-rgb), 0.6);
+  border: 2px solid rgba(var(--on-surface-rgb), 0.2);
 }

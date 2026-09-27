@@ -150,7 +150,7 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
           border: "none",
         },
         overlay: {
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          backgroundColor: "var(--overlay-scrim)",
         },
       }}
     >

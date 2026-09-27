@@ -3,13 +3,17 @@
   "previewModal.closeAria": "Close",
   "previewModal.ok": "Got it",
 
+  "themeToggle.toDark": "Switch to dark mode",
+  "themeToggle.toLight": "Switch to light mode",
+
   "nav.about": "about",
   "nav.washing": "washing",
   "nav.gallery": "gallery",
   "nav.contacts": "contacts",
   "nav.toggleNav": "Toggle navigation",
-  "nav.usernameLabel": "Username:",
+  "nav.usernameLabel": "Username",
   "nav.changeButton": "Change",
+  "nav.darkMode": "Dark mode",
 
   "home.title": "Welcome to ADK",
   "home.body": "Welcome to the new homepage of the SSV of Allee der Kosmonauten 20! Here you can find information about the dormitory and of course about the offers of the SSV.",

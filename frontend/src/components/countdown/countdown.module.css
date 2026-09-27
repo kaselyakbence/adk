@@ -1,5 +1,5 @@
 .available {
-  color: #4cb944;
+  color: var(--color-success);
   display: inline-block;
   animation: pop 0.35s ease;
 }
@@ -39,7 +39,7 @@
 }
 
 .loading span {
-  color: #4b5358;
+  color: var(--color-grey);
 
   display: inline-block;
 

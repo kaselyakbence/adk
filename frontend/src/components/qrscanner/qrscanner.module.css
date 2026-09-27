@@ -6,7 +6,7 @@
   top: 0;
   left: 0;
 
-  background-color: #4b5358;
+  background-color: var(--color-camera-backdrop);
   opacity: 0.99;
 
   display: flex;
@@ -27,7 +27,7 @@
   width: calc(1.8rem + 24px);
   height: calc(1.8rem + 24px);
 
-  background-color: #ff6584;
+  background-color: var(--color-error);
   border: none;
   padding: 0;
 
@@ -47,7 +47,7 @@
   width: 1.8rem;
   height: 1.8rem;
 
-  color: white;
+  color: var(--color-on-brand);
 }
 
 .confirmOverlay {
@@ -59,7 +59,7 @@
   align-items: center;
   justify-content: center;
 
-  background-color: rgba(76, 185, 68, 0.35);
+  background-color: rgba(var(--color-success-rgb), 0.35);
 
   animation: fadeIn 0.15s ease;
 }
@@ -68,7 +68,7 @@
   width: 5rem;
   height: 5rem;
 
-  color: #4cb944;
+  color: var(--color-success);
 
   animation: pop 0.35s ease;
 }

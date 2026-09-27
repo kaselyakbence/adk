@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../../main.css";
+import { THEME_INIT_SCRIPT } from "../../themes";
 
 export const metadata: Metadata = {
   title: "Alle Der Kosmonauten 20",
@@ -26,7 +27,10 @@ export default function RootRedirectLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body suppressHydrationWarning>{children}</body>
     </html>
   );
