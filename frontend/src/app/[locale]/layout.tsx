@@ -10,7 +10,6 @@ import ThemeProvider from "../../context/ThemeProvider";
 import { THEME_INIT_SCRIPT } from "../../themes";
 import ServiceWorkerRegister from "../../components/ServiceWorkerRegister";
 import OfflineQueueSync from "../../components/OfflineQueueSync";
-import LanguageSwitcher from "../../components/LanguageSwitcher";
 import PageTransition from "../../components/PageTransition";
 
 export function generateStaticParams() {
@@ -72,7 +71,6 @@ export default async function LocaleLayout({
                     <PageTransition>{children}</PageTransition>
                   </UsernameProvider>
                 </div>
-                <LanguageSwitcher />
                 <ServiceWorkerRegister />
                 <OfflineQueueSync />
               </MobileMenuProvider>

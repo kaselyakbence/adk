@@ -27,3 +27,30 @@ model PushSubscription {
   auth      String
   createdAt DateTime @default(now())
 }
+model Event {
+  id            Int                 @id @default(autoincrement())
+  title         String
+  description   String?
+  location      String?
+  startDate     DateTime
+  endDate       DateTime?
+  // Null = the frontend shows its placeholder poster.
+  imageUrl      String?
+  createdAt     DateTime            @default(now())
+  subscriptions EventSubscription[]
+}
+
+// Kept separate from PushSubscription on purpose - the device update route
+// wipes all of a device's subscriptions on every new booking, which has
+// nothing to do with event reminders.
+model EventSubscription {
+  id        Int      @id @default(autoincrement())
+  eventId   Int
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  endpoint  String
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  @@unique([eventId, endpoint])
+}

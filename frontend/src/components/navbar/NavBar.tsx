@@ -10,10 +10,13 @@ import { CameraContext } from "../../context/CameraContext";
 import { MobileMenuContext } from "../../context/MobileMenuContext";
 import UsernameModal from "../../modals/username/UsernameModal";
 import ThemeToggle from "../ThemeToggle";
+import LanguageSwitcher from "../LanguageSwitcher";
+import { consumeReopenUserMenu } from "../../lib/userMenu";
 
 const navItems = [
   { key: "nav.about", href: "about" },
   { key: "nav.washing", href: "washing" },
+  { key: "nav.events", href: "events" },
   { key: "nav.gallery", href: "gallery" },
   { key: "nav.contacts", href: "contacts" },
 ];
@@ -30,6 +33,27 @@ const Navbar = () => {
   const { username, loaded: usernameLoaded } = useContext(UsernameContext);
   const displayName = username || "Guest";
   const { cameraOpen } = useContext(CameraContext);
+  // True for the first frame after a language switch, so the menu comes up
+  // already open instead of replaying its open animation.
+  const [instant, setInstant] = useState(false);
+
+  useEffect(() => {
+    if (!consumeReopenUserMenu()) return;
+
+    /* eslint-disable react-hooks/set-state-in-effect -- sessionStorage is
+       only readable after mount */
+    setInstant(true);
+    if (window.matchMedia("(max-width: 600px)").matches) setMenuOpen(true);
+    else setDropdownOpen(true);
+    /* eslint-enable react-hooks/set-state-in-effect */
+
+    // Two frames: one to paint open with transitions off, one to turn
+    // them back on.
+    let frame = requestAnimationFrame(() => {
+      frame = requestAnimationFrame(() => setInstant(false));
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [setMenuOpen]);
 
   useEffect(() => {
     if (!dropdownOpen) return;
@@ -74,7 +98,9 @@ const Navbar = () => {
       >
         ☰
       </button>
-      <div className={`${styles.mobileMenu} ${menuOpen ? styles.open : ""}`}>
+      <div
+        className={`${styles.mobileMenu} ${menuOpen ? styles.open : ""} ${instant ? styles.instant : ""}`}
+      >
         <ul className={styles.navlist}>
           {navItems.map((item) => (
             <li key={item.key}>
@@ -125,6 +151,10 @@ const Navbar = () => {
             <div className={styles.settingRow}>
               <span>{t("nav.darkMode")}</span>
               <ThemeToggle />
+            </div>
+            <div className={styles.settingRow}>
+              <span>{t("nav.language")}</span>
+              <LanguageSwitcher />
             </div>
           </div>
         </div>

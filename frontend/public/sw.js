@@ -17,6 +17,9 @@ const QUEUE_BROADCAST_CHANNEL_NAME = "adk-offline-queue-updates";
 const LOCALES = ["en", "de"];
 const DEFAULT_LOCALE = "en";
 
+// Pages a notification click is allowed to open.
+const PAGES = ["washing", "events"];
+
 const PRECACHE_URLS = [
   "/manifest.webmanifest",
   "/icon-192.png",
@@ -169,12 +172,16 @@ self.addEventListener("push", (event) => {
       body: data.body,
       icon: "/icon-192.png",
       badge: "/favicon-32.png",
+      // Which page a click should open - event reminders send "events",
+      // laundry notifications don't set it and keep the washing default.
+      data: { page: PAGES.includes(data.page) ? data.page : "washing" },
     }),
   );
 });
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
+  const page = (event.notification.data && event.notification.data.page) || "washing";
   event.waitUntil(
     self.clients
       .matchAll({ type: "window", includeUncontrolled: true })
@@ -184,7 +191,7 @@ self.addEventListener("notificationclick", (event) => {
         // The service worker itself can't read localStorage to do this
         // directly.
         if (clients.length === 0) {
-          return self.clients.openWindow("/?start=washing");
+          return self.clients.openWindow(`/?start=${page}`);
         }
 
         // A window is already open - it's already on some /<locale>/...
@@ -192,13 +199,13 @@ self.addEventListener("notificationclick", (event) => {
         const client = clients[0];
         const segment = new URL(client.url).pathname.split("/")[1];
         const locale = LOCALES.includes(segment) ? segment : DEFAULT_LOCALE;
-        const washingUrl = new URL(
-          `/${locale}/washing`,
+        const pageUrl = new URL(
+          `/${locale}/${page}`,
           self.location.origin,
         ).href;
 
         return client
-          .navigate(washingUrl)
+          .navigate(pageUrl)
           .then((navigated) => navigated && navigated.focus());
       }),
   );
@@ -210,9 +217,9 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
 
-  // Device list: show the last-known state instantly (works offline too),
+  // Device/event lists: show the last-known state instantly (works offline too),
   // then refresh it in the background for next time.
-  if (url.pathname.endsWith("/device/all")) {
+  if (url.pathname.endsWith("/device/all") || url.pathname.endsWith("/event/all")) {
     event.respondWith(staleWhileRevalidate(request, API_CACHE));
     return;
   }

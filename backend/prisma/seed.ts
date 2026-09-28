@@ -35,6 +35,40 @@ const DEVICES: DeviceSeed[] = [
   })),
 ];
 
+interface EventSeed {
+  title: string;
+  location: string;
+  startDate: Date;
+  createdAt: Date;
+}
+
+// Titles/dates/places from the dorm's existing Instagram posts; everything
+// else (description, poster) is deliberately placeholder - none of the
+// original post content is reused.
+const PLACEHOLDER_DESCRIPTION =
+  "Placeholder description - the details for this event will go here: what's happening, what to bring and who to ask.";
+
+const EVENTS: EventSeed[] = [
+  {
+    title: "ADK Party 26",
+    location: "Keller, House 15",
+    startDate: new Date("2026-01-23T21:00:00+01:00"),
+    createdAt: new Date("2026-01-13T12:00:00+01:00"),
+  },
+  {
+    title: "ADK Picnic",
+    location: "Yard",
+    startDate: new Date("2026-09-06T11:00:00+02:00"),
+    createdAt: new Date("2026-09-04T12:00:00+02:00"),
+  },
+  {
+    title: "Trivia Night",
+    location: "Keller, House 15",
+    startDate: new Date("2026-10-03T19:00:00+02:00"),
+    createdAt: new Date("2026-09-07T12:00:00+02:00"),
+  },
+];
+
 function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -54,8 +88,14 @@ async function main() {
   // refuses otherwise, since it references Device) - a clean reset should
   // drop stale subscriptions tied to bookings that no longer exist anyway.
   await prisma.$executeRawUnsafe(
-    `TRUNCATE TABLE "Device", "PushSubscription" RESTART IDENTITY;`,
+    `TRUNCATE TABLE "Device", "PushSubscription", "Event", "EventSubscription" RESTART IDENTITY;`,
   );
+
+  for (const event of EVENTS) {
+    await prisma.event.create({
+      data: { ...event, description: PLACEHOLDER_DESCRIPTION },
+    });
+  }
 
   for (const device of DEVICES) {
     const isRunning = Math.random() < 0.5;

@@ -1,0 +1,176 @@
+.carousel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.stage {
+  position: relative;
+}
+
+.track {
+  display: flex;
+  gap: 1rem;
+
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+
+  /* Room for the cards' shadows, which overflow: auto would clip. */
+  padding: 0.25rem 0.5rem 0.75rem;
+  margin: 0 -0.5rem;
+  scroll-padding: 0 0.5rem;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Slightly narrower than the track so the next card peeks in from the
+   right - hints that there's more to swipe to. */
+.slide {
+  flex: 0 0 88%;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.slide:last-child {
+  scroll-snap-align: end;
+}
+
+/* Matches the gallery carousel's arrows (size, look, half outside the
+   card). */
+.nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+
+  width: 2.5rem;
+  height: 2.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+
+  transform: translateY(-50%);
+  transition:
+    background-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.nav:hover:not(:disabled) {
+  background-color: var(--color-surface-alt);
+}
+
+.nav:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.nav:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.prev {
+  left: -1.25rem;
+}
+
+.next {
+  right: -1.25rem;
+}
+
+/* Narrow screens swipe (the next card peeks in as the hint) - arrows only
+   from the wide layout up. */
+@media (width < 850px) {
+  .nav {
+    display: none;
+  }
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+
+  background-color: var(--color-dot);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.dot:hover {
+  background-color: var(--color-dot-hover);
+}
+
+.dotActive {
+  background-color: var(--color-info);
+  transform: scale(1.3);
+}
+
+/* Natural height, but allowed to shrink (down through the stage, track and
+   slide to the card) when the events page has less height to give than a
+   full card needs. */
+.carousel {
+  flex: 0 1 auto;
+  min-height: 0;
+}
+
+.stage {
+  flex: 0 1 auto;
+  min-height: 0;
+  display: flex;
+}
+
+.track {
+  flex: 1;
+}
+
+.slide {
+  display: flex;
+  flex-direction: column;
+  /* Lets the card's poster size itself off the slide's width (cqw). */
+  container-type: inline-size;
+}
+
+.slide > * {
+  flex: 0 1 auto;
+  min-height: 0;
+}
+
+/* Wide screens: one full card per view, no peek - the arrows show there's
+   more, and a peeking card would be cut off hard at the column's edge next
+   to the Past column. Also keeps it the same width as the past cards. */
+@media (850px <= width) {
+  .slide {
+    flex-basis: 100%;
+  }
+
+  /* More room around the slide than on phones - the card's shadow spreads
+     ~14px, and anything past the track's padding gets clipped into a
+     visible edge. */
+  .track {
+    padding: 0.5rem 1.25rem 1.5rem;
+    margin: -0.25rem -1.25rem -0.75rem;
+    scroll-padding: 0 1.25rem;
+    gap: 2.5rem;
+  }
+}

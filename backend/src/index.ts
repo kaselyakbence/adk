@@ -2,6 +2,7 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { MODE, PORT } from "./secrets";
 import DeviceRouter from "./routers";
+import EventRouter from "./routers/events";
 import { startPushJob } from "./pushJob";
 import cors from "cors";
 import morgan from "morgan";
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/device", DeviceRouter);
+app.use("/event", EventRouter);
 
 app.get("/", (_, res) => {
   res.status(201).send({ msg: "Successfull" });

@@ -313,9 +313,12 @@
   .userMenu {
     position: static;
     transform: none;
-    margin-left: 0;
-
-    padding: 1rem 1rem 1.5rem;
+    /* Inset line (margin, not padding) separating the settings from the
+       nav links above - heavier than the dividers between the rows, since
+       it splits two different kinds of content. */
+    margin: 0 1rem;
+    padding: 0.9rem 0 1.25rem;
+    border-top: 2px solid rgba(var(--on-surface-rgb), 0.35);
     text-align: center;
   }
 
@@ -328,7 +331,7 @@
     position: static;
     align-items: center;
 
-    gap: 0.6rem;
+    gap: 0.5rem;
     min-width: 0;
     padding: 0;
     --switch-size: 1rem;
@@ -358,8 +361,7 @@
   }
 
   .settingRow + .settingRow {
-    margin-top: 0.4rem;
-    padding-top: 1rem;
+    padding-top: 0.5rem;
   }
 
   .settingCaption {
@@ -382,4 +384,11 @@
   background: var(--color-navy);
 
   color: var(--color-on-brand);
+}
+
+/* Set for one frame after a language switch (see NavBar.tsx) - the menu
+   and dropdown appear already open instead of animating in again. */
+.instant,
+.instant * {
+  transition: none !important;
 }

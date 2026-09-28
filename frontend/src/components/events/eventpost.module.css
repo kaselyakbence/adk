@@ -1,0 +1,285 @@
+.post {
+  overflow: hidden;
+
+  background-color: var(--color-surface);
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+/* Past events stay readable but visibly "done". */
+.past .poster {
+  filter: grayscale(0.7);
+  opacity: 0.8;
+}
+
+.poster {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+/* Generated stand-in until real posters exist. */
+.placeholder {
+  position: relative;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 1.5rem;
+  color: var(--color-on-brand);
+}
+
+.posterBlue {
+  background: linear-gradient(145deg, #6397ff, #3f3d56);
+}
+
+.posterPurple {
+  background: linear-gradient(145deg, #6c63ff, #2f2e41);
+}
+
+.posterGreen {
+  background: linear-gradient(145deg, #4cb944, #24632a);
+}
+
+.posterCoral {
+  background: linear-gradient(145deg, #ff6584, #3f3d56);
+}
+
+.posterDate {
+  align-self: flex-end;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 0.5rem 0.8rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.18);
+  line-height: 1;
+}
+
+.posterDay {
+  font-size: 2.2rem;
+  font-weight: bold;
+}
+
+.posterMonth {
+  margin-top: 0.2rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.posterTitle {
+  font-size: clamp(2rem, 9vw, 2.8rem);
+  font-weight: bold;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.posterTag {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+
+  padding: 0.2rem 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+
+.body {
+  padding: 0.65rem 0.9rem 0.8rem;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+
+  margin-bottom: 0.3rem;
+}
+
+.remindButton {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  padding: 0.35rem 0.8rem;
+
+  background: var(--color-surface-alt);
+  color: var(--color-text);
+  border: 1px solid rgba(var(--on-surface-rgb), 0.2);
+  border-radius: 999px;
+  cursor: pointer;
+
+  font: inherit;
+  font-size: 0.85rem;
+  white-space: nowrap;
+
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.remindButton:hover {
+  border-color: rgba(var(--on-surface-rgb), 0.4);
+}
+
+.remindButton:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.remindButton:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+
+.reminded,
+.reminded:hover {
+  background: rgba(var(--color-brand-rgb), 0.12);
+  border-color: var(--color-brand);
+}
+
+.reminded svg {
+  color: var(--color-brand);
+}
+
+.title {
+  min-width: 0;
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  margin: 0.15rem 0 0;
+  font-size: 0.95rem;
+}
+
+.metaIcon {
+  flex-shrink: 0;
+  color: var(--color-info);
+}
+
+.caption {
+  margin: 0.45rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.captionAccount {
+  font-weight: bold;
+}
+
+.posted {
+  margin: 0.35rem 0 0;
+
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-grey);
+}
+
+/* Carousel cards: poster starts as a square (100cqw = the slide's width,
+   see eventcarousel.module.css) and never grows past that, but shrinks
+   when the screen is too short to fit the whole card. */
+.fill {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.fill .poster {
+  flex: 0 1 100cqw;
+  min-height: 6rem;
+  aspect-ratio: auto;
+  overflow: hidden;
+}
+
+.fill .body {
+  flex-shrink: 0;
+}
+
+/* Wide screens: past events become compact rows (small poster thumbnail +
+   title, date, place) in their side column - the upcoming carousel stays
+   the big visual, past ones are just a quick "what happened" list. */
+@media (850px <= width) {
+  .past {
+    display: flex;
+    align-items: stretch;
+
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .past .poster {
+    flex: 0 0 5.5rem;
+    width: 5.5rem;
+    height: auto;
+    min-height: 5.5rem;
+    aspect-ratio: auto;
+  }
+
+  .past .placeholder {
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+  }
+
+  /* Only the date survives at thumbnail size. */
+  .past .posterTitle,
+  .past .posterTag,
+  .past .caption,
+  .past .posted {
+    display: none;
+  }
+
+  .past .posterDate {
+    align-self: center;
+    padding: 0.35rem 0.55rem;
+  }
+
+  .past .posterDay {
+    font-size: 1.4rem;
+  }
+
+  .past .posterMonth {
+    font-size: 0.7rem;
+  }
+
+  .past .body {
+    flex: 1;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 0.6rem 0.9rem;
+  }
+
+  .past .title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 1.05rem;
+  }
+
+  .past .meta {
+    font-size: 0.85rem;
+  }
+}
