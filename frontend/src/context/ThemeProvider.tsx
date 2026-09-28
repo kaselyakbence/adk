@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { ThemeContext } from "./ThemeContext";
 import { DEFAULT_THEME, isTheme, Theme, THEME_STORAGE_KEY } from "../themes";
 
@@ -18,6 +18,19 @@ const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   // script in the layout's <head> sets data-theme pre-paint), this state
   // only drives the toggle's icon.
   const [theme, setThemeState] = useState<Theme>(DEFAULT_THEME);
+
+  // Re-apply a stored choice to <html> on every mount, not just in
+  // setTheme: switching locale swaps in a fresh <html> (the [locale] layout
+  // is the root layout) without re-running the pre-paint script, which
+  // dropped data-theme and fell back to the OS preference - e.g. dark mode
+  // while the toggle still said light. Layout effect so it lands before
+  // paint, with no one-frame flash of the wrong theme.
+  useLayoutEffect(() => {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY) ?? "";
+    if (isTheme(stored)) {
+      document.documentElement.setAttribute("data-theme", stored);
+    }
+  }, []);
 
   useEffect(() => {
     setThemeState(getInitialTheme());
