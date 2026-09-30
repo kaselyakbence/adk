@@ -19,6 +19,27 @@ function parseClientDate(value: unknown): string | null {
   return isNaN(parsed.getTime()) ? null : parsed.toISOString();
 }
 
+// Mirrors TimerModal's client-side isValidInput (frontend/src/modals/timer/
+// TimerModal.tsx) - a direct API call bypasses that entirely, so the same
+// bounds need enforcing here too. `typeof x === "number"` (rather than
+// `!isNaN(x)`, the previous check) matters: `isNaN` coerces its argument
+// first, so booleans, null, and empty arrays were all sneaking through as
+// "valid" numbers before.
+function isValidBookingDuration(hours: unknown, minutes: unknown): boolean {
+  const hoursValid =
+    typeof hours === "number" &&
+    Number.isInteger(hours) &&
+    hours >= 0 &&
+    hours <= 3;
+  const minutesValid =
+    typeof minutes === "number" &&
+    Number.isInteger(minutes) &&
+    minutes >= 0 &&
+    minutes <= 60;
+
+  return hoursValid && minutesValid && hours * 60 + minutes > 0;
+}
+
 DeviceRouter.post("/:id/update", async (req, res) => {
   const minutes = req.body?.minutes;
   const hours = req.body?.hours;
@@ -27,9 +48,9 @@ DeviceRouter.post("/:id/update", async (req, res) => {
   try {
     if (
       req.params.id &&
-      !isNaN(hours) &&
-      !isNaN(minutes) &&
-      typeof owner === "string"
+      isValidBookingDuration(hours, minutes) &&
+      typeof owner === "string" &&
+      owner.trim().length > 0
     ) {
       const deviceId = parseInt(req.params.id);
 
