@@ -22,20 +22,24 @@ export function isTheme(value: string): value is Theme {
 // actual U+2028 character" - exactly the kind of mix-up this function
 // exists to prevent on the output side.
 function jsonForInlineScript(value: unknown): string {
-  const lineSeparator = String.fromCharCode(0x2028);
-  const paragraphSeparator = String.fromCharCode(0x2029);
-  const backslash = String.fromCharCode(0x5c);
-  const escapedLt = backslash + "u003c";
-  const escapedLineSeparator = backslash + "u2028";
-  const escapedParagraphSeparator = backslash + "u2029";
+  const charMap: Record<string, string> = {
+    "<": "\\u003c",
+    ">": "\\u003e",
+    "/": "\\u002f",
+    "\b": "\\b",
+    "\f": "\\f",
+    "\n": "\\n",
+    "\r": "\\r",
+    "\t": "\\t",
+    "\0": "\\0",
+    "\u2028": "\\u2028",
+    "\u2029": "\\u2029",
+  };
 
-  return JSON.stringify(value)
-    .split("<")
-    .join(escapedLt)
-    .split(lineSeparator)
-    .join(escapedLineSeparator)
-    .split(paragraphSeparator)
-    .join(escapedParagraphSeparator);
+  return JSON.stringify(value).replace(
+    /[<>\/\b\f\n\r\t\0\u2028\u2029]/g,
+    (ch) => charMap[ch] ?? ch,
+  );
 }
 
 // Inlined into each root layout's <head> so a stored choice is on <html>
