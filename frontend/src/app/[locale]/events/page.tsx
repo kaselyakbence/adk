@@ -120,15 +120,6 @@ export default function Page() {
       />
     ));
 
-  // TEMP (demo): the one seeded upcoming event repeated 10x so the carousel
-  // has something to swipe through. Drop this and use groups.upcoming
-  // directly once there are real events.
-  const DEMO_REPEAT = 10;
-  const upcomingSlides =
-    groups.upcoming.length > 0
-      ? Array.from({ length: DEMO_REPEAT }, () => groups.upcoming[0])
-      : [];
-
   return (
     <SnackbarContext.Provider
       value={{ messages: snackbarMessages, setMessages: setSnackbarMessages }}
@@ -146,13 +137,13 @@ export default function Page() {
           >
             <h1 className={styles.panelTitle}>
               {t("events.upcoming")}
-              {!loading && ` (${upcomingSlides.length})`}
+              {!loading && ` (${groups.upcoming.length})`}
             </h1>
             <div className={styles.upcomingArea}>
               {loading ? (
                 <div className={styles.skeleton} />
-              ) : upcomingSlides.length > 0 ? (
-                <EventCarousel slides={renderPosts(upcomingSlides, false)} />
+              ) : groups.upcoming.length > 0 ? (
+                <EventCarousel slides={renderPosts(groups.upcoming, false)} />
               ) : (
                 <p className={styles.empty}>{t("events.noUpcoming")}</p>
               )}

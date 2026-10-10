@@ -38,13 +38,17 @@ const DEVICES: DeviceSeed[] = [
 interface EventSeed {
   title: string;
   location: string;
-  startDate: Date;
-  createdAt: Date;
+  // Relative to the day the seed runs, so a reseed always yields a mix of
+  // past and upcoming events instead of everything drifting into "past".
+  daysFromToday: number;
+  hour: number;
+  // How many days before the event it was "posted" (shown as the post date).
+  postedDaysBefore: number;
 }
 
-// Titles/dates/places from the dorm's existing Instagram posts; everything
-// else (description, poster) is deliberately placeholder - none of the
-// original post content is reused.
+// Titles/places from the dorm's existing Instagram posts; everything else
+// (description, poster) is deliberately placeholder - none of the original
+// post content is reused. Dates are generated, see EventSeed.
 const PLACEHOLDER_DESCRIPTION =
   "Placeholder description - the details for this event will go here: what's happening, what to bring and who to ask.";
 
@@ -52,21 +56,55 @@ const EVENTS: EventSeed[] = [
   {
     title: "ADK Party 26",
     location: "Keller, House 15",
-    startDate: new Date("2026-01-23T21:00:00+01:00"),
-    createdAt: new Date("2026-01-13T12:00:00+01:00"),
+    daysFromToday: -25,
+    hour: 21,
+    postedDaysBefore: 10,
   },
   {
     title: "ADK Picnic",
     location: "Yard",
-    startDate: new Date("2026-09-06T11:00:00+02:00"),
-    createdAt: new Date("2026-09-04T12:00:00+02:00"),
+    daysFromToday: 4,
+    hour: 11,
+    postedDaysBefore: 10,
   },
   {
     title: "Trivia Night",
     location: "Keller, House 15",
-    startDate: new Date("2026-10-03T19:00:00+02:00"),
-    createdAt: new Date("2026-09-07T12:00:00+02:00"),
+    daysFromToday: 12,
+    hour: 19,
+    postedDaysBefore: 10,
   },
+];
+
+// That day (counted from today) at `hour`:00 *Berlin* time, whatever the
+// timezone of the machine running the seed (the server container is UTC).
+function berlinDateAt(daysFromToday: number, hour: number): Date {
+  const day = new Date(Date.now() + daysFromToday * 86_400_000);
+  // YYYY-MM-DD of that day as seen in Berlin.
+  const ymd = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Berlin",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(day);
+  const hh = String(hour).padStart(2, "0");
+
+  // Treat the wall-clock time as UTC first, then shift by Berlin's offset
+  // on that date (+1h or +2h depending on DST).
+  const asUtc = new Date(`${ymd}T${hh}:00:00Z`);
+  const berlinWall = new Date(
+    asUtc.toLocaleString("en-US", { timeZone: "Europe/Berlin" }),
+  );
+  const utcWall = new Date(asUtc.toLocaleString("en-US", { timeZone: "UTC" }));
+  return new Date(asUtc.getTime() - (berlinWall.getTime() - utcWall.getTime()));
+}
+
+// Placeholder reasons for the one demo machine the seed flags as broken.
+const BROKEN_REASONS = [
+  "Door won't lock",
+  "Stops mid-cycle",
+  "Leaking water",
+  "Display stays blank",
 ];
 
 function randomInt(min: number, max: number): number {
@@ -93,9 +131,27 @@ async function main() {
 
   for (const event of EVENTS) {
     await prisma.event.create({
-      data: { ...event, description: PLACEHOLDER_DESCRIPTION },
+      data: {
+        title: event.title,
+        location: event.location,
+        description: PLACEHOLDER_DESCRIPTION,
+        startDate: berlinDateAt(event.daysFromToday, event.hour),
+        // Never "posted" in the future - an event far ahead was announced
+        // at the latest today.
+        createdAt: new Date(
+          Math.min(
+            berlinDateAt(
+              event.daysFromToday - event.postedDaysBefore,
+              12,
+            ).getTime(),
+            Date.now(),
+          ),
+        ),
+      },
     });
   }
+
+  const idleDeviceIds: number[] = [];
 
   for (const device of DEVICES) {
     const isRunning = Math.random() < 0.5;
@@ -109,13 +165,29 @@ async function main() {
       ? randomInt(0, durationMinutes - 5)
       : durationMinutes + randomInt(5, 180);
 
-    await prisma.device.create({
+    const created = await prisma.device.create({
       data: {
         number: device.number,
         type: device.type,
         owner: randomName(),
         start_date: minutesFromNow(-startedMinutesAgo),
         end_date: minutesFromNow(durationMinutes - startedMinutesAgo),
+      },
+    });
+    if (!isRunning) idleDeviceIds.push(created.id);
+  }
+
+  // One random idle machine is flagged broken, so the demo shows the state.
+  // Never a running one - a machine mid-cycle has obviously been working.
+  // (If every machine happens to be running, nothing gets flagged.)
+  if (idleDeviceIds.length > 0) {
+    const id = idleDeviceIds[randomInt(0, idleDeviceIds.length - 1)];
+    await prisma.device.update({
+      where: { id },
+      data: {
+        broken: true,
+        brokenReason: BROKEN_REASONS[randomInt(0, BROKEN_REASONS.length - 1)],
+        brokenAt: minutesFromNow(-randomInt(10, 240)),
       },
     });
   }

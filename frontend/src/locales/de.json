@@ -79,6 +79,7 @@
   "washing.dryerLabel": "Trockner",
   "washing.pendingSync": "Wird synchronisiert",
   "washing.scanQrAria": "QR-Code scannen",
+  "washing.brokenBadge": "Defekt",
 
   "timerModal.washingMachine": "Waschmaschine",
   "timerModal.dryer": "Trockner",
@@ -94,6 +95,14 @@
   "timerModal.successMessage": "Erfolgreich aktualisiert",
   "timerModal.errorMessage": "Ein Fehler ist aufgetreten",
   "timerModal.offlineMessage": "Offline gespeichert - wird synchronisiert, sobald du wieder online bist",
+  "timerModal.brokenWarning": "Als defekt gemeldet",
+  "timerModal.brokenHint": "Sobald sie wieder funktioniert, markiere sie als repariert, damit andere sie nutzen können.",
+  "timerModal.markFixed": "Als repariert markieren",
+  "timerModal.reportBroken": "Als defekt melden",
+  "timerModal.reportPlaceholder": "Was ist kaputt? (optional)",
+  "timerModal.reportSubmit": "Melden",
+  "timerModal.reportIntro": "Sag den anderen Bescheid, dass diese Maschine nicht funktioniert. Was kaputt ist, kannst du optional angeben.",
+  "timerModal.back": "Zurück",
 
   "infoModal.washer": "Waschmaschine",
   "infoModal.dryer": "Trockner",
@@ -102,6 +111,9 @@
   "infoModal.endsAt": "Endet um:",
   "infoModal.startedBy": "Gestartet von:",
   "infoModal.unknown": "Unbekannt",
+  "infoModal.brokenHeadline": "Als defekt gemeldet",
+  "infoModal.brokenReason": "Grund:",
+  "infoModal.noReason": "Kein Grund angegeben",
 
   "usernameModal.welcome": "Willkommen!",
   "usernameModal.prompt": "Bitte benutze deinen Namen aus der Gruppe",

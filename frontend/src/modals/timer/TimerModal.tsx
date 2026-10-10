@@ -1,5 +1,6 @@
 import ReactModal from "react-modal";
 import { IoMdClose } from "react-icons/io";
+import { MdBuild } from "react-icons/md";
 import styles from "./timermodal.module.css";
 import "../modal.css";
 import { useCallback, useContext, useMemo, useRef, useState } from "react";
@@ -11,6 +12,10 @@ import { enqueueUpdate, registerBackgroundSync } from "../../lib/offlineQueue";
 import { subscribeToPush, MACHINE_STARTED_EVENT } from "../../lib/push";
 import { LocaleContext } from "../../context/LocaleContext";
 import { useVisualViewportHeight } from "../../hooks/useVisualViewportHeight";
+import { formatTimeAgo } from "../../lib/relativeTime";
+
+// Same cap as the backend (MAX_BROKEN_REASON_LENGTH in routers/index.ts).
+const MAX_BROKEN_REASON_LENGTH = 200;
 
 interface TimerModalProps {
   deviceID: number | null;
@@ -24,9 +29,12 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
   const [input, setInput] = useState<{ hours?: string; minutes?: string }>({});
   const [shakeHour, setShakeHour] = useState(false);
   const [shakeMinute, setShakeMinute] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [brokenBusy, setBrokenBusy] = useState(false);
 
   const { messages, setMessages } = useContext(SnackbarContext);
-  const { t } = useContext(LocaleContext);
+  const { locale, t } = useContext(LocaleContext);
   const viewportHeight = useVisualViewportHeight();
 
   const device = useContext(DevicesContext).find((d) => d.id == deviceID);
@@ -52,7 +60,46 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
   const closeModal = useCallback(() => {
     setIsOpen(null);
     setInput({});
+    setReportOpen(false);
+    setReportReason("");
   }, [setIsOpen]);
+
+  // report-broken / clear-broken. Unlike Start these aren't time-sensitive,
+  // so no offline queue - a failure just shows the error snackbar and the
+  // resident can retry. The modal stays open; the refreshed device data
+  // flips the warning banner on/off in place.
+  const sendBrokenAction = useCallback(
+    async (action: "report-broken" | "clear-broken", body?: object) => {
+      if (!deviceID) return;
+      setBrokenBusy(true);
+
+      let ok = false;
+      try {
+        const res = await fetch(`${API_URL}/device/${deviceID}/${action}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: body ? JSON.stringify(body) : undefined,
+        });
+        ok = res.status === 201;
+      } catch {
+        // Network failure - ok stays false, handled below.
+      }
+
+      if (ok) {
+        await refresh();
+        setReportOpen(false);
+        setReportReason("");
+      }
+      setMessages?.((prev) => [
+        ...prev,
+        ok
+          ? { status: "success", message: t("timerModal.successMessage") }
+          : { status: "error", message: t("timerModal.errorMessage") },
+      ]);
+      setBrokenBusy(false);
+    },
+    [deviceID, refresh, setMessages, t],
+  );
 
   const startOnClick = useCallback(async () => {
     if (!deviceID || !isValidInput) return;
@@ -159,115 +206,201 @@ const TimerModal = ({ deviceID, setIsOpen, refresh }: TimerModalProps) => {
           {device?.type === "dryer" ? t("timerModal.dryer") : t("timerModal.washingMachine")}{" "}
           {device?.number}
         </p>
-        <button
-          className={styles.closeIcon}
-          onClick={closeModal}
-          aria-label={t("timerModal.closeAria")}
-        >
-          <IoMdClose />
-        </button>
+        <div className={styles.headerActions}>
+          {/* Report entry point - only on a working machine (a broken one
+              has "Mark as fixed" in its banner instead), and hidden while
+              already in report mode. */}
+          {!device?.broken && !reportOpen && (
+            <button
+              type="button"
+              className={styles.closeIcon}
+              onClick={() => setReportOpen(true)}
+              aria-label={t("timerModal.reportBroken")}
+              title={t("timerModal.reportBroken")}
+            >
+              <MdBuild />
+            </button>
+          )}
+          <button
+            className={styles.closeIcon}
+            onClick={closeModal}
+            aria-label={t("timerModal.closeAria")}
+          >
+            <IoMdClose />
+          </button>
+        </div>
       </div>
 
-      {inUse ? (
+      {/* Report mode swaps the timer contents for just the reason field
+          and the Report button; Back returns to the timer untouched. */}
+      {reportOpen ? (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            sendBrokenAction("report-broken", {
+              reason: reportReason.trim() || undefined,
+            });
+          }}
+        >
+          <p className={styles.label}>{t("timerModal.reportBroken")}</p>
+          <p className={styles.instructions}>{t("timerModal.reportIntro")}</p>
+          <input
+            type="text"
+            className={styles.reportInput}
+            placeholder={t("timerModal.reportPlaceholder")}
+            value={reportReason}
+            maxLength={MAX_BROKEN_REASON_LENGTH}
+            onChange={(e) => setReportReason(e.target.value)}
+            autoFocus
+          />
+          <div className={styles.buttons}>
+            <button
+              type="button"
+              className={styles.closeButton}
+              onClick={() => {
+                setReportOpen(false);
+                setReportReason("");
+              }}
+            >
+              {t("timerModal.back")}
+            </button>
+            <button
+              type="submit"
+              className={styles.reportSubmit}
+              disabled={brokenBusy}
+            >
+              {t("timerModal.reportSubmit")}
+            </button>
+          </div>
+        </form>
+      ) : device?.broken ? (
+        // Broken machine: just the notice and "Mark as fixed" - no timer
+        // until someone confirms it works again. (The backend still
+        // accepts a Start on a broken machine; this only gates the UI.)
         <>
-          <p className={styles.label}>{t("timerModal.inUseHeading")}</p>
-          <p className={styles.instructions}>
-            {t("timerModal.inUseByBefore")}{" "}
-            {device?.owner || t("infoModal.unknown")}.{" "}
-            {t("timerModal.inUseFreeAt")}{" "}
-            {device?.end_date && new Date(device.end_date).toLocaleTimeString()}.
-          </p>
+          <div className={styles.brokenBanner} role="status">
+            <p className={styles.brokenText}>
+              <strong>{t("timerModal.brokenWarning")}</strong>
+              {device.brokenAt && ` ${formatTimeAgo(device.brokenAt, locale)}`}
+              {device.brokenReason && `: ${device.brokenReason}`}
+            </p>
+            <p className={styles.brokenHint}>{t("timerModal.brokenHint")}</p>
+          </div>
+          <div className={styles.buttons}>
+            <button
+              type="button"
+              className={styles.startButton}
+              onClick={() => sendBrokenAction("clear-broken")}
+              disabled={brokenBusy}
+            >
+              {t("timerModal.markFixed")}
+            </button>
+          </div>
         </>
       ) : (
         <>
-          <p className={styles.label}>{t("timerModal.setTimer")}</p>
-          <p className={styles.instructions}>{t("timerModal.instructions")}</p>
+        {inUse ? (
+          <>
+            <p className={styles.label}>{t("timerModal.inUseHeading")}</p>
+            <p className={styles.instructions}>
+              {t("timerModal.inUseByBefore")}{" "}
+              {device?.owner || t("infoModal.unknown")}.{" "}
+              {t("timerModal.inUseFreeAt")}{" "}
+              {device?.end_date && new Date(device.end_date).toLocaleTimeString()}.
+            </p>
+          </>
+        ) : (
+          <>
+            <p className={styles.label}>{t("timerModal.setTimer")}</p>
+            <p className={styles.instructions}>{t("timerModal.instructions")}</p>
+          </>
+        )}
+        <div className={styles.inputs}>
+          <input
+            id="hour"
+            type="number"
+            className={`${styles.input} ${shakeHour ? styles.shake : ""}`}
+            inputMode="numeric"
+            placeholder="H"
+            value={input.hours ?? ""}
+            min={0}
+            max={3}
+            onChange={(e) => {
+              const v = e.target.value;
+              if (v === "") {
+                setInput({ ...input, hours: "" });
+                setShakeHour(false);
+                return;
+              }
+              // Single-digit field: always take the most recently typed
+              // digit (lets a second keystroke "overwrite" without having
+              // to select-all first), but validate that specific digit
+              // instead of silently defaulting an unparsable one to 0.
+              const lastChar = v.charAt(v.length - 1);
+              const num = /^[0-9]$/.test(lastChar) ? parseInt(lastChar, 10) : NaN;
+              if (!Number.isNaN(num) && num <= 3) {
+                setInput({ ...input, hours: String(num) });
+                setShakeHour(false);
+                inputRef.current?.focus();
+              } else {
+                setShakeHour(true);
+              }
+            }}
+            onAnimationEnd={() => setShakeHour(false)}
+            autoFocus
+          />
+          <span className={styles.separator}>:</span>
+          <input
+            ref={inputRef}
+            id="minutes"
+            inputMode="numeric"
+            placeholder="MM"
+            type="number"
+            className={`${styles.input} ${shakeMinute ? styles.shake : ""}`}
+            value={input.minutes ?? ""}
+            min={0}
+            max={60}
+            onChange={(e) => {
+              const v = e.target.value;
+              if (v === "") {
+                setInput({ ...input, minutes: "" });
+                setShakeMinute(false);
+                return;
+              }
+              // Reject anything that isn't 1-2 plain digits outright, rather
+              // than parsing it and defaulting a NaN result to a
+              // passes-the-check 0 - that was letting garbage like "-1" or
+              // "-" slip into state as if it were valid input.
+              if (!/^\d{1,2}$/.test(v)) {
+                setShakeMinute(true);
+                return;
+              }
+              const val = parseInt(v, 10);
+              if (val <= 60) {
+                setInput({ ...input, minutes: v });
+                setShakeMinute(false);
+              } else {
+                setShakeMinute(true);
+              }
+            }}
+            onAnimationEnd={() => setShakeMinute(false)}
+          />
+        </div>
+
+        <div className={styles.buttons}>
+          <button onClick={closeModal} className={styles.closeButton}>
+            {t("timerModal.close")}
+          </button>
+          <button
+            className={styles.startButton}
+            onClick={startOnClick}
+            disabled={!isValidInput}
+          >
+            {inUse ? t("timerModal.overwrite") : t("timerModal.start")}
+          </button>
+        </div>
         </>
       )}
-      <div className={styles.inputs}>
-        <input
-          id="hour"
-          type="number"
-          className={`${styles.input} ${shakeHour ? styles.shake : ""}`}
-          inputMode="numeric"
-          placeholder="H"
-          value={input.hours ?? ""}
-          min={0}
-          max={3}
-          onChange={(e) => {
-            const v = e.target.value;
-            if (v === "") {
-              setInput({ ...input, hours: "" });
-              setShakeHour(false);
-              return;
-            }
-            // Single-digit field: always take the most recently typed
-            // digit (lets a second keystroke "overwrite" without having
-            // to select-all first), but validate that specific digit
-            // instead of silently defaulting an unparsable one to 0.
-            const lastChar = v.charAt(v.length - 1);
-            const num = /^[0-9]$/.test(lastChar) ? parseInt(lastChar, 10) : NaN;
-            if (!Number.isNaN(num) && num <= 3) {
-              setInput({ ...input, hours: String(num) });
-              setShakeHour(false);
-              inputRef.current?.focus();
-            } else {
-              setShakeHour(true);
-            }
-          }}
-          onAnimationEnd={() => setShakeHour(false)}
-          autoFocus
-        />
-        <span className={styles.separator}>:</span>
-        <input
-          ref={inputRef}
-          id="minutes"
-          inputMode="numeric"
-          placeholder="MM"
-          type="number"
-          className={`${styles.input} ${shakeMinute ? styles.shake : ""}`}
-          value={input.minutes ?? ""}
-          min={0}
-          max={60}
-          onChange={(e) => {
-            const v = e.target.value;
-            if (v === "") {
-              setInput({ ...input, minutes: "" });
-              setShakeMinute(false);
-              return;
-            }
-            // Reject anything that isn't 1-2 plain digits outright, rather
-            // than parsing it and defaulting a NaN result to a
-            // passes-the-check 0 - that was letting garbage like "-1" or
-            // "-" slip into state as if it were valid input.
-            if (!/^\d{1,2}$/.test(v)) {
-              setShakeMinute(true);
-              return;
-            }
-            const val = parseInt(v, 10);
-            if (val <= 60) {
-              setInput({ ...input, minutes: v });
-              setShakeMinute(false);
-            } else {
-              setShakeMinute(true);
-            }
-          }}
-          onAnimationEnd={() => setShakeMinute(false)}
-        />
-      </div>
-
-      <div className={styles.buttons}>
-        <button onClick={closeModal} className={styles.closeButton}>
-          {t("timerModal.close")}
-        </button>
-        <button
-          className={styles.startButton}
-          onClick={startOnClick}
-          disabled={!isValidInput}
-        >
-          {inUse ? t("timerModal.overwrite") : t("timerModal.start")}
-        </button>
-      </div>
     </ReactModal>
   );
 };

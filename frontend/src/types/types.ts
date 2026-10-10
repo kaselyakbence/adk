@@ -5,6 +5,11 @@ export interface Device {
   type: "washer" | "dryer";
   number: number;
   owner: string;
+  // Warn-only broken flag (see backend Device model) - optional here since
+  // the placeholder baseDevices shown before the first fetch don't have it.
+  broken?: boolean;
+  brokenReason?: string | null;
+  brokenAt?: string | null;
 }
 
 export interface SnackbarItem {

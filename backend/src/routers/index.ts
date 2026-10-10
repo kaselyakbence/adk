@@ -19,6 +19,35 @@ function parseClientDate(value: unknown): string | null {
   return isNaN(parsed.getTime()) ? null : parsed.toISOString();
 }
 
+// Mirrors TimerModal's client-side isValidInput (frontend/src/modals/timer/
+// TimerModal.tsx) - a direct API call bypasses that entirely, so the same
+// bounds need enforcing here too. `typeof x === "number"` (rather than
+// `!isNaN(x)`, the previous check) matters: `isNaN` coerces its argument
+// first, so booleans, null, and empty arrays were all sneaking through as
+// "valid" numbers before.
+function isValidBookingDuration(hours: unknown, minutes: unknown): boolean {
+  const hoursValid =
+    typeof hours === "number" &&
+    Number.isInteger(hours) &&
+    hours >= 0 &&
+    hours <= 3;
+  const minutesValid =
+    typeof minutes === "number" &&
+    Number.isInteger(minutes) &&
+    minutes >= 0 &&
+    minutes <= 60;
+
+  return hoursValid && minutesValid && hours * 60 + minutes > 0;
+}
+
+// The "not broken" defaults - shared by clear-broken and by a successful
+// Start (/update), which auto-clears a stale flag.
+const NOT_BROKEN = { broken: false, brokenReason: null, brokenAt: null };
+
+// Matches the frontend input's maxLength - longer reasons are cut, not
+// rejected, since the flag itself is the important part.
+const MAX_BROKEN_REASON_LENGTH = 200;
+
 DeviceRouter.post("/:id/update", async (req, res) => {
   const minutes = req.body?.minutes;
   const hours = req.body?.hours;
@@ -27,9 +56,9 @@ DeviceRouter.post("/:id/update", async (req, res) => {
   try {
     if (
       req.params.id &&
-      !isNaN(hours) &&
-      !isNaN(minutes) &&
-      typeof owner === "string"
+      isValidBookingDuration(hours, minutes) &&
+      typeof owner === "string" &&
+      owner.trim().length > 0
     ) {
       const deviceId = parseInt(req.params.id);
 
@@ -50,6 +79,9 @@ DeviceRouter.post("/:id/update", async (req, res) => {
           start_date: now,
           end_date: endDate,
           owner: owner,
+          // A successful Start means someone just used the machine, so a
+          // leftover "broken" flag is assumed stale and cleared.
+          ...NOT_BROKEN,
         },
       });
 
@@ -96,6 +128,50 @@ DeviceRouter.post("/:id/subscribe", async (req, res) => {
     }
 
     res.sendStatus(403);
+  } catch (_) {
+    res.status(403).send();
+  }
+});
+
+// Warn-only: flags the machine as broken for everyone, but Start keeps
+// working on it. `reason` is optional; blank counts as none.
+DeviceRouter.post("/:id/report-broken", async (req, res) => {
+  const reason: unknown = req.body?.reason;
+
+  try {
+    if (reason !== undefined && reason !== null && typeof reason !== "string") {
+      res.sendStatus(403);
+      return;
+    }
+
+    const trimmed = typeof reason === "string" ? reason.trim() : "";
+
+    await prismaClient.device.update({
+      where: { id: parseInt(req.params.id) },
+      data: {
+        broken: true,
+        brokenReason: trimmed
+          ? trimmed.slice(0, MAX_BROKEN_REASON_LENGTH)
+          : null,
+        brokenAt: new Date(),
+      },
+    });
+
+    res.status(201).send();
+  } catch (_) {
+    res.status(403).send();
+  }
+});
+
+// Anyone can clear it - same honor system as everything else.
+DeviceRouter.post("/:id/clear-broken", async (req, res) => {
+  try {
+    await prismaClient.device.update({
+      where: { id: parseInt(req.params.id) },
+      data: NOT_BROKEN,
+    });
+
+    res.status(201).send();
   } catch (_) {
     res.status(403).send();
   }

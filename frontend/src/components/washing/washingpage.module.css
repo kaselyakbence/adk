@@ -219,3 +219,20 @@
   width: 0.85rem;
   height: 0.85rem;
 }
+
+/* Shown instead of the countdown on a machine reported broken. Styled like
+   the countdown's "Available" (same inherited size/weight, plain text) -
+   the red colour and the leading wrench are the difference. */
+.brokenBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+
+  color: var(--color-warning);
+  white-space: nowrap;
+}
+
+.brokenIcon {
+  width: 1em;
+  height: 1em;
+}
