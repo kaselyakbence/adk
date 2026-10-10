@@ -40,6 +40,14 @@ function isValidBookingDuration(hours: unknown, minutes: unknown): boolean {
   return hoursValid && minutesValid && hours * 60 + minutes > 0;
 }
 
+// The "not broken" defaults - shared by clear-broken and by a successful
+// Start (/update), which auto-clears a stale flag.
+const NOT_BROKEN = { broken: false, brokenReason: null, brokenAt: null };
+
+// Matches the frontend input's maxLength - longer reasons are cut, not
+// rejected, since the flag itself is the important part.
+const MAX_BROKEN_REASON_LENGTH = 200;
+
 DeviceRouter.post("/:id/update", async (req, res) => {
   const minutes = req.body?.minutes;
   const hours = req.body?.hours;
@@ -71,6 +79,9 @@ DeviceRouter.post("/:id/update", async (req, res) => {
           start_date: now,
           end_date: endDate,
           owner: owner,
+          // A successful Start means someone just used the machine, so a
+          // leftover "broken" flag is assumed stale and cleared.
+          ...NOT_BROKEN,
         },
       });
 
@@ -117,6 +128,50 @@ DeviceRouter.post("/:id/subscribe", async (req, res) => {
     }
 
     res.sendStatus(403);
+  } catch (_) {
+    res.status(403).send();
+  }
+});
+
+// Warn-only: flags the machine as broken for everyone, but Start keeps
+// working on it. `reason` is optional; blank counts as none.
+DeviceRouter.post("/:id/report-broken", async (req, res) => {
+  const reason: unknown = req.body?.reason;
+
+  try {
+    if (reason !== undefined && reason !== null && typeof reason !== "string") {
+      res.sendStatus(403);
+      return;
+    }
+
+    const trimmed = typeof reason === "string" ? reason.trim() : "";
+
+    await prismaClient.device.update({
+      where: { id: parseInt(req.params.id) },
+      data: {
+        broken: true,
+        brokenReason: trimmed
+          ? trimmed.slice(0, MAX_BROKEN_REASON_LENGTH)
+          : null,
+        brokenAt: new Date(),
+      },
+    });
+
+    res.status(201).send();
+  } catch (_) {
+    res.status(403).send();
+  }
+});
+
+// Anyone can clear it - same honor system as everything else.
+DeviceRouter.post("/:id/clear-broken", async (req, res) => {
+  try {
+    await prismaClient.device.update({
+      where: { id: parseInt(req.params.id) },
+      data: NOT_BROKEN,
+    });
+
+    res.status(201).send();
   } catch (_) {
     res.status(403).send();
   }

@@ -220,7 +220,15 @@ self.addEventListener("fetch", (event) => {
   // Device/event lists: show the last-known state instantly (works offline too),
   // then refresh it in the background for next time.
   if (url.pathname.endsWith("/device/all") || url.pathname.endsWith("/event/all")) {
-    event.respondWith(staleWhileRevalidate(request, API_CACHE));
+    // A page asking for fresh data (cache: "no-cache" - the refresh right
+    // after Start / report broken) gets the network first, so it doesn't
+    // see the pre-write list; still falls back to the cache offline.
+    const wantsFresh = ["no-cache", "no-store", "reload"].includes(request.cache);
+    event.respondWith(
+      wantsFresh
+        ? networkFirst(request, API_CACHE)
+        : staleWhileRevalidate(request, API_CACHE),
+    );
     return;
   }
 

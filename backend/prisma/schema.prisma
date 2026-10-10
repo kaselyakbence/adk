@@ -15,6 +15,11 @@ model Device {
   end_date DateTime
   type String
   owner String
+  // Warn-only flag: Start still works on a broken machine, anyone can set
+  // or clear it, and a successful Start clears it automatically.
+  broken       Boolean   @default(false)
+  brokenReason String?
+  brokenAt     DateTime?
   pushSubscriptions PushSubscription[]
 }
 

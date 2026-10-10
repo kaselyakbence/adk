@@ -193,6 +193,31 @@ describe("POST /device/:id/update", () => {
     expect(mockPrisma.device.update.mock.calls[1][0].data.owner).toBe("Jordan");
   });
 
+  it("auto-clears a stale broken flag on a successful Start", async () => {
+    // Settled default: someone just used the machine, so a leftover
+    // "broken" report is assumed out of date.
+    await request(buildApp())
+      .post("/device/1/update")
+      .send({ hours: 1, minutes: 30, owner: "Alex" });
+
+    const { data } = mockPrisma.device.update.mock.calls[0][0];
+    expect(data).toEqual(
+      expect.objectContaining({
+        broken: false,
+        brokenReason: null,
+        brokenAt: null,
+      }),
+    );
+  });
+
+  it("does not touch the broken flag when the Start request is rejected", async () => {
+    await request(buildApp())
+      .post("/device/1/update")
+      .send({ hours: 0, minutes: 0, owner: "Alex" });
+
+    expect(mockPrisma.device.update).not.toHaveBeenCalled();
+  });
+
   it("returns 403 rather than crashing when the update throws (e.g. unknown device id)", async () => {
     mockPrisma.device.update.mockRejectedValue(
       new Error("Record to update not found"),
@@ -393,6 +418,137 @@ describe("POST /device/:id/subscribe", () => {
         endpoint: "https://push.example/abc",
         keys: { p256dh: "key1", auth: "key2" },
       });
+
+    expect(res.status).toBe(403);
+  });
+});
+
+describe("POST /device/:id/report-broken", () => {
+  it("flags the device with the given reason and the current time", async () => {
+    const before = Date.now();
+    const res = await request(buildApp())
+      .post("/device/3/report-broken")
+      .send({ reason: "Door won't close" });
+    const after = Date.now();
+
+    expect(res.status).toBe(201);
+    expect(mockPrisma.device.update).toHaveBeenCalledTimes(1);
+
+    const { where, data } = mockPrisma.device.update.mock.calls[0][0];
+    expect(where).toEqual({ id: 3 });
+    expect(data.broken).toBe(true);
+    expect(data.brokenReason).toBe("Door won't close");
+    expect(data.brokenAt).toBeInstanceOf(Date);
+    expect(data.brokenAt.getTime()).toBeGreaterThanOrEqual(before);
+    expect(data.brokenAt.getTime()).toBeLessThanOrEqual(after);
+  });
+
+  it("accepts a report with no body at all - the reason is optional", async () => {
+    const res = await request(buildApp()).post("/device/3/report-broken");
+
+    expect(res.status).toBe(201);
+    const { data } = mockPrisma.device.update.mock.calls[0][0];
+    expect(data.broken).toBe(true);
+    expect(data.brokenReason).toBeNull();
+  });
+
+  it.each([
+    ["an empty string", ""],
+    ["whitespace only", "   "],
+    ["null", null],
+  ])("stores no reason when it is %s", async (_label, reason) => {
+    const res = await request(buildApp())
+      .post("/device/3/report-broken")
+      .send({ reason });
+
+    expect(res.status).toBe(201);
+    expect(
+      mockPrisma.device.update.mock.calls[0][0].data.brokenReason,
+    ).toBeNull();
+  });
+
+  it("trims surrounding whitespace off the reason", async () => {
+    await request(buildApp())
+      .post("/device/3/report-broken")
+      .send({ reason: "  Leaking  " });
+
+    expect(mockPrisma.device.update.mock.calls[0][0].data.brokenReason).toBe(
+      "Leaking",
+    );
+  });
+
+  it("cuts an overlong reason to 200 characters instead of rejecting it", async () => {
+    const res = await request(buildApp())
+      .post("/device/3/report-broken")
+      .send({ reason: "x".repeat(500) });
+
+    expect(res.status).toBe(201);
+    expect(
+      mockPrisma.device.update.mock.calls[0][0].data.brokenReason,
+    ).toHaveLength(200);
+  });
+
+  it.each([
+    ["a number", 42],
+    ["an object", { text: "broken" }],
+    ["an array", ["broken"]],
+  ])("rejects a reason given as %s", async (_label, reason) => {
+    const res = await request(buildApp())
+      .post("/device/3/report-broken")
+      .send({ reason });
+
+    expect(res.status).toBe(403);
+    expect(mockPrisma.device.update).not.toHaveBeenCalled();
+  });
+
+  it("returns 403 rather than crashing when the update throws (e.g. unknown device id)", async () => {
+    mockPrisma.device.update.mockRejectedValue(
+      new Error("Record to update not found"),
+    );
+
+    const res = await request(buildApp())
+      .post("/device/999999/report-broken")
+      .send({ reason: "Broken" });
+
+    expect(res.status).toBe(403);
+  });
+});
+
+describe("POST /device/:id/clear-broken", () => {
+  it("resets all three broken fields to their defaults", async () => {
+    const res = await request(buildApp()).post("/device/3/clear-broken");
+
+    expect(res.status).toBe(201);
+    expect(mockPrisma.device.update).toHaveBeenCalledWith({
+      where: { id: 3 },
+      data: { broken: false, brokenReason: null, brokenAt: null },
+    });
+  });
+
+  it("leaves the booking itself (start/end/owner) alone", async () => {
+    await request(buildApp()).post("/device/3/clear-broken");
+
+    const { data } = mockPrisma.device.update.mock.calls[0][0];
+    expect(data).not.toHaveProperty("start_date");
+    expect(data).not.toHaveProperty("end_date");
+    expect(data).not.toHaveProperty("owner");
+  });
+
+  it("succeeds on a device that isn't flagged - clearing is idempotent", async () => {
+    const app = buildApp();
+    const first = await request(app).post("/device/3/clear-broken");
+    const second = await request(app).post("/device/3/clear-broken");
+
+    expect(first.status).toBe(201);
+    expect(second.status).toBe(201);
+  });
+
+  it("returns 403 rather than crashing when the update throws (e.g. unknown device id)", async () => {
+    mockPrisma.device.update.mockRejectedValue(
+      new Error("Record to update not found"),
+    );
+
+    const res = await request(buildApp()).post("/device/999999/clear-broken");
 
     expect(res.status).toBe(403);
   });

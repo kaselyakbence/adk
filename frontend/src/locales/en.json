@@ -79,6 +79,7 @@
   "washing.dryerLabel": "Dryer",
   "washing.pendingSync": "Pending sync",
   "washing.scanQrAria": "Scan QR code",
+  "washing.brokenBadge": "Broken",
 
   "timerModal.washingMachine": "Washing Machine",
   "timerModal.dryer": "Dryer",
@@ -94,6 +95,14 @@
   "timerModal.successMessage": "Successfully updated",
   "timerModal.errorMessage": "An error occured",
   "timerModal.offlineMessage": "Saved offline - will sync once you're back online",
+  "timerModal.brokenWarning": "Reported broken",
+  "timerModal.brokenHint": "Once it's working again, mark it as fixed so others can use it.",
+  "timerModal.markFixed": "Mark as fixed",
+  "timerModal.reportBroken": "Report broken",
+  "timerModal.reportPlaceholder": "What's wrong? (optional)",
+  "timerModal.reportSubmit": "Report",
+  "timerModal.reportIntro": "Let others know this machine isn't working. Adding what's wrong is optional.",
+  "timerModal.back": "Back",
 
   "infoModal.washer": "Washer",
   "infoModal.dryer": "Dryer",
@@ -102,6 +111,9 @@
   "infoModal.endsAt": "Ends at:",
   "infoModal.startedBy": "Started by:",
   "infoModal.unknown": "Unknown",
+  "infoModal.brokenHeadline": "Reported broken",
+  "infoModal.brokenReason": "Reason:",
+  "infoModal.noReason": "No reason given",
 
   "usernameModal.welcome": "Welcome!",
   "usernameModal.prompt": "Please use your name from the groupchat",

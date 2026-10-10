@@ -77,3 +77,37 @@
   border: 3px solid var(--color-error);
   border-radius: 25px;
 }
+
+/* Broken state - same warning colour as the device list's badge. */
+.brokenBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+
+  padding: 0.2rem 0.7rem;
+  border-radius: 12px;
+  background-color: var(--color-warning);
+
+  font-weight: bold;
+  color: var(--color-on-warning);
+  white-space: nowrap;
+}
+
+.brokenNotice {
+  margin: 0.25rem 0 0.75rem;
+  padding: 0.7rem 0.9rem;
+
+  border-left: 3px solid var(--color-warning);
+  border-radius: 4px;
+  background-color: rgba(var(--color-warning-rgb), 0.1);
+}
+
+.brokenHeadline {
+  margin: 0;
+  font-weight: bold;
+  color: var(--color-warning);
+}
+
+.brokenReason {
+  margin: 0.25rem 0 0;
+}

@@ -74,6 +74,12 @@
   font-size: 1.5rem;
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
 .closeIcon {
   display: flex;
   align-items: center;
@@ -211,4 +217,79 @@
 
 .startButton:disabled:hover {
   background-color: var(--color-disabled);
+}
+
+/* Broken machine: the notice shown instead of the timer. */
+.brokenBanner {
+  margin: 0 0 1.5rem;
+  padding: 0.75rem 0.9rem;
+
+  border-left: 3px solid var(--color-warning);
+  border-radius: 8px;
+  background-color: rgba(var(--color-warning-rgb), 0.1);
+}
+
+.brokenText {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.brokenText strong {
+  color: var(--color-warning);
+}
+
+.brokenHint {
+  margin: 0.3rem 0 0;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+
+/* Report mode (replaces the timer contents). */
+.reportInput {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 0.9rem;
+
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+  border: 2px solid transparent;
+  border-radius: 10px;
+
+  font: inherit;
+  font-size: 1.05rem;
+}
+
+.reportInput:focus {
+  border-color: var(--color-warning);
+  outline: none;
+}
+
+/* Same shape as Start, in the warning colour. */
+.reportSubmit {
+  flex: 1;
+  padding: 0.7rem;
+
+  background-color: var(--color-warning);
+  color: var(--color-on-warning);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+
+  font-size: 1.1rem;
+  font-weight: bold;
+
+  transition: filter 0.15s ease;
+}
+
+.reportSubmit:hover:not(:disabled) {
+  filter: brightness(0.92);
+}
+
+.reportSubmit:disabled {
+  opacity: 0.6;
+  cursor: progress;
 }

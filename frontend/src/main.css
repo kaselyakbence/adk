@@ -27,6 +27,11 @@
   --color-accent-green-dark: #24632a;
   --color-info: #0891b2;
   --color-info-rgb: 8, 145, 178;
+  /* Broken-machine badge/banner - orange-red, deliberately unlike the
+     blue pending-sync badge so the two never get confused. */
+  --color-warning: #e03131;
+  --color-warning-rgb: 224, 49, 49;
+  --color-on-warning: #ffffff;
 
   /* Same in both themes - saturated fills that already read fine on
      either background, or surfaces that are dark by design. */
@@ -69,6 +74,9 @@
   --color-accent-green-dark: #388e3c;
   --color-info: #22a6c7;
   --color-info-rgb: 34, 166, 199;
+  --color-warning: #ff6b6b;
+  --color-warning-rgb: 255, 107, 107;
+  --color-on-warning: #2f2e41;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -93,6 +101,9 @@
     --color-accent-green-dark: #388e3c;
     --color-info: #22a6c7;
     --color-info-rgb: 34, 166, 199;
+    --color-warning: #ff6b6b;
+    --color-warning-rgb: 255, 107, 107;
+    --color-on-warning: #2f2e41;
   }
 }
 
