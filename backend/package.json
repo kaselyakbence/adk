@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "postinstall": "prisma generate",
     "dev": "dotenv -- tsx watch src/index.ts",
     "seed": "prisma db seed",
     "test": "jest --passWithNoTests",
@@ -57,6 +58,7 @@
     "deepmerge-ts": "^8.0.2",
     "@istanbuljs/load-nyc-config": {
       "js-yaml": "^4.1.0"
-    }
+    },
+    "effect": "^3.22.1"
   }
 }
