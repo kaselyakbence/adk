@@ -1,0 +1,30 @@
+name: Tests
+
+# Runs the backend test suite on every pull request into main, so a PR shows
+# a pass/fail check before it's merged. (deploy.yml runs the same tests again
+# before deploying, since pushes to `deployment` don't go through a PR.)
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      # No database needed - the tests mock Prisma (see
+      # backend/__tests__/routers/device.test.ts).
+      - name: Backend - install and test
+        working-directory: backend
+        run: |
+          npm ci
+          npm test

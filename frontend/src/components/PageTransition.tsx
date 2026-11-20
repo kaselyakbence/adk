@@ -5,6 +5,9 @@ import styles from "./pagetransition.module.css";
 
 const PageTransition = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
+  // Path without its /<locale> prefix - a language switch changes only that
+  // prefix and happens in place (the menu stays open), so no cover.
+  const page = pathname.split("/").slice(2).join("/");
   const isFirstRender = useRef(true);
   const [transitionKey, setTransitionKey] = useState(0);
 
@@ -16,7 +19,7 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
       return;
     }
     setTransitionKey((k) => k + 1);
-  }, [pathname]);
+  }, [page]);
 
   return (
     <>

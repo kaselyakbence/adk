@@ -19,10 +19,14 @@ function App() {
   const [initialLoading, setInitialLoading] = useState(true);
   const { t } = useContext(LocaleContext);
 
-  const fetchDevices = useCallback(async () => {
+  // `fresh` skips the service worker's stale-while-revalidate cache (see
+  // sw.js) - used right after a write (Start, report/clear broken), where
+  // the cached list would otherwise show the old state until the next poll.
+  const fetchDevices = useCallback(async (fresh = false) => {
     try {
       const fetchData = await fetch(`${API_URL}/device/all`, {
         method: "GET",
+        cache: fresh ? "no-cache" : "default",
         headers: {
           "Content-Type": "application/json",
         },
@@ -42,7 +46,7 @@ function App() {
 
   useEffect(() => {
     fetchDevices();
-    const interval = setInterval(fetchDevices, DEVICE_POLL_INTERVAL_MS);
+    const interval = setInterval(() => fetchDevices(), DEVICE_POLL_INTERVAL_MS);
     return () => clearInterval(interval);
   }, [fetchDevices]);
 
@@ -51,7 +55,10 @@ function App() {
       <SnackbarContext.Provider
         value={{ messages: snackbarMessages, setMessages: setSnackbarMessages }}
       >
-        <MainPage refresh={fetchDevices} loading={initialLoading} />
+        <MainPage
+          refresh={() => fetchDevices(true)}
+          loading={initialLoading}
+        />
         <Astronaut />
       </SnackbarContext.Provider>
     </DevicesContext.Provider>

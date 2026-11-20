@@ -11,8 +11,8 @@
      overlay, modals) so a message is never silently hidden behind them. */
   z-index: 1000000;
 
-  background-color: #4cb944;
-  color: white;
+  background-color: var(--color-success);
+  color: var(--color-on-brand);
 
   padding: 0.6rem 1.1rem;
 
@@ -40,13 +40,13 @@
 }
 
 .success {
-  background-color: #4cb944;
+  background-color: var(--color-success);
 }
 
 .error {
-  background-color: #ff6584;
+  background-color: var(--color-error);
 }
 
 .info {
-  background-color: #6397ff;
+  background-color: var(--color-brand);
 }

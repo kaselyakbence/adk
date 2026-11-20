@@ -165,8 +165,8 @@
   align-items: center;
   justify-content: center;
 
-  color: black;
-  background-color: white;
+  color: var(--color-text);
+  background-color: var(--color-surface);
   border: none;
   border-radius: 50%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
@@ -174,7 +174,7 @@
 }
 
 .nav:hover {
-  background-color: #f0f0f0;
+  background-color: var(--color-surface-alt);
 }
 
 .prev {
@@ -227,7 +227,7 @@
   height: 0.5rem;
   padding: 0;
 
-  background-color: #c4c4c4;
+  background-color: var(--color-dot);
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -238,10 +238,10 @@
 }
 
 .dot:hover {
-  background-color: #8f8f8f;
+  background-color: var(--color-dot-hover);
 }
 
 .dotActive {
-  background-color: #0891b2;
+  background-color: var(--color-info);
   transform: scale(1.3);
 }

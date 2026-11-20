@@ -12,8 +12,8 @@
   padding: 0.9rem 1rem;
   padding-bottom: calc(0.9rem + env(safe-area-inset-bottom));
 
-  background-color: #3f3d56;
-  color: white;
+  background-color: var(--color-navy);
+  color: var(--color-on-brand);
   box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.25);
 
   animation: slideUpIn 0.3s ease;
@@ -43,10 +43,10 @@
   border-radius: 50%;
   cursor: pointer;
 
-  color: white;
+  color: var(--color-on-brand);
   font-size: 1.2rem;
 }
 
 .closeButton:hover {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(var(--color-on-brand-rgb), 0.15);
 }

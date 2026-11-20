@@ -4,6 +4,8 @@ import styles from "./infomodal.module.css";
 import { DevicesContext } from "../../context/DevicesContext";
 import Countdown from "../../components/countdown/Countdown";
 import { LocaleContext } from "../../context/LocaleContext";
+import { MdBuild } from "react-icons/md";
+import { formatTimeAgo } from "../../lib/relativeTime";
 
 interface InfoModalProps {
   deviceID: number | null;
@@ -12,12 +14,14 @@ interface InfoModalProps {
 
 const InfoModal = ({ deviceID, setIsOpen }: InfoModalProps) => {
   const device = useContext(DevicesContext).find((d) => d.id == deviceID);
-  const { t } = useContext(LocaleContext);
+  const { locale, t } = useContext(LocaleContext);
 
   const isAvailable = useMemo(() => {
     if (!device) return false;
     const now = new Date();
-    return !!device.end_date && new Date(device.end_date) < now;
+    return (
+      !device.broken && !!device.end_date && new Date(device.end_date) < now
+    );
   }, [device]);
 
   return (
@@ -56,8 +60,37 @@ const InfoModal = ({ deviceID, setIsOpen }: InfoModalProps) => {
               {device?.type === "washer" ? t("infoModal.washer") : t("infoModal.dryer")}{" "}
               {device.number}
             </h2>
-            <Countdown time={device.end_date} />
+            {/* Broken replaces the countdown/availability display. */}
+            {device.broken ? (
+              <span className={styles.brokenBadge}>
+                <MdBuild aria-hidden />
+                {t("washing.brokenBadge")}
+              </span>
+            ) : (
+              <Countdown time={device.end_date} />
+            )}
           </div>
+          {/* The headline when broken - but the booking rows below stay, as
+              secondary context: a machine can break mid-cycle, and whoever's
+              load it is still needs to know when it was due to finish. */}
+          {device.broken && (
+            <div className={styles.brokenNotice}>
+              <p className={styles.brokenHeadline}>
+                {t("infoModal.brokenHeadline")}
+                {device.brokenAt &&
+                  ` ${formatTimeAgo(device.brokenAt, locale)}`}
+              </p>
+              <p className={styles.brokenReason}>
+                {device.brokenReason ? (
+                  <>
+                    {t("infoModal.brokenReason")} {device.brokenReason}
+                  </>
+                ) : (
+                  t("infoModal.noReason")
+                )}
+              </p>
+            </div>
+          )}
           <p>
             {t("infoModal.lastStarted")}{" "}
             {device.start_date &&

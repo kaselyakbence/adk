@@ -1,0 +1,210 @@
+/* Fixed to the viewport so the panels below can each scroll on their own
+   instead of the whole page scrolling. */
+.main {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* Narrow screens: one column at roughly Instagram's feed width - the
+   upcoming carousel takes the height, Past is a collapsible bar under it.
+   Wide screens (850px+, same breakpoint as the about page): the two sit
+   side by side, see the media query at the bottom. */
+.feed {
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  width: 90%;
+  max-width: 470px;
+  margin: 1rem auto;
+}
+
+.panel {
+  flex: 0 1 auto;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Always takes the height left over, even with a short card - its card
+   never stretches past natural size (square poster), the extra is split
+   above/below it; it only shrinks when the space is too short (see .fill
+   in eventpost.module.css). */
+.upcomingPanel {
+  flex: 1 1 0;
+}
+
+/* Past, when open: takes all the height (upcoming is hidden meanwhile),
+   and its .scroll list fills and scrolls within it. */
+.pastPanelOpen {
+  flex: 1 1 0;
+}
+
+.hiddenNarrow {
+  display: none;
+}
+
+/* Past's title on wide screens, where it's always expanded - the toggle
+   bar is only for narrow ones. */
+.wideOnly {
+  display: none;
+}
+
+.panelHeader {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.85rem 1.1rem;
+
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: bold;
+}
+
+/* Plain title (not a bar like the Past toggle) - it isn't clickable, and
+   this keeps it compact. */
+.panelTitle {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0 0.25rem;
+
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-info);
+}
+
+/* Holds the carousel and lets it shrink to the space available. */
+.upcomingArea {
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  /* Room for the cards' shadows, which overflow: auto would clip. */
+  padding: 0.25rem 0.5rem 0.75rem;
+  margin: 0 -0.5rem;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-dot) transparent;
+}
+
+/* Doubled class so it beats .scroll's own display. */
+.scroll.pastCollapsed {
+  display: none;
+}
+
+/* Otherwise the flex column squashes the cards instead of scrolling. */
+.scroll > * {
+  flex-shrink: 0;
+}
+
+.pastToggle {
+  cursor: pointer;
+}
+
+.pastToggle:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+.chevron {
+  color: var(--color-grey);
+  transition: transform 0.2s ease;
+}
+
+.pastToggleOpen .chevron {
+  transform: rotate(180deg);
+}
+
+.empty {
+  margin: 0;
+  padding: 1.25rem;
+
+  border-radius: 12px;
+  background-color: var(--color-surface);
+  text-align: center;
+  color: var(--color-grey);
+}
+
+.skeleton {
+  flex: 1;
+  width: 100%;
+
+  border-radius: 12px;
+  background-color: var(--color-skeleton-base);
+}
+
+@media (850px <= width) {
+  /* Two fixed-width columns centred as a pair: the upcoming carousel at
+     roughly Instagram's feed width, the compact past list a bit narrower. */
+  .feed {
+    display: grid;
+    grid-template-columns: minmax(0, 500px) minmax(0, 400px);
+    grid-template-rows: minmax(0, 1fr);
+    justify-content: center;
+    column-gap: 5rem;
+
+    width: 90%;
+    max-width: none;
+    margin: 2rem auto;
+  }
+
+  .hiddenNarrow,
+  .scroll.pastCollapsed {
+    display: flex;
+  }
+
+  .narrowOnly {
+    display: none;
+  }
+
+  .wideOnly {
+    display: block;
+  }
+
+  /* Top-aligned so the card lines up with the list next to it; visible
+     overflow so the card's shadow isn't clipped into a grey band. */
+  .upcomingArea {
+    justify-content: flex-start;
+    overflow: visible;
+  }
+
+  .scroll {
+    gap: 0.75rem;
+  }
+}

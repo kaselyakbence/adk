@@ -2,6 +2,8 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json ./
+# Schema first: npm ci's postinstall runs `prisma generate`, which needs it.
+COPY prisma ./prisma
 RUN npm ci
 
 COPY . .

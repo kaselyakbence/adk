@@ -1,5 +1,5 @@
 .card {
-  background-color: white;
+  background-color: var(--color-surface);
 
   border-radius: 12px;
   padding: 0.75rem 1.1rem;
@@ -32,7 +32,7 @@
   border: none;
   cursor: pointer;
 
-  color: #2e7d32;
+  color: var(--color-accent-green);
 }
 
 @media (850px <= width) {
@@ -61,7 +61,7 @@
 
   font-size: 1.3rem;
   font-weight: bold;
-  color: #2e7d32;
+  color: var(--color-accent-green);
   text-transform: uppercase;
 }
 
@@ -108,7 +108,7 @@
   gap: 1.5rem;
   margin-left: auto;
 
-  border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 2px solid rgba(var(--on-surface-rgb), 0.08);
 }
 
 .tabsHidden {
@@ -135,7 +135,7 @@
   font-size: 1.3rem;
   line-height: 1;
   font-weight: bold;
-  color: rgba(0, 0, 0, 0.4);
+  color: rgba(var(--on-surface-rgb), 0.4);
   text-transform: uppercase;
 
   transition:
@@ -150,12 +150,12 @@
 }
 
 .tab:hover {
-  color: rgba(0, 0, 0, 0.7);
+  color: rgba(var(--on-surface-rgb), 0.7);
 }
 
 .tab.tabActive {
-  color: #2e7d32;
-  border-bottom-color: #2e7d32;
+  color: var(--color-accent-green);
+  border-bottom-color: var(--color-accent-green);
 }
 
 .text {

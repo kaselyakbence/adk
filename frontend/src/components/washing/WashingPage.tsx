@@ -2,7 +2,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DevicesContext } from "../../context/DevicesContext";
 import styles from "./washingpage.module.css";
 import Countdown from "../countdown/Countdown";
-import { MdCameraswitch, MdSync } from "react-icons/md";
+import { MdBuild, MdCameraswitch, MdSync } from "react-icons/md";
 import TimerModal from "../../modals/timer/TimerModal";
 import CustomSnackbar from "../snackbar/CustomSnackbar";
 import QRScanner from "../qrscanner/QRScanner";
@@ -57,10 +57,14 @@ const MainPage = ({ refresh, loading }: MainPageProps) => {
     const now = new Date();
     const washers = devices
       .filter((d) => d.type === "washer")
+      // A broken machine isn't really "free", even once its cycle is over.
+      .filter((d) => !d.broken)
       .filter((d) => d.end_date && new Date(d.end_date) < now).length;
 
     const dryers = devices
       .filter((d) => d.type === "dryer")
+      // A broken machine isn't really "free", even once its cycle is over.
+      .filter((d) => !d.broken)
       .filter((d) => d.end_date && new Date(d.end_date) < now).length;
 
     return {
@@ -147,7 +151,16 @@ const MainPage = ({ refresh, loading }: MainPageProps) => {
                           </span>
                         )}
                       </div>
-                      <Countdown time={d.end_date} />
+                      {/* Broken replaces the countdown/availability
+                          entirely rather than sitting next to it. */}
+                      {d.broken ? (
+                        <span className={styles.brokenBadge}>
+                          <MdBuild className={styles.brokenIcon} aria-hidden />
+                          {t("washing.brokenBadge")}
+                        </span>
+                      ) : (
+                        <Countdown time={d.end_date} />
+                      )}
                     </div>
                   ))}
           </div>
@@ -192,7 +205,16 @@ const MainPage = ({ refresh, loading }: MainPageProps) => {
                           </span>
                         )}
                       </div>
-                      <Countdown time={d.end_date} />
+                      {/* Broken replaces the countdown/availability
+                          entirely rather than sitting next to it. */}
+                      {d.broken ? (
+                        <span className={styles.brokenBadge}>
+                          <MdBuild className={styles.brokenIcon} aria-hidden />
+                          {t("washing.brokenBadge")}
+                        </span>
+                      ) : (
+                        <Countdown time={d.end_date} />
+                      )}
                     </div>
                   ))}
           </div>
